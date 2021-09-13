@@ -1,16 +1,19 @@
 #ifndef __VOITURE__
 #define __VOITURE__
 
+#include <string>
+
+using namespace std;
 
 class Voiture{
 public:
     Voiture();
     Voiture(Voiture & v);
     ~Voiture();
-    int getImat() const;
+    string getImat() const;
 
 private:
-    int immatriculation;
+    string immatriculation;
 };
 
 #endif
