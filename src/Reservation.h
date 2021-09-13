@@ -7,6 +7,7 @@
 class Reservation{
 public:
     Reservation();
+    Reservation(Date & d1, Date & d2, Voiture & v);
     ~Reservation();
 
 private:

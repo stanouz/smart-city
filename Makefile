@@ -2,7 +2,7 @@
 EXEC = bin/exec
 
 # All object files
-OBJ_FILES = obj/main.o obj/Date.o obj/Voiture.o obj/Reservation.o
+OBJ_FILES = obj/main.o obj/Date.o obj/Voiture.o obj/Reservation.o obj/Place.o
 
 
 # Compilator rules
@@ -19,6 +19,9 @@ bin/exec : $(OBJ_FILES)
 
 # Objects
 obj/main.o: src/main.cpp src/Date.h src/Voiture.h
+	$(COMPILATIONOBJ)
+
+obj/Place.o : src/Place.cpp src/Place.h
 	$(COMPILATIONOBJ)
 
 obj/Reservation.o : src/Reservation.cpp src/Reservation.h

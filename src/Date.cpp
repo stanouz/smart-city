@@ -30,7 +30,7 @@ Date::~Date(){
 
 }
 
-bool Date::isBetween(Date date1, Date date2){
+bool Date::isBetween(Date date1, Date date2) const{
     if(date1 <= date2){
         if(*this >= date1 && *this <= date2)
             return true;
@@ -53,7 +53,7 @@ void Date::setTime(int hour_, int minute_){
     minute = minute_;
 }
 
-bool Date::operator<=(Date &d2){
+bool Date::operator<=(Date &d2) const{
     if(year > d2.year)
         return false;
     if(month > d2.month)
@@ -68,7 +68,7 @@ bool Date::operator<=(Date &d2){
     return true;
 }
 
-bool Date::operator>=(Date &d2){
+bool Date::operator>=(Date &d2) const{
     if(year < d2.year)
         return false;
     if(month < d2.month)
@@ -83,3 +83,36 @@ bool Date::operator>=(Date &d2){
     return true;
 }
 
+void Date::operator=(Date &d2){
+    year = d2.year;
+    month = d2.month;
+    day = d2.day;
+    hour = d2.hour;
+    minute = d2.minute;
+
+    weedDay = d2.weedDay;
+}
+
+int Date::getYear() const{
+    return year;
+}
+
+int Date::getMonth() const{
+    return month;
+}
+
+int Date::getDay() const{
+    return day;
+}
+
+int Date::getHour() const{
+    return hour;
+}
+
+int Date::getMinute() const{
+    return minute;
+}
+
+WeekDay Date::getWeekDay() const{
+    return weedDay;
+}

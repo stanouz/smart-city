@@ -4,14 +4,15 @@ Voiture::Voiture(){
 
 }
 
+Voiture::Voiture(Voiture & v){
+    immatriculation = v.immatriculation;
+}
+
 Voiture::~Voiture(){
 
 }
 
-string Voiture::getImat() const{
+int Voiture::getImat() const{
     return immatriculation;
 }
 
-void Voiture::setImat(string & imat){
-    immatriculation = imat;
-}

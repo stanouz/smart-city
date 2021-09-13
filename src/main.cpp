@@ -1,23 +1,18 @@
 #include <iostream>
-#include "Date.h"
-#include "Voiture.h"
+#include "Place.h"
 
 using namespace std;
 
 int main(int argc, char ** argv){
-    Date d1;
-    Date d2;
-    Date d3;
+    Date d1, d2;
+    d2.setDate(23, 9, 2021);
 
-    d1.setDate(3, 9, 2021);
-    d3.setDate(13, 9, 2021);
+    Voiture v;
 
-    cout << d2.isBetween(d1, d3) << endl;
-    cout << d2.isBetween(d2, d3) << endl;
-    cout << d2.isBetween(d3, d1) << endl;
-    cout << d3.isBetween(d1, d2) << endl;
-    
-    Voiture voiture;
+    Reservation r;    
+    Reservation r1(d1, d2, v);
+
+    Place p;
 
     return 0;
 }
