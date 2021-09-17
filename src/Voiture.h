@@ -2,6 +2,8 @@
 #define __VOITURE__
 
 #include <string>
+#include "Date.h"
+
 
 using namespace std;
 
@@ -11,6 +13,7 @@ public:
     Voiture(Voiture & v);
     ~Voiture();
     string getImat() const;
+
 
 private:
     string immatriculation;

@@ -15,4 +15,3 @@ Voiture::~Voiture(){
 string Voiture::getImat() const{
     return immatriculation;
 }
-

@@ -17,6 +17,7 @@ private:
     int nbPlaces;
     map<string, int> historiqueClient;
     vector<Place> places;
+    int grilleTarifaire[7][24];
 };
 
 
