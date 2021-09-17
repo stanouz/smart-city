@@ -17,6 +17,7 @@ private:
     int nbPlaces;
     map<string, int> historiqueClient;
     vector<Place> places;
+    bool IsCompleted; // pour voir si on a des places disponibles ou pas 
 };
 
 
