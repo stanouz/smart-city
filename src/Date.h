@@ -1,3 +1,6 @@
+#ifndef __DATE_H_
+#define __DATE_H_
+
 enum WeekDay{monday, tuesday, wednesday, thursday, friday, saturday, sunday};
 
 class Date{
@@ -24,3 +27,6 @@ private:
     int hour, minute;
     WeekDay weedDay;
 };
+
+
+#endif
