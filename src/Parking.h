@@ -13,11 +13,13 @@ class Parking{
 public:
     Parking();
     ~Parking();
+    bool IsCompleted() const;
 private:
     int nbPlaces;
     map<string, int> historiqueClient;
     vector<Place> places;
     int grilleTarifaire[7][24];
+    bool isCompleted; // pour voir si on a des places disponibles ou pas 
 };
 
 
