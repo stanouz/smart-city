@@ -11,7 +11,6 @@ private:
 public:
     Argument();
     ~Argument();
-    float calculTaux();
 };
 
 #endif // ARGUMENT_H_INCLUDED
