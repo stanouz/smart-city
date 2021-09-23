@@ -10,7 +10,7 @@ int Place::getID() const{
     return ID;
 }
 
-vector<Reservation> Place::getReservations() const{
+const vector<Reservation> & Place::getReservations() const{
     return reservations;
 }
 

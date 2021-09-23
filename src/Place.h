@@ -12,7 +12,7 @@ public:
     ~Place();
     
     int getID() const;
-    vector<Reservation> getReservations() const;
+    const vector<Reservation>& getReservations() const;
     bool GetIsOccupied() const;
 
 private:
