@@ -8,7 +8,7 @@ OBJ_FILES+= obj/Parking.o obj/Message.o obj/Contenu.o obj/Agent.o
 
 # Compilator rules
 CC = g++
-CFLAGS = -Wall -ggdb -std=c++14
+CFLAGS = -Wall -ggdb -std=c++17
 COMPILATIONOBJ = $(CC) $(CFLAGS) -c $< -o $@ 
 
 

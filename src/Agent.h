@@ -12,4 +12,5 @@ public:
     ~Agent();
     inline static vector<Message> BoiteAuxLettres[2];
 };
+
 #endif

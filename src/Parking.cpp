@@ -22,5 +22,15 @@ bool Parking::IsCompleted() const{
 }
 
 void Parking::sendMessage(){
+    Message m;
+    string mess = "Bonjour";
+    m.contenuMessage.texte = mess;
+    BoiteAuxLettres[1].push_back(m);
+}
+
+string Parking::checkMessage(){
+    if(BoiteAuxLettres[0].size()>0)
+        return BoiteAuxLettres[0][0].contenuMessage.texte;
     
+    return "Rien";
 }

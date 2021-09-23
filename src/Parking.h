@@ -16,6 +16,8 @@ public:
     ~Parking();
     bool IsCompleted() const;
     void sendMessage();
+    string checkMessage();
+
 private:
     int nbPlaces;
     map<string, int> historiqueClient;
