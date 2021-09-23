@@ -20,5 +20,5 @@ void Voiture::sendMessage(){
     Message m;
     string mess = "Bonjour";
     m.contenuMessage.texte = mess;
-    //BoiteAuxLettres[0].push_back(m);
+    BoiteAuxLettres[0].push_back(m);
 }

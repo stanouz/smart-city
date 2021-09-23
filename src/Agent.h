@@ -10,7 +10,6 @@ class Agent{
 public:
     Agent();
     ~Agent();
-
-    static vector<Message> BoiteAuxLettres[2];
+    inline static vector<Message> BoiteAuxLettres[2];
 };
 #endif
