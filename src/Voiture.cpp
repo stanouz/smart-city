@@ -4,7 +4,7 @@ Voiture::Voiture(){
 
 }
 
-Voiture::Voiture(Voiture & v){
+Voiture::Voiture(Voiture & v): Agent(){
     immatriculation = v.immatriculation;
 }
 
