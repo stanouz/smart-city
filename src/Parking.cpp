@@ -20,3 +20,7 @@ Parking::~Parking(){
 bool Parking::IsCompleted() const{
     return isCompleted;
 }
+
+Parking::sendMessage(){
+    
+}

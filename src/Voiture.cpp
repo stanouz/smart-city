@@ -17,5 +17,8 @@ string Voiture::getImat() const{
 }
 
 Voiture::sendMessage(){
-    
+    Message m;
+    string mess = "Bonjour";
+    m.contenu.texte = mess;
+    BoiteAuxLettres[0].pushback(m);
 }
