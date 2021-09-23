@@ -3,7 +3,7 @@ EXEC = bin/exec
 
 # All object files
 OBJ_FILES = obj/main.o obj/Date.o obj/Voiture.o obj/Reservation.o obj/Place.o
-OBJ_FILES+= obj/Parking.o
+OBJ_FILES+= obj/Parking.o obj/Message.o obj/Contenu.o obj/Agent.o
 
 
 # Compilator rules
@@ -13,7 +13,7 @@ COMPILATIONOBJ = $(CC) $(CFLAGS) -c $< -o $@
 
 
 
-all: $(EXEC)
+all: clean $(EXEC)
 
 bin/exec : $(OBJ_FILES)
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS_SFML)
@@ -35,6 +35,15 @@ obj/Voiture.o : src/Voiture.cpp src/Voiture.h
 	$(COMPILATIONOBJ)
 
 obj/Date.o : src/Date.cpp src/Date.h 
+	$(COMPILATIONOBJ)
+
+obj/Agent.o : src/Agent.cpp src/Agent.h
+	$(COMPILATIONOBJ)
+
+obj/Message.o : src/Message.cpp src/Message.h
+	$(COMPILATIONOBJ)
+
+obj/Contenu.o : src/Contenu.cpp src/Contenu.h
 	$(COMPILATIONOBJ)
 
 
