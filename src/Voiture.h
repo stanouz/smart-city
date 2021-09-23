@@ -3,17 +3,18 @@
 
 #include <string>
 #include "Date.h"
+#include "Agent.h"
 
 
 using namespace std;
 
-class Voiture{
+class Voiture:public Agent{
 public:
     Voiture();
     Voiture(Voiture & v);
     ~Voiture();
     string getImat() const;
-
+    void sendMessage();
 
 private:
     string immatriculation;

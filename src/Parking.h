@@ -8,12 +8,13 @@
 
 using namespace std;
 
-class Parking{
+class Parking:public Agent{
     
 public:
     Parking();
     ~Parking();
     bool IsCompleted() const;
+    void sendMessage();
 private:
     int nbPlaces;
     map<string, int> historiqueClient;
