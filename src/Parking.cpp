@@ -21,6 +21,6 @@ bool Parking::IsCompleted() const{
     return isCompleted;
 }
 
-Parking::sendMessage(){
+void Parking::sendMessage(){
     
 }

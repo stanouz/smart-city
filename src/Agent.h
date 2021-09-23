@@ -1,13 +1,16 @@
 #ifndef __AGENT__
 #define __AGENT__
 
-#include "Parking.h"
-#include "Voiture.h"
 #include "Message.h"
 
+#include <vector>
+using namespace std;
+
 class Agent{
-    Voiture v;
-    Parking p;
-    vector<Message>[2] BoiteAuxLettres;
+public:
+    Agent();
+    ~Agent();
+
+    static vector<Message> BoiteAuxLettres[2];
 };
 #endif

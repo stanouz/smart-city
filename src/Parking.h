@@ -5,10 +5,11 @@
 #include <string>
 #include <vector>
 #include "Place.h"
+#include "Agent.h"
 
 using namespace std;
 
-class Parking:public Agent{
+class Parking: public Agent{
     
 public:
     Parking();

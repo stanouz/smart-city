@@ -4,8 +4,13 @@
 #include <string>
 #include "Date.h"
 
+using namespace std;
+
 class Contenu{
-    
+public:
+    Contenu();
+    ~Contenu();
+
     /*string objet;
     Date date;
     float prix;*/

@@ -13,7 +13,7 @@ COMPILATIONOBJ = $(CC) $(CFLAGS) -c $< -o $@
 
 
 
-all: clean $(EXEC)
+all: $(EXEC)
 
 bin/exec : $(OBJ_FILES)
 	$(CC) $(CFLAGS) $^ -o $@ $(LIBS_SFML)

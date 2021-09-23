@@ -5,7 +5,10 @@
 #include "Contenu.h"
 
 class Message{
-    
+public:
+    Message();
+    ~Message();
+
     string emmeteur;
     string recepteur;
     Contenu contenuMessage;

@@ -16,9 +16,9 @@ string Voiture::getImat() const{
     return immatriculation;
 }
 
-Voiture::sendMessage(){
+void Voiture::sendMessage(){
     Message m;
     string mess = "Bonjour";
-    m.contenu.texte = mess;
-    BoiteAuxLettres[0].pushback(m);
+    m.contenuMessage.texte = mess;
+    //BoiteAuxLettres[0].push_back(m);
 }
