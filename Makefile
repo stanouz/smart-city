@@ -20,7 +20,7 @@ bin/exec : $(OBJ_FILES)
 
 # Objects
 obj/main.o: src/main.cpp src/Date.h src/Voiture.h
-	$(COMPILATIONOBJ) -pthread
+	$(COMPILATIONOBJ) -lpthread
 
 obj/Parking.o : src/Parking.cpp src/Parking.h
 	$(COMPILATIONOBJ)
