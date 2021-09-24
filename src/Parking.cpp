@@ -45,12 +45,8 @@ string Parking::checkMessage(){
 }
 
 void Parking::Boucle(){
-    time_t currentTime = time(0);
-    tm * ltm = localtime(&currentTime);
-    int sec;
 
     while(true){
-        sec = ltm->tm_sec;
         
         cout << checkMessage() << endl;
 

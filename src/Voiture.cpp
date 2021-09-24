@@ -29,17 +29,12 @@ void Voiture::sendMessage(){
 
 void Voiture::Boucle(){
     
-    time_t currentTime = time(0);
-    tm * ltm = localtime(&currentTime);
-    int sec;
-    
     for(int i=0; i<5; i++){
         sendMessage();
     }
 
 
     while(true){
-        sec = ltm->tm_sec;
         
         sendMessage();
         
