@@ -61,3 +61,16 @@ void Parking::Boucle(){
         usleep(600000);
     }
 }
+//cette fonction nous permet de voir si le parking est complet ou pas.
+bool Parking::IsCompleted(int Place, int NbPlace) const {
+ int compteur=0 ;
+ int i=0,complet=1;
+    while(i <=NbPlace || complet == 1 ){
+
+        if(!isOccupied(Place[i])){
+            complet=0;
+        }
+    }
+
+   return complet;
+}
