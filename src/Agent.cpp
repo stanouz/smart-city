@@ -1,7 +1,7 @@
 #include "Agent.h"
 
 Agent::Agent(){
-    lastRead=0;
+    lastRead=-1;
 }
 
 Agent::~Agent(){
