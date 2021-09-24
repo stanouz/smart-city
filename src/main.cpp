@@ -23,7 +23,7 @@ int main(int argc, char ** argv){
     thread thread_voiture(BoucleVoiture, ref(v));
     thread thread_parking(BoucleParking, ref(p));
     
-
+    cout << "ok" << endl;
     thread_voiture.join();
     thread_parking.join();
 
