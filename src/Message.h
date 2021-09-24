@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Contenu.h"
+using namespace std;
 
 class Message{
 public:

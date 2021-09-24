@@ -34,7 +34,7 @@ bool Parking::IsCompleted() const{
 void Parking::sendMessage(string id_destinataire){
     Message m;
     string mess = "Bonjour";
-    m.contenuMessage.texte = mess;
+    m.contenuMessage.setTexte(mess);
     m.emmeteur = ID;
     m.recepteur = id_destinataire;
     BoiteAuxLettres[id_destinataire].push_back(m);
@@ -43,7 +43,7 @@ void Parking::sendMessage(string id_destinataire){
 string Parking::checkMessage(){
     int size = BoiteAuxLettres[ID].size();
     if(size>0 && (size-1)!=lastRead){
-        string msg = BoiteAuxLettres[ID][lastRead].contenuMessage.texte+" "+to_string(lastRead);
+        string msg = BoiteAuxLettres[ID][lastRead].contenuMessage.getTexte()+" "+to_string(lastRead);
         string emmeteur = BoiteAuxLettres[ID][lastRead].emmeteur;
         lastRead ++;
         return "Reçu de " +emmeteur + " : " + msg;

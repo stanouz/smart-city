@@ -27,7 +27,7 @@ string Voiture::getImat() const{
 void Voiture::sendMessage(string id_destinataire){
     Message m;
     string mess = "Bonjour";
-    m.contenuMessage.texte = mess;
+    m.contenuMessage.setTexte(mess);
     m.emmeteur = immatriculation;
     m.recepteur = id_destinataire;
     BoiteAuxLettres[id_destinataire].push_back(m);
