@@ -13,9 +13,10 @@ class Parking: public Agent{
     
 public:
     Parking();
+    Parking(string id);
     ~Parking();
     bool IsCompleted() const;
-    void sendMessage();
+    void sendMessage(string id_destinataire);
     string checkMessage();
     void Boucle();
 
@@ -25,6 +26,7 @@ private:
     vector<Place> places;
     //int grilleTarifaire[7][24];
     bool isCompleted; // pour voir si on a des places disponibles ou pas 
+    string ID;
 };
 
 

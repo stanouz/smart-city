@@ -12,6 +12,10 @@ Voiture::Voiture(Voiture & v): Agent(){
     immatriculation = v.immatriculation;
 }
 
+Voiture::Voiture(string immat){
+    immatriculation = immat;
+}
+
 Voiture::~Voiture(){
 
 }
@@ -20,23 +24,23 @@ string Voiture::getImat() const{
     return immatriculation;
 }
 
-void Voiture::sendMessage(){
+void Voiture::sendMessage(string id_destinataire){
     Message m;
     string mess = "Bonjour";
     m.contenuMessage.texte = mess;
-    BoiteAuxLettres[0].push_back(m);
+    BoiteAuxLettres[id_destinataire].push_back(m);
 }
 
 void Voiture::Boucle(){
     
     for(int i=0; i<5; i++){
-        sendMessage();
+        sendMessage("P1");
     }
 
 
     while(true){
         
-        sendMessage();
+        sendMessage("P1");
         
         usleep(1600000);
     }

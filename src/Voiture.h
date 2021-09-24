@@ -12,9 +12,10 @@ class Voiture:public Agent{
 public:
     Voiture();
     Voiture(Voiture & v);
+    Voiture(string immat);
     ~Voiture();
     string getImat() const;
-    void sendMessage();
+    void sendMessage(string id_destinataire);
     void Boucle();
 
 private:

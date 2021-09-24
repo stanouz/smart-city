@@ -4,6 +4,7 @@
 #include "Message.h"
 
 #include <vector>
+#include <map>
 #include <thread>
 
 using namespace std;
@@ -12,7 +13,7 @@ class Agent{
 public:
     Agent();
     ~Agent();
-    inline static vector<Message> BoiteAuxLettres[2];
+    inline static map<string, vector<Message> > BoiteAuxLettres;
     int lastRead;
 };
 

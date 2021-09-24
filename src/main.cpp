@@ -19,8 +19,8 @@ void BoucleParking(Parking & p){
 
 int main(int argc, char ** argv){
 
-    Parking p;
-    Voiture v;
+    Parking p("P1");
+    Voiture v("AAA-123-AAA");
 
     thread thread_voiture(BoucleVoiture, ref(v));
     thread thread_parking(BoucleParking, ref(p));

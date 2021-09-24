@@ -19,6 +19,10 @@ Parking::Parking(){
     
 }
 
+Parking::Parking(string id){
+    ID = id;
+}
+
 Parking::~Parking(){
 
 }
@@ -27,18 +31,18 @@ bool Parking::IsCompleted() const{
     return isCompleted;
 }
 
-void Parking::sendMessage(){
+void Parking::sendMessage(string id_destinataire){
     Message m;
     string mess = "Bonjour";
     m.contenuMessage.texte = mess;
-    BoiteAuxLettres[1].push_back(m);
+    BoiteAuxLettres[id_destinataire].push_back(m);
 }
 
 string Parking::checkMessage(){
-    int size = BoiteAuxLettres[0].size();
+    int size = BoiteAuxLettres[ID].size();
     if(size>0 && (size-1)!=lastRead){
         lastRead ++;
-        return BoiteAuxLettres[0][lastRead].contenuMessage.texte+" "+to_string(lastRead);
+        return BoiteAuxLettres[ID][lastRead].contenuMessage.texte+" "+to_string(lastRead);
     }
         
     return "Pas de nouveau message : "+to_string(lastRead)+" messages déjà lu.";
