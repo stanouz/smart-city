@@ -40,7 +40,7 @@ void Voiture::Boucle(){
 
     while(true){
         sec = ltm->tm_sec;
-        cout << "Last read voiture =" << lastRead << endl;
+        
         sendMessage();
         
         usleep(1600000);
