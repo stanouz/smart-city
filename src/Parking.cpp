@@ -46,7 +46,7 @@ string Parking::checkMessage(){
         string msg = BoiteAuxLettres[ID][lastRead].contenuMessage.getTexte()+" "+to_string(lastRead);
         string emmeteur = BoiteAuxLettres[ID][lastRead].emmeteur;
         lastRead ++;
-        return "Reçu de " +emmeteur + " : " + msg;
+        return ID + " : Reçu de " +emmeteur + " : " + msg;
     }
         
     return ID + " : Pas de nouveau message : "+to_string(lastRead)+" messages déjà lu.";
@@ -60,4 +60,17 @@ void Parking::Boucle(){
 
         usleep(600000);
     }
+}
+//cette fonction nous permet de voir si le parking est complet ou pas.
+bool Parking::IsCompleted(int Place, int NbPlace) const {
+ int compteur=0 ;
+ int i=0,complet=1;
+    while(i <=NbPlace || complet == 1 ){
+
+        if(!isOccupied(Place[i])){
+            complet=0;
+        }
+    }
+
+   return complet;
 }
