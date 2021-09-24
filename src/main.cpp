@@ -3,28 +3,20 @@
 #include <pthread.h>
 
 #include "Parking.h"
+#include "Voiture.h"
 #include "time.h"
 
 
 using namespace std;
-
-void BoucleVoiture(Voiture & v){
-    v.Boucle();
-}
-
-void BoucleParking(Parking & p){
-    p.Boucle();
-}
 
 
 int main(int argc, char ** argv){
 
     Parking p("P1");
     Voiture v("AAA-123-AAA");
-
-    thread thread_voiture(BoucleVoiture, ref(v));
-    thread thread_parking(BoucleParking, ref(p));
     
+    thread thread_voiture(&Voiture::Boucle, ref(v));
+    thread thread_parking(&Parking::Boucle, ref(p));
 
     thread_voiture.join();
     thread_parking.join();

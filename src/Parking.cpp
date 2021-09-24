@@ -46,7 +46,7 @@ string Parking::checkMessage(){
         string msg = BoiteAuxLettres[ID][lastRead].contenuMessage.texte+" "+to_string(lastRead);
         string emmeteur = BoiteAuxLettres[ID][lastRead].emmeteur;
         lastRead ++;
-        return "Reçu de " +emmeteur + " : " + msg;
+        return ID + " : Reçu de " +emmeteur + " : " + msg;
     }
         
     return ID + " : Pas de nouveau message : "+to_string(lastRead)+" messages déjà lu.";
