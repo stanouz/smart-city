@@ -17,12 +17,13 @@ public:
     bool IsCompleted() const;
     void sendMessage();
     string checkMessage();
+    void Boucle();
 
 private:
     int nbPlaces;
     map<string, int> historiqueClient;
     vector<Place> places;
-    int grilleTarifaire[7][24];
+    //int grilleTarifaire[7][24];
     bool isCompleted; // pour voir si on a des places disponibles ou pas 
 };
 

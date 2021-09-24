@@ -15,6 +15,7 @@ public:
     ~Voiture();
     string getImat() const;
     void sendMessage();
+    void Boucle();
 
 private:
     string immatriculation;

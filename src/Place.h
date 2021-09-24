@@ -19,7 +19,6 @@ private:
     int ID;
     vector<Reservation> reservations;
     bool isOccupied;
-
 };
 
 

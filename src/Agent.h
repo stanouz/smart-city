@@ -13,6 +13,7 @@ public:
     Agent();
     ~Agent();
     inline static vector<Message> BoiteAuxLettres[2];
+    int lastRead;
 };
 
 #endif
