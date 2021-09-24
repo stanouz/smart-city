@@ -16,11 +16,11 @@ COMPILATIONOBJ = $(CC) $(CFLAGS) -c $< -o $@
 all: $(EXEC)
 
 bin/exec : $(OBJ_FILES)
-	$(CC) $(CFLAGS) $^ -o $@ $(LIBS_SFML)
+	$(CC) $(CFLAGS) $^ -lpthread -o $@ 
 
 # Objects
 obj/main.o: src/main.cpp src/Date.h src/Voiture.h
-	$(COMPILATIONOBJ) -pthread
+	$(COMPILATIONOBJ)
 
 obj/Parking.o : src/Parking.cpp src/Parking.h
 	$(COMPILATIONOBJ)
