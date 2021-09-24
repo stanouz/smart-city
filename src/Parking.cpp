@@ -35,17 +35,21 @@ void Parking::sendMessage(string id_destinataire){
     Message m;
     string mess = "Bonjour";
     m.contenuMessage.texte = mess;
+    m.emmeteur = ID;
+    m.recepteur = id_destinataire;
     BoiteAuxLettres[id_destinataire].push_back(m);
 }
 
 string Parking::checkMessage(){
     int size = BoiteAuxLettres[ID].size();
     if(size>0 && (size-1)!=lastRead){
+        string msg = BoiteAuxLettres[ID][lastRead].contenuMessage.texte+" "+to_string(lastRead);
+        string emmeteur = BoiteAuxLettres[ID][lastRead].emmeteur;
         lastRead ++;
-        return BoiteAuxLettres[ID][lastRead].contenuMessage.texte+" "+to_string(lastRead);
+        return "Reçu de " +emmeteur + " : " + msg;
     }
         
-    return "Pas de nouveau message : "+to_string(lastRead)+" messages déjà lu.";
+    return ID + " : Pas de nouveau message : "+to_string(lastRead)+" messages déjà lu.";
 }
 
 void Parking::Boucle(){

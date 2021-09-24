@@ -28,20 +28,21 @@ void Voiture::sendMessage(string id_destinataire){
     Message m;
     string mess = "Bonjour";
     m.contenuMessage.texte = mess;
+    m.emmeteur = immatriculation;
+    m.recepteur = id_destinataire;
     BoiteAuxLettres[id_destinataire].push_back(m);
 }
 
 void Voiture::Boucle(){
     
-    for(int i=0; i<5; i++){
-        sendMessage("P1");
-    }
-
-
+    int i=0;
+    
     while(true){
         
+        cout << immatriculation << " envoie un msg : "<< i << endl;
         sendMessage("P1");
         
         usleep(1600000);
+        i++;
     }
 }
