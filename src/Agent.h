@@ -13,7 +13,6 @@ class Agent{
 public:
     Agent();
     ~Agent();
-private:
     inline static map<string, vector<Message> > BoiteAuxLettres;
     int lastRead;
 };
