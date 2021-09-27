@@ -27,10 +27,6 @@ Parking::~Parking(){
 
 }
 
-bool Parking::IsCompleted() const{
-    return isCompleted;
-}
-
 void Parking::sendMessage(string id_destinataire){
     Message m;
     string mess = "Bonjour";
@@ -61,16 +57,13 @@ void Parking::Boucle(){
         usleep(600000);
     }
 }
-//cette fonction nous permet de voir si le parking est complet ou pas.
-bool Parking::IsCompleted(int Place, int NbPlace) const {
- int compteur=0 ;
- int i=0,complet=1;
-    while(i <=NbPlace || complet == 1 ){
 
-        if(!isOccupied(Place[i])){
-            complet=0;
+bool Parking::IsFull() const{
+    for(int i=0; i<places.size(); i++){
+        if(places[i].GetIsOccupied()==false){
+            return true;
         }
     }
-
-   return complet;
+    return false;
 }
+
