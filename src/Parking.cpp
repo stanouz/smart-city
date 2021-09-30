@@ -59,7 +59,7 @@ void Parking::Boucle(){
 }
 
 bool Parking::IsFull() const{
-    for(int i=0; i<places.size(); i++){
+    for(int i=0; i<(int)places.size(); i++){
         if(places[i].GetIsOccupied()==false){
             return true;
         }
