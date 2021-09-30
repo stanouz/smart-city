@@ -3,15 +3,18 @@
 
 #include <string>
 #include "Contenu.h"
-using namespace std;
+
+enum Performatif{DemandePlace, Reponse};
 
 class Message{
 public:
     Message();
+    Message(string emmeteur_, Performatif perfo);
     ~Message();
 
     string emmeteur;
     string recepteur;
+    Performatif performatif;
     Contenu contenuMessage;
 };
 
