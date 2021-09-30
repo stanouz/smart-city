@@ -4,8 +4,7 @@ Contenu::Contenu(){
 
 }
 
-Contenu::Contenu(string obj, Date d, float _prix, string t){
-    objet = obj;
+Contenu::Contenu(Date d, float _prix, string t){
     date = d;
     prix = _prix;
     texte = t;
@@ -15,10 +14,6 @@ Contenu::~Contenu(){
 
 }
 
-string Contenu:: getObjet()
-{
-    return objet;
-}
 
 Date Contenu:: getDate()
 {
@@ -35,10 +30,6 @@ string Contenu:: getTexte()
     return texte;
 }
 
-void Contenu:: setObjet(string obj)
-{
-    objet = obj;
-}
 
 void Contenu:: setDate(Date d)
 {
