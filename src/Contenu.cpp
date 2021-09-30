@@ -4,8 +4,9 @@ Contenu::Contenu(){
 
 }
 
-Contenu::Contenu(Date d, float _prix, string t){
-    date = d;
+Contenu::Contenu(Date dd, Date df, float _prix, string t){
+    dateDebut = dd;
+    dateFin = df;
     prix = _prix;
     texte = t;
 }
@@ -15,9 +16,14 @@ Contenu::~Contenu(){
 }
 
 
-Date Contenu:: getDate()
+Date Contenu:: getDateDebut()
 {
-    return date;
+    return dateDebut;
+}
+
+Date Contenu:: getDateFin()
+{
+    return dateFin;
 }
 
 float Contenu:: getPrix()
@@ -31,9 +37,14 @@ string Contenu:: getTexte()
 }
 
 
-void Contenu:: setDate(Date d)
+void Contenu:: setDateDebut(Date d)
 {
-    date = d;
+    dateDebut = d;
+}
+
+void Contenu:: setDateFin(Date d)
+{
+    dateFin = d;
 }
 
 void Contenu:: setPrix(float p)

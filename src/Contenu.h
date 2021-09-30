@@ -9,18 +9,21 @@ using namespace std;
 class Contenu{
 public:
     Contenu();
-    Contenu( Date d, float _prix, string t);
+    Contenu( Date dd, Date df, float _prix, string t);
     ~Contenu();
-    Date getDate();
+    Date getDateDebut();
+    Date getDateFin();
     float getPrix();
     string getTexte();
 
-    void setDate(Date d);
+    void setDateDebut(Date d);
+    void setDateFin(Date d);
     void setPrix(float _prix);
     void setTexte(string t);
 
 private:
-    Date date;
+    Date dateDebut;
+    Date dateFin;
     float prix;
     string texte;
 };
