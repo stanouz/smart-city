@@ -12,7 +12,7 @@ using namespace std;
 
 
 int main(int argc, char ** argv){
-    /*
+    
     Parking p("P1");
     Voiture v("AAA-123-AAA");
     
@@ -21,12 +21,6 @@ int main(int argc, char ** argv){
 
     thread_voiture.join();
     thread_parking.join();
-    */
-    
-    Date d1;
-    Date d2(d1, 768);
-
-    cout << d2 << endl;
     
 
 

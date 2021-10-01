@@ -40,9 +40,11 @@ string Parking::checkMessage(){
     int size = BoiteAuxLettres[ID].size();
     if(size>0 && (size-1)!=lastRead){
         string msg = BoiteAuxLettres[ID][lastRead].contenuMessage.getTexte()+" "+to_string(lastRead);
+        Date date = BoiteAuxLettres[ID][lastRead].contenuMessage.getDateDebut();
+        float p = BoiteAuxLettres[ID][lastRead].contenuMessage.getPrix();
         string emmeteur = BoiteAuxLettres[ID][lastRead].emmeteur;
         lastRead ++;
-        return ID + " : Reçu de " +emmeteur + " : " + msg;
+        return ID + " : Reçu de " +emmeteur + " : " + msg + "Date :" + date.DateToString() + "Prix : " + to_string(p);
     }
         
     return ID + " : Pas de nouveau message : "+to_string(lastRead)+" messages déjà lu.";
