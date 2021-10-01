@@ -19,7 +19,7 @@ public:
     void sendMessage(string id_destinataire, Message & m);
     void negociation();
     string checkMessage();
-    Message & GetLastUnreadMsg() const;
+    Message & GetLastUnreadMsg();
     void Boucle();
 
 private:

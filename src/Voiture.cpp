@@ -64,10 +64,10 @@ void Voiture::Boucle(){
         int size = BoiteAuxLettres[immatriculation].size();
         int compteur=0;
        
-        if(size>0 && (size-1)!=lastRead){
+        if(size>0 && size!=lastRead){
             
             while(compteur<=3){
-                while(size-1==lastRead)
+                while(size==lastRead)
                 {
             
                 }

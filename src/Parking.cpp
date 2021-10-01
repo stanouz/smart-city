@@ -50,8 +50,9 @@ string Parking::checkMessage(){
 
 
 
-Message & Parking::GetLastUnreadMsg() const{
-    return BoiteAuxLettres[ID][lastRead];
+Message & Parking::GetLastUnreadMsg(){
+    lastRead++;
+    return BoiteAuxLettres[ID][lastRead-1];
 }
 
 
