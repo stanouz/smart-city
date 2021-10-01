@@ -24,26 +24,56 @@ string Voiture::getImat() const{
     return immatriculation;
 }
 
-void Voiture::sendMessage(string id_destinataire){
+void Voiture::sendMessage(string id_destinataire, Message m){
+    m.recepteur = id_destinataire;
+    BoiteAuxLettres[id_destinataire].push_back(m);
+}
+
+void Voiture::negociation(string id_destinataire)
+{
+    Message m(immatriculation, DemandePlace);
+    string non = "Non, -10%";
+    string oui = "Oui";
+    float alea = rand() % 100;
+    if(alea<=80)
+    {
+        m.contenuMessage.setTexte(non); 
+    }
+    else m.contenuMessage.setTexte(oui);
+
+    sendMessage(id_destinataire,m);
+}
+
+Message &Voiture::checkLastUnreadMessage() const
+{
+    return BoiteAuxLettres[immatriculation][lastRead];
+}
+
+
+void Voiture::Boucle(){
+    
     Message m(immatriculation, DemandePlace);
     string mess = "Bonjour";
     m.contenuMessage.setDateDebut(Date());
     m.contenuMessage.setPrix(6);
     m.contenuMessage.setTexte(mess);
-    m.recepteur = id_destinataire;
-    BoiteAuxLettres[id_destinataire].push_back(m);
-}
+    sendMessage("P1",m);
 
-void Voiture::Boucle(){
-    
-    int i=0;
-    
     while(true){
-        
-        cout << immatriculation << " envoie un msg : "<< i << endl;
-        sendMessage("P1");
+        int size = BoiteAuxLettres[immatriculation].size();
+        int compteur=0;
+        if(size>0 && (size-1)!=lastRead){
+            while(compteur<=3){
+                while(size-1==lastRead)
+                {
+            
+                }
+                Message read = checkLastUnreadMessage();
+                negociation(read.emmeteur);
+                compteur++;
+            }
+        }
         
         usleep(1600000);
-        i++;
     }
 }

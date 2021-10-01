@@ -15,8 +15,10 @@ public:
     Voiture(string immat);
     ~Voiture();
     string getImat() const;
-    void sendMessage(string id_destinataire);
+    void sendMessage(string id_destinataire, Message m);
     void Boucle();
+    void negociation(string id_destinataire);
+    Message &checkLastUnreadMessage() const;
 
 private:
     string immatriculation;
