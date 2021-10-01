@@ -35,6 +35,7 @@ void Voiture::negociation(string id_destinataire)
     string non = "Non, -10%";
     string oui = "Oui";
     float alea = rand() % 100;
+    m.performatif = DemandePlace;
     if(alea<=80)
     {
         m.contenuMessage.setTexte(non); 
@@ -46,6 +47,7 @@ void Voiture::negociation(string id_destinataire)
 
 Message &Voiture::checkLastUnreadMessage() 
 {
+    // Ajouter test pour pas sortir du tab
     lastRead++;
     return BoiteAuxLettres[immatriculation][lastRead-1];
 }
@@ -66,17 +68,22 @@ void Voiture::Boucle(){
         int compteur=0;
        
         if(size>0 && size!=lastRead){
-            
+           
             while(compteur<=3){
-                while(size==lastRead)
-                {
-            
-                }
                 Message read = checkLastUnreadMessage();
+                bool lu = true;
+                while(size==lastRead && !lu)
+                {
+                    read = checkLastUnreadMessage();
+                }
+                
+                read.display();
                 negociation(read.emmeteur);
                 cout << "Message " << compteur << endl;
                 compteur++;
                 usleep(1600000);
+                lu = false;
+                
             }
         }
         
