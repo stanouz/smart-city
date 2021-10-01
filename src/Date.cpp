@@ -2,6 +2,7 @@
 #include "time.h"
 
 #include<iostream>
+#include<string>
 
 Date::Date(){
     time_t currentTime = time(0);
@@ -22,9 +23,82 @@ Date::Date(){
         default: weedDay = monday; break;
     }
 
-    hour = ltm->tm_hour;
-    minute = ltm->tm_min;
+    // Les heures seront des minutes et les minutes des secondes
+    // pour accelerer le défilement du temps
+    hour = ltm->tm_min%24;
+    minute = ltm->tm_sec;
 }
+
+
+
+/*
+A FAIRE :
+    Gerer les depassement d'année
+    Changement de weedDay 
+*/
+
+Date::Date(Date & d, int hours){
+    *this = d;
+
+    hour = d.hour + hours;
+    if(hour >= 24){
+        int addDay = (hour+1 - hour%24) / 24;
+        day += addDay;
+        hour = hour % 24;
+        
+        // Nombre de jour minimum dans un mois 
+        if(day>28){
+            switch (month)
+            {
+            case 1 :
+            case 3 :
+            case 5 :
+            case 7 :
+            case 8 :
+            case 10 :
+            case 12 :
+                if(day>31){
+                    month++;
+                    day = day%31 + 1;
+                }
+                break;
+            
+            case 4 :
+            case 6 :
+            case 9 :
+            case 11 :
+                if(day>30){
+                    month++;
+                    day = day%30 + 1;
+                }
+                break;
+
+            case 2:
+                if(year%4==0){
+                    if(day>29){
+                        month++;
+                        day = day%29 + 1;
+                    }
+                }
+                else{
+                    if(day>28){
+                        month++;
+                        day = day%28 + 1;
+                    }
+                }
+                
+                break;
+
+             
+            default:
+                break;
+            }
+        }
+        
+
+    }
+}
+
 
 Date::~Date(){
 
@@ -92,6 +166,41 @@ void Date::operator=(Date &d2){
 
     weedDay = d2.weedDay;
 }
+
+std::ostream& operator<<(std::ostream& os, const Date& d){
+    std::string strWeekDay;
+    switch(d.getWeekDay())
+    {
+    case monday: strWeekDay="Monday";
+        break;
+
+    case tuesday: strWeekDay="Tuesday";
+        break;
+
+    case wednesday: strWeekDay="Wednesday";
+        break;
+
+    case thursday: strWeekDay="Thursday";
+        break;
+    
+    case friday: strWeekDay="Friday";
+        break;
+    
+    case saturday: strWeekDay="Saturday";
+        break;
+    
+    case sunday: strWeekDay="Sunday";
+        break;
+    
+    default: strWeekDay="Monday";
+        break;
+    }
+
+    os << strWeekDay << " " << d.getDay() << "/" << d.getMonth() << "/";
+    os << d.getYear() << " - "<< d.getHour() << ":" << d.getMinute();
+    return os;
+}
+
 
 int Date::getYear() const{
     return year;
