@@ -44,9 +44,10 @@ void Voiture::negociation(string id_destinataire)
     sendMessage(id_destinataire,m);
 }
 
-Message &Voiture::checkLastUnreadMessage() const
+Message &Voiture::checkLastUnreadMessage() 
 {
-    return BoiteAuxLettres[immatriculation][lastRead];
+    lastRead++;
+    return BoiteAuxLettres[immatriculation][lastRead-1];
 }
 
 

@@ -18,7 +18,7 @@ public:
     void sendMessage(string id_destinataire, Message m);
     void Boucle();
     void negociation(string id_destinataire);
-    Message &checkLastUnreadMessage() const;
+    Message &checkLastUnreadMessage();
 
 private:
     string immatriculation;
