@@ -1,7 +1,10 @@
 #include "Contenu.h"
 
-Contenu::Contenu(){
+#include<iostream>
 
+Contenu::Contenu(){
+    prix=0;
+    texte = "pas de texte";
 }
 
 Contenu::Contenu(Date dd, Date df, float _prix, string t){
@@ -15,6 +18,10 @@ Contenu::~Contenu(){
 
 }
 
+
+void Contenu::display() const{
+    cout << "Date début : " << dateDebut << " | Date Fin : " << dateFin << " | prix : " << prix << " | texte : " << texte << endl;
+}
 
 Date Contenu:: getDateDebut()
 {

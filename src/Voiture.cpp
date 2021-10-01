@@ -57,12 +57,15 @@ void Voiture::Boucle(){
     m.contenuMessage.setDateDebut(Date());
     m.contenuMessage.setPrix(6);
     m.contenuMessage.setTexte(mess);
+    m.performatif = DemandePlace;
     sendMessage("P1",m);
 
     while(true){
         int size = BoiteAuxLettres[immatriculation].size();
         int compteur=0;
+       
         if(size>0 && (size-1)!=lastRead){
+            
             while(compteur<=3){
                 while(size-1==lastRead)
                 {
@@ -70,7 +73,9 @@ void Voiture::Boucle(){
                 }
                 Message read = checkLastUnreadMessage();
                 negociation(read.emmeteur);
+                cout << "Message " << compteur << endl;
                 compteur++;
+                usleep(1600000);
             }
         }
         

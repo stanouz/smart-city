@@ -6,35 +6,33 @@
 using namespace std;
 
 Parking::Parking(){
-    /*
-    for(int j=0; j<24; j++){
-        grilleTarifaire[0][j]= 5;
-        grilleTarifaire[1][j]= 5;
-        grilleTarifaire[2][j]= 5;
-        grilleTarifaire[3][j]= 5;
-        grilleTarifaire[4][j]= 5;
-        grilleTarifaire[5][j]= 10;
-        grilleTarifaire[6][j]= 10;
-    }*/
-    
+    prix = 5.;
 }
 
 Parking::Parking(string id){
     ID = id;
+    prix = 5.;
 }
 
 Parking::~Parking(){
 
 }
 
-void Parking::sendMessage(string id_destinataire){
-    Message m;
-    string mess = "Bonjour";
-    m.contenuMessage.setTexte(mess);
-    m.emmeteur = ID;
+bool Parking::IsFull() const{
+    for(int i=0; i<(int)places.size(); i++){
+        if(places[i].GetIsOccupied()==false){
+            return true;
+        }
+    }
+    return false;
+}
+
+void Parking::sendMessage(string id_destinataire, Message & m){
     m.recepteur = id_destinataire;
     BoiteAuxLettres[id_destinataire].push_back(m);
 }
+
+
 
 string Parking::checkMessage(){
     int size = BoiteAuxLettres[ID].size();
@@ -50,22 +48,42 @@ string Parking::checkMessage(){
     return ID + " : Pas de nouveau message : "+to_string(lastRead)+" messages déjà lu.";
 }
 
+
+
+Message & Parking::GetLastUnreadMsg() const{
+    return BoiteAuxLettres[ID][lastRead];
+}
+
+
+
 void Parking::Boucle(){
 
     while(true){
+        int size = BoiteAuxLettres[ID].size();
+    
+        if(size > 0 && size!=lastRead){
+            Message recu = GetLastUnreadMsg();
+            recu.display();
+            if(recu.performatif==DemandePlace){
+                Message toSend(ID, Reponse);
+                float prixNegocie = recu.contenuMessage.getPrix();
+
+                if(prixNegocie >= prix*0.9){
+                    toSend.contenuMessage.setTexte("Ok");
+                }
+                else{
+                    toSend.contenuMessage.setTexte("Non");
+                }
+
+                
+                sendMessage(recu.emmeteur, toSend);
+            }
+        }
         
-        cout << checkMessage() << endl;
 
         usleep(600000);
     }
 }
 
-bool Parking::IsFull() const{
-    for(int i=0; i<(int)places.size(); i++){
-        if(places[i].GetIsOccupied()==false){
-            return true;
-        }
-    }
-    return false;
-}
+
 

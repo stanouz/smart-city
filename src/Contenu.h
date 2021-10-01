@@ -11,6 +11,10 @@ public:
     Contenu();
     Contenu( Date dd, Date df, float _prix, string t);
     ~Contenu();
+
+    void display() const;
+
+
     Date getDateDebut();
     Date getDateFin();
     float getPrix();

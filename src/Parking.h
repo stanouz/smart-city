@@ -16,14 +16,16 @@ public:
     Parking(string id);
     ~Parking();
     bool IsFull() const;
-    void sendMessage(string id_destinataire);
+    void sendMessage(string id_destinataire, Message & m);
+    void negociation();
     string checkMessage();
+    Message & GetLastUnreadMsg() const;
     void Boucle();
 
 private:
     map<string, int> historiqueClient;
     vector<Place> places;
-    //int grilleTarifaire[7][24];
+    float prix;
     string ID;
 };
 

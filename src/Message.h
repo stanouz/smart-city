@@ -11,6 +11,7 @@ public:
     Message();
     Message(string emmeteur_, Performatif perfo);
     ~Message();
+    void display() const;
 
     string emmeteur;
     string recepteur;
