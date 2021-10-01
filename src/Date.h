@@ -2,6 +2,9 @@
 #define __DATE_H_
 
 #include <iostream>
+#include <string>
+
+using namespace std;
 
 enum WeekDay{monday, tuesday, wednesday, thursday, friday, saturday, sunday};
 
@@ -17,7 +20,9 @@ public:
     bool operator<=(Date &d2) const;
     bool operator>=(Date &d2) const;
     void operator=(Date &d2);
-    friend std::ostream& operator<<(std::ostream& os, const Date & d);
+    friend ostream& operator<<(ostream& os, const Date & d);
+
+    string DateToString() const;
 
     int getYear() const;
     int getMonth() const;
@@ -29,7 +34,7 @@ public:
 private:
     int day, month, year;
     int hour, minute;
-    WeekDay weedDay;
+    WeekDay weekDay;
 };
 
 

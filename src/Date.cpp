@@ -13,14 +13,14 @@ Date::Date(){
     year = ltm->tm_year + 1900; // ltm->tm_year = time since 1900
 
     switch(ltm->tm_wday){
-        case 1: weedDay = monday; break;
-        case 2: weedDay = tuesday; break;
-        case 3: weedDay = wednesday; break;
-        case 4: weedDay = thursday; break;
-        case 5: weedDay = friday; break;
-        case 6: weedDay = saturday; break;
-        case 7: weedDay = sunday; break;
-        default: weedDay = monday; break;
+        case 1: weekDay = monday; break;
+        case 2: weekDay = tuesday; break;
+        case 3: weekDay = wednesday; break;
+        case 4: weekDay = thursday; break;
+        case 5: weekDay = friday; break;
+        case 6: weekDay = saturday; break;
+        case 7: weekDay = sunday; break;
+        default: weekDay = monday; break;
     }
 
     // Les heures seront des minutes et les minutes des secondes
@@ -164,12 +164,43 @@ void Date::operator=(Date &d2){
     hour = d2.hour;
     minute = d2.minute;
 
-    weedDay = d2.weedDay;
+    weekDay = d2.weekDay;
 }
 
 std::ostream& operator<<(std::ostream& os, const Date& d){
-    std::string strWeekDay;
-    switch(d.getWeekDay())
+    os << d.DateToString();
+    return os;
+}
+
+
+int Date::getYear() const{
+    return year;
+}
+
+int Date::getMonth() const{
+    return month;
+}
+
+int Date::getDay() const{
+    return day;
+}
+
+int Date::getHour() const{
+    return hour;
+}
+
+int Date::getMinute() const{
+    return minute;
+}
+
+WeekDay Date::getWeekDay() const{
+    return weekDay;
+}
+
+
+string Date::DateToString() const{
+    string strWeekDay;
+    switch(weekDay)
     {
     case monday: strWeekDay="Monday";
         break;
@@ -196,32 +227,7 @@ std::ostream& operator<<(std::ostream& os, const Date& d){
         break;
     }
 
-    os << strWeekDay << " " << d.getDay() << "/" << d.getMonth() << "/";
-    os << d.getYear() << " - "<< d.getHour() << ":" << d.getMinute();
-    return os;
-}
-
-
-int Date::getYear() const{
-    return year;
-}
-
-int Date::getMonth() const{
-    return month;
-}
-
-int Date::getDay() const{
-    return day;
-}
-
-int Date::getHour() const{
-    return hour;
-}
-
-int Date::getMinute() const{
-    return minute;
-}
-
-WeekDay Date::getWeekDay() const{
-    return weedDay;
+    string resultat = strWeekDay + " " + to_string(day) + "/" + to_string(month) + "/" + to_string(year)+ " - " + to_string(hour)+":"+to_string(minute);
+   
+    return resultat;
 }
