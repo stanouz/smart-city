@@ -1,7 +1,7 @@
 #ifndef __PLACE__
 #define __PLACE__
 
-#include "Reservation.h"
+#include "Date.h"
 #include <vector>
 
 using namespace std;
@@ -12,12 +12,14 @@ public:
     ~Place();
     
     int getID() const;
-    const vector<Reservation>& getReservations() const;
-    bool GetIsOccupied() const;
+    bool getIsOccupied() const;
+    Date getOccupiedUntil() const;
+    void updateStatus();
+
 
 private:
     int ID;
-    vector<Reservation> reservations;
+    Date occupiedUntil;
     bool isOccupied;
 };
 

@@ -10,10 +10,21 @@ int Place::getID() const{
     return ID;
 }
 
-const vector<Reservation> & Place::getReservations() const{
-    return reservations;
-}
-
-bool Place::GetIsOccupied() const{
+bool Place::getIsOccupied() const{
     return isOccupied;
 }
+
+Date Place::getOccupiedUntil() const{
+    return occupiedUntil;
+}
+
+
+void Place::updateStatus(){
+    if(isOccupied){
+        Date now;
+        if(now >= occupiedUntil){
+            isOccupied==false;
+        }
+    }
+}
+

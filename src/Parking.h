@@ -20,10 +20,10 @@ public:
     void negociation();
     string checkMessage();
     Message & GetLastUnreadMsg();
+    void updatePlacesStatus();
     void Boucle();
 
 private:
-    map<string, int> historiqueClient;
     vector<Place> places;
     float prix;
     string ID;

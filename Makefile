@@ -2,7 +2,7 @@
 EXEC = bin/exec
 
 # All object files
-OBJ_FILES = obj/main.o obj/Date.o obj/Voiture.o obj/Reservation.o obj/Place.o
+OBJ_FILES = obj/main.o obj/Date.o obj/Voiture.o obj/Place.o
 OBJ_FILES+= obj/Parking.o obj/Message.o obj/Contenu.o obj/Agent.o
 
 
@@ -26,9 +26,6 @@ obj/Parking.o : src/Parking.cpp src/Parking.h
 	$(COMPILATIONOBJ)
 
 obj/Place.o : src/Place.cpp src/Place.h
-	$(COMPILATIONOBJ)
-
-obj/Reservation.o : src/Reservation.cpp src/Reservation.h
 	$(COMPILATIONOBJ)
 
 obj/Voiture.o : src/Voiture.cpp src/Voiture.h

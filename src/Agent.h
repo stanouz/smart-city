@@ -13,6 +13,7 @@ class Agent{
 public:
     Agent();
     ~Agent();
+protected:
     inline static map<string, vector<Message> > BoiteAuxLettres;
     int lastRead;
 };

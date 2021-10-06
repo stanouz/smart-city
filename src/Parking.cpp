@@ -20,11 +20,17 @@ Parking::~Parking(){
 
 bool Parking::IsFull() const{
     for(int i=0; i<(int)places.size(); i++){
-        if(places[i].GetIsOccupied()==false){
+        if(places[i].getIsOccupied()==false){
             return true;
         }
     }
     return false;
+}
+
+void Parking::updatePlacesStatus(){
+    for(int i=0; i<places.size(); i++){
+        places[i].updateStatus();
+    }
 }
 
 void Parking::sendMessage(string id_destinataire, Message & m){
