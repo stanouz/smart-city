@@ -17,7 +17,6 @@ public:
 protected:
     inline static map<string, queue<Message> > BoiteAuxLettres;
     vector<Message> BoiteAuxLettresPrivé;
-    int lastRead;
 };
 
 #endif

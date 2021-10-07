@@ -40,6 +40,9 @@ void Parking::sendMessage(string id_destinataire, Message & m){
 
 
 
+
+
+
 bool Parking::GetLastUnreadMsg(Message & m){
     if(!BoiteAuxLettres[ID].empty()){
         m = BoiteAuxLettres[ID].front();
@@ -50,41 +53,46 @@ bool Parking::GetLastUnreadMsg(Message & m){
     return false;
 }
 
+void Parking::processusNegocitation(Message & recu){
+    int compteur =0;
+    bool propositionAccepte=false;
+    Message toSend(ID, Reponse);
+    while(compteur<3 && !propositionAccepte){
+        // Boucle bloquant l'attente d'un nouveau message
+        while(!GetLastUnreadMsg(recu) && compteur!=0){}
+
+        cout << "===== COMPTEUR " << compteur << "=======" << endl;
+        recu.display();
+        float prixDemande = recu.contenuMessage.getPrix();
+        
+        if(prixDemande >= prix*0.9){
+            toSend.contenuMessage.setTexte("Proposition acceptée");
+            propositionAccepte=true;
+        }
+        else{
+            toSend.contenuMessage.setTexte("Proposition refusée");
+        }
+                    
+        sendMessage(recu.emmeteur, toSend);
+        
+        compteur++;
+    }
+    cout << "Négociation terminée !" << endl;
+}
 
 
 void Parking::Boucle(){
 
     while(true){
-        int compteur =0;
         Message recu;
+
         if(GetLastUnreadMsg(recu)){
             
             if(recu.performatif==DemandePlace){
-                bool propositionAccepte = false;
-                while(compteur<3 && !propositionAccepte){
-                    recu.display();
-                    
-                
-                    Message toSend(ID, Reponse);
-                    float prixNegocie = recu.contenuMessage.getPrix();
-
-                    if(prixNegocie >= prix*0.9){
-                        toSend.contenuMessage.setTexte("Ok");
-                        propositionAccepte=true;
-                    }
-                    else{
-                        toSend.contenuMessage.setTexte("Non");
-                    }
-                    
-                    sendMessage(recu.emmeteur, toSend);
-
-                    while(!GetLastUnreadMsg(recu))
-                    {
-        
-                    }
-                    compteur++;
-                }
+                cout << "Debut négociation" << endl;
+                processusNegocitation(recu);
             }
+
         }
         
 
