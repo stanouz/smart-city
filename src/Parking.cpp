@@ -53,47 +53,62 @@ bool Parking::GetLastUnreadMsg(Message & m){
     return false;
 }
 
-void Parking::processusNegocitation(Message & recu){
+void Parking::processusNegocitation(){
+    Message recu;
+
+    // Si pas de message recu on quitte la fonction
+    if(!GetLastUnreadMsg(recu)){
+        return;
+    }
+    else{
+        // Si il y a un message recu mais ce n'est pas une demande de 
+        // place on quitte aussi
+        if(recu.performatif!=DemandePlace){
+            return;
+        }
+    }
+
+
     int compteur =0;
-    bool propositionAccepte=false;
     Message toSend(ID, Reponse);
-    while(compteur<3 && !propositionAccepte){
-        // Boucle bloquant l'attente d'un nouveau message
-        while(!GetLastUnreadMsg(recu) && compteur!=0){}
+    while(compteur<3){
+        
 
         cout << "===== COMPTEUR " << compteur << "=======" << endl;
         recu.display();
         float prixDemande = recu.contenuMessage.getPrix();
         
         if(prixDemande >= prix*0.9){
+            // Si la proposition est accepté on previent la voiture et 
+            // on quitte le processus de négociation.
             toSend.contenuMessage.setTexte("Proposition acceptée");
-            propositionAccepte=true;
+            sendMessage(recu.emmeteur, toSend);
+
+            // Appeller une fonction qui gare la voiture à la première place 
+            // libre
+            return;
         }
         else{
             toSend.contenuMessage.setTexte("Proposition refusée");
+            sendMessage(recu.emmeteur, toSend);
         }
                     
-        sendMessage(recu.emmeteur, toSend);
+
+        // Boucle bloquant l'attente d'un nouveau message
+        while(!GetLastUnreadMsg(recu)){
+            cout << "Boucle d'attente" << endl;
+        }
         
         compteur++;
     }
-    cout << "Négociation terminée !" << endl;
 }
 
 
 void Parking::Boucle(){
 
     while(true){
-        Message recu;
 
-        if(GetLastUnreadMsg(recu)){
-            
-            if(recu.performatif==DemandePlace){
-                cout << "Debut négociation" << endl;
-                processusNegocitation(recu);
-            }
-
-        }
+        processusNegocitation();
         
 
         usleep(600000);
