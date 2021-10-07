@@ -21,6 +21,7 @@ public:
     bool GetLastUnreadMsg(Message & msg);
     void updatePlacesStatus();
     void Boucle();
+    void processusNegocitation();
 
 private:
     vector<Place> places;

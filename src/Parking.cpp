@@ -40,6 +40,9 @@ void Parking::sendMessage(string id_destinataire, Message & m){
 
 
 
+
+
+
 bool Parking::GetLastUnreadMsg(Message & m){
     if(!BoiteAuxLettres[ID].empty()){
         m = BoiteAuxLettres[ID].front();
@@ -50,42 +53,62 @@ bool Parking::GetLastUnreadMsg(Message & m){
     return false;
 }
 
+void Parking::processusNegocitation(){
+    Message recu;
+
+    // Si pas de message recu on quitte la fonction
+    if(!GetLastUnreadMsg(recu)){
+        return;
+    }
+    else{
+        // Si il y a un message recu mais ce n'est pas une demande de 
+        // place on quitte aussi
+        if(recu.performatif!=DemandePlace){
+            return;
+        }
+    }
+
+
+    int compteur =0;
+    Message toSend(ID, Reponse);
+    while(compteur<3){
+        
+
+        cout << "===== COMPTEUR " << compteur << "=======" << endl;
+        recu.display();
+        float prixDemande = recu.contenuMessage.getPrix();
+        
+        if(prixDemande >= prix*0.9){
+            // Si la proposition est accepté on previent la voiture et 
+            // on quitte le processus de négociation.
+            toSend.contenuMessage.setTexte("Proposition acceptée");
+            sendMessage(recu.emmeteur, toSend);
+
+            // Appeller une fonction qui gare la voiture à la première place 
+            // libre
+            return;
+        }
+        else{
+            toSend.contenuMessage.setTexte("Proposition refusée");
+            sendMessage(recu.emmeteur, toSend);
+        }
+                    
+
+        // Boucle bloquant l'attente d'un nouveau message
+        while(!GetLastUnreadMsg(recu)){
+            cout << "Boucle d'attente" << endl;
+        }
+        
+        compteur++;
+    }
+}
 
 
 void Parking::Boucle(){
 
     while(true){
-        int compteur =0;
-        Message recu;
-        if(GetLastUnreadMsg(recu)){
-            
-            if(recu.performatif==DemandePlace){
-                bool propositionAccepte = false;
-                while(compteur<3 && !propositionAccepte){
-                    recu.display();
-                    
-                
-                    Message toSend(ID, Reponse);
-                    float prixNegocie = recu.contenuMessage.getPrix();
 
-                    if(prixNegocie >= prix*0.9){
-                        toSend.contenuMessage.setTexte("Ok");
-                        propositionAccepte=true;
-                    }
-                    else{
-                        toSend.contenuMessage.setTexte("Non");
-                    }
-                    
-                    sendMessage(recu.emmeteur, toSend);
-
-                    while(!GetLastUnreadMsg(recu))
-                    {
-        
-                    }
-                    compteur++;
-                }
-            }
-        }
+        processusNegocitation();
         
 
         usleep(600000);
