@@ -35,30 +35,20 @@ void Parking::updatePlacesStatus(){
 
 void Parking::sendMessage(string id_destinataire, Message & m){
     m.recepteur = id_destinataire;
-    BoiteAuxLettres[id_destinataire].push_back(m);
+    BoiteAuxLettres[id_destinataire].push(m);
 }
 
 
 
-string Parking::checkMessage(){
-    int size = BoiteAuxLettres[ID].size();
-    if(size>0 && (size-1)!=lastRead){
-        string msg = BoiteAuxLettres[ID][lastRead].contenuMessage.getTexte()+" "+to_string(lastRead);
-        Date date = BoiteAuxLettres[ID][lastRead].contenuMessage.getDateDebut();
-        float p = BoiteAuxLettres[ID][lastRead].contenuMessage.getPrix();
-        string emmeteur = BoiteAuxLettres[ID][lastRead].emmeteur;
-        lastRead ++;
-        return ID + " : Reçu de " +emmeteur + " : " + msg + "Date :" + date.DateToString() + "Prix : " + to_string(p);
+bool Parking::GetLastUnreadMsg(Message & m){
+    if(!BoiteAuxLettres.empty()){
+        m = BoiteAuxLettres[ID].front();
+        BoiteAuxLettresPrivé.push_back(m);
+        BoiteAuxLettres[ID].pop();
+        cout << "Unread" << endl;
+        return true;
     }
-        
-    return ID + " : Pas de nouveau message : "+to_string(lastRead)+" messages déjà lu.";
-}
-
-
-
-Message & Parking::GetLastUnreadMsg(){
-    lastRead++;
-    return BoiteAuxLettres[ID][lastRead-1];
+    return false;
 }
 
 
@@ -66,10 +56,8 @@ Message & Parking::GetLastUnreadMsg(){
 void Parking::Boucle(){
 
     while(true){
-        int size = BoiteAuxLettres[ID].size();
-    
-        if(size > 0 && size!=lastRead){
-            Message recu = GetLastUnreadMsg();
+        Message recu;
+        if(GetLastUnreadMsg(recu)){
             recu.display();
             if(recu.performatif==DemandePlace){
                 Message toSend(ID, Reponse);
@@ -83,7 +71,7 @@ void Parking::Boucle(){
                 }
 
                 
-                sendMessage(recu.emmeteur, toSend);
+                //sendMessage(recu.emmeteur, toSend);
             }
         }
         

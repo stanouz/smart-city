@@ -26,7 +26,7 @@ string Voiture::getImat() const{
 
 void Voiture::sendMessage(string id_destinataire, Message m){
     m.recepteur = id_destinataire;
-    BoiteAuxLettres[id_destinataire].push_back(m);
+    BoiteAuxLettres[id_destinataire].push(m);
 }
 
 void Voiture::negociation(string id_destinataire)
@@ -45,11 +45,17 @@ void Voiture::negociation(string id_destinataire)
     sendMessage(id_destinataire,m);
 }
 
-Message &Voiture::checkLastUnreadMessage() 
+bool Voiture::checkLastUnreadMessage(Message & m) 
 {
-    // Ajouter test pour pas sortir du tab
-    lastRead++;
-    return BoiteAuxLettres[immatriculation][lastRead-1];
+    if(!BoiteAuxLettres.empty()){
+        m = BoiteAuxLettres[immatriculation].front();
+        BoiteAuxLettresPrivé.push_back(m);
+        BoiteAuxLettres[immatriculation].pop();
+        cout << "ok" << endl;
+        return true;
+    }
+    cout << "okkkk" << endl;
+    return false;
 }
 
 
@@ -64,28 +70,22 @@ void Voiture::Boucle(){
     sendMessage("P1",m);
 
     while(true){
-        int size = BoiteAuxLettres[immatriculation].size();
         int compteur=0;
-       
-        if(size>0 && size!=lastRead){
-           
-            while(compteur<=3){
-                Message read = checkLastUnreadMessage();
-                bool lu = true;
-                while(size==lastRead && !lu)
-                {
-                    read = checkLastUnreadMessage();
-                }
-                
-                read.display();
-                negociation(read.emmeteur);
-                cout << "Message " << compteur << endl;
-                compteur++;
-                usleep(1600000);
-                lu = false;
-                
+       /*
+        while(compteur<=3){
+            Message read;
+            while(!checkLastUnreadMessage(read))
+            {
+                cout << "pause" << endl;
             }
-        }
+                
+
+            read.display();
+            negociation(read.emmeteur);
+            cout << "Message " << compteur << endl;
+            compteur++;
+            usleep(1600000);
+        }*/
         
         usleep(1600000);
     }

@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <map>
+#include <queue>
 #include <thread>
 
 using namespace std;
@@ -14,7 +15,8 @@ public:
     Agent();
     ~Agent();
 protected:
-    inline static map<string, vector<Message> > BoiteAuxLettres;
+    inline static map<string, queue<Message> > BoiteAuxLettres;
+    vector<Message> BoiteAuxLettresPrivé;
     int lastRead;
 };
 

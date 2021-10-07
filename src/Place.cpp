@@ -23,7 +23,7 @@ void Place::updateStatus(){
     if(isOccupied){
         Date now;
         if(now >= occupiedUntil){
-            isOccupied==false;
+            isOccupied=false;
         }
     }
 }
