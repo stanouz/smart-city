@@ -9,13 +9,22 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include <SFML/Window.hpp>
 
 
 using namespace std;
+using namespace sf;
 
 
 int main(int argc, char ** argv){
+
+    //cration d'une fenetre de type RenderWindow
+    RenderWindow window(VideoMode(500,500,32),"mon titre");
     
+
+
+
+ 
     Parking p("P1");
     Voiture v("AAA-123-AAA");
     
