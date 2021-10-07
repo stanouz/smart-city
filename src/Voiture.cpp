@@ -32,17 +32,13 @@ void Voiture::sendMessage(string id_destinataire, Message m){
 void Voiture::negociation(string id_destinataire)
 {
     Message m(immatriculation, DemandePlace);
-    string non = "Non, -10%";
-    string oui = "Oui";
-    float alea = rand() % 100;
-    m.performatif = DemandePlace;
-    if(alea<=80)
-    {
-        m.contenuMessage.setTexte(non); 
-    }
-    else m.contenuMessage.setTexte(oui);
+    m = BoiteAuxLettresPrivé.back();
+    float prix_parking = m.contenuMessage.getPrix();
 
-    sendMessage(id_destinataire,m);
+    Message m_new(immatriculation, DemandePlace);
+    m_new.contenuMessage.setPrix(prix_parking-0.1*prix_parking);
+    m.contenuMessage.setTexte("Je vous fais une autre proposition");
+    sendMessage(id_destinataire,m_new);
 }
 
 bool Voiture::checkLastUnreadMessage(Message & m) 
@@ -61,7 +57,7 @@ void Voiture::premierMessage(string id_destinataire)
     Message m(immatriculation, DemandePlace);
     string mess = "Premier message de voiture";
     m.contenuMessage.setDateDebut(Date());
-    m.contenuMessage.setPrix(6);
+    m.contenuMessage.setPrix(3);
     m.contenuMessage.setTexte(mess);
     m.recepteur = id_destinataire;
     sendMessage(id_destinataire, m);
@@ -81,15 +77,15 @@ void Voiture::processusNegocitionVoiture(Message & recu)
         }
         if(read.performatif==Reponse)
         {
-            if(read.contenuMessage.getTexte()=="Ok")
+            if(read.contenuMessage.getTexte()=="Proposition acceptée")
             {
                 propositionAccepte = true;
                 cout << "Parking a accepter ma proposition" << endl;
             }
-            else if(read.contenuMessage.getTexte()=="Non")
+            else if(read.contenuMessage.getTexte()=="Proposition refusée")
             {
-                cout << "Le parking a refusé ma proposition" << endl;
                 read.display();
+                cout << "Le parking a refusé ma proposition" << endl;
                 negociation(read.emmeteur);
             } 
         

@@ -7,11 +7,13 @@ using namespace std;
 
 Parking::Parking(){
     prix = 5.;
+    nb_place_occup = 0;
 }
 
 Parking::Parking(string id){
     ID = id;
     prix = 5.;
+    nb_place_occup = 0;
 }
 
 Parking::~Parking(){
@@ -19,18 +21,21 @@ Parking::~Parking(){
 }
 
 bool Parking::IsFull() const{
-    for(int i=0; i<(int)places.size(); i++){
-        if(places[i].getIsOccupied()==false){
-            return true;
-        }
+    if(nb_place_occup<NB_PLACES_TOTAL){
+        return false;
     }
-    return false;
+    return true;
 }
 
 void Parking::updatePlacesStatus(){
-    for(int i=0; i<places.size(); i++){
-        places[i].updateStatus();
+    for(int i=0; i<NB_PLACES_TOTAL; i++){
+        tabPlaces[i].updateStatus();
     }
+}
+
+int Parking::pourcentageUtilisation()
+{
+    return nb_place_occup/NB_PLACES_TOTAL*100;
 }
 
 void Parking::sendMessage(string id_destinataire, Message & m){
@@ -38,7 +43,10 @@ void Parking::sendMessage(string id_destinataire, Message & m){
     BoiteAuxLettres[id_destinataire].push(m);
 }
 
-
+void Parking::placeVoiture()
+{
+    
+}
 
 
 
@@ -74,7 +82,7 @@ void Parking::processusNegocitation(){
     while(compteur<3){
         
 
-        cout << "===== COMPTEUR " << compteur << "=======" << endl;
+        cout << endl<<endl<<endl<<"===== COMPTEUR " << compteur << "=======" << endl;
         recu.display();
         float prixDemande = recu.contenuMessage.getPrix();
         
@@ -90,13 +98,14 @@ void Parking::processusNegocitation(){
         }
         else{
             toSend.contenuMessage.setTexte("Proposition refusée");
+            toSend.contenuMessage.setPrix(prix + 0.1*prix);
             sendMessage(recu.emmeteur, toSend);
         }
                     
 
         // Boucle bloquant l'attente d'un nouveau message
         while(!GetLastUnreadMsg(recu)){
-            cout << "Boucle d'attente" << endl;
+            //cout << "Boucle d'attente" << endl;
         }
         
         compteur++;
@@ -106,7 +115,7 @@ void Parking::processusNegocitation(){
 
 void Parking::Boucle(){
 
-    while(true){
+    while(!IsFull()){
 
         processusNegocitation();
         

@@ -21,6 +21,7 @@ private:
     int ID;
     Date occupiedUntil;
     bool isOccupied;
+    string occupant;
 };
 
 

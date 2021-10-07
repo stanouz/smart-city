@@ -22,9 +22,13 @@ public:
     void updatePlacesStatus();
     void Boucle();
     void processusNegocitation();
+    int pourcentageUtilisation();
+    void placeVoiture();
 
 private:
-    vector<Place> places;
+    Place tabPlaces[100];
+    const int NB_PLACES_TOTAL = 100;
+    int nb_place_occup;
     float prix;
     string ID;
 };
