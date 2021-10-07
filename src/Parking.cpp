@@ -55,22 +55,35 @@ bool Parking::GetLastUnreadMsg(Message & m){
 void Parking::Boucle(){
 
     while(true){
+        int compteur =0;
         Message recu;
         if(GetLastUnreadMsg(recu)){
-            recu.display();
+            
             if(recu.performatif==DemandePlace){
-                Message toSend(ID, Reponse);
-                float prixNegocie = recu.contenuMessage.getPrix();
-
-                if(prixNegocie >= prix*0.9){
-                    toSend.contenuMessage.setTexte("Ok");
-                }
-                else{
-                    toSend.contenuMessage.setTexte("Non");
-                }
-
+                bool propositionAccepte = false;
+                while(compteur<3 && !propositionAccepte){
+                    recu.display();
+                    
                 
-                sendMessage(recu.emmeteur, toSend);
+                    Message toSend(ID, Reponse);
+                    float prixNegocie = recu.contenuMessage.getPrix();
+
+                    if(prixNegocie >= prix*0.9){
+                        toSend.contenuMessage.setTexte("Ok");
+                        propositionAccepte=true;
+                    }
+                    else{
+                        toSend.contenuMessage.setTexte("Non");
+                    }
+                    
+                    sendMessage(recu.emmeteur, toSend);
+
+                    while(!GetLastUnreadMsg(recu))
+                    {
+        
+                    }
+                    compteur++;
+                }
             }
         }
         
