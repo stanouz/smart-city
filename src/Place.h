@@ -14,7 +14,8 @@ public:
     int getID() const;
     bool getIsOccupied() const;
     Date getOccupiedUntil() const;
-    void updateStatus();
+    bool updateStatus();
+    bool ajouteVoiture(string immat, Date dateDepart);
 
 
 private:

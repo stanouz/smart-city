@@ -29,13 +29,16 @@ bool Parking::IsFull() const{
 
 void Parking::updatePlacesStatus(){
     for(int i=0; i<NB_PLACES_TOTAL; i++){
-        tabPlaces[i].updateStatus();
+        if(tabPlaces[i].updateStatus()){
+            nb_place_occup--;
+        }
+        
     }
 }
 
-int Parking::pourcentageUtilisation()
+double Parking::pourcentageRemplissage()
 {
-    return nb_place_occup/NB_PLACES_TOTAL*100;
+    return (nb_place_occup/NB_PLACES_TOTAL)*100;
 }
 
 void Parking::sendMessage(string id_destinataire, Message & m){
@@ -43,9 +46,16 @@ void Parking::sendMessage(string id_destinataire, Message & m){
     BoiteAuxLettres[id_destinataire].push(m);
 }
 
-void Parking::placeVoiture()
-{
-    
+void Parking::ajouteVoiture(string occupant, Date dateDepart){
+
+    int i=0;
+    bool ajouter = false;
+    while(i<NB_PLACES_TOTAL && !ajouter){
+        ajouter = tabPlaces[i].ajouteVoiture(occupant, dateDepart);
+    }
+    if(ajouter){
+        nb_place_occup++;
+    }
 }
 
 
@@ -53,6 +63,7 @@ void Parking::placeVoiture()
 
 bool Parking::GetLastUnreadMsg(Message & m){
     if(!BoiteAuxLettres[ID].empty()){
+        cout << "Voiture à un nouveau msg" << endl;
         m = BoiteAuxLettres[ID].front();
         BoiteAuxLettresPrivé.push_back(m);
         BoiteAuxLettres[ID].pop();
@@ -76,6 +87,14 @@ void Parking::processusNegocitation(){
         }
     }
 
+    // Si le parking est plein on refuse directement 
+    if(IsFull()){
+        Message toSend(ID, Refut);
+        toSend.contenuMessage.setTexte("Désolé nous sommes complet");
+        sendMessage(recu.emmeteur, toSend);
+        return;
+    }
+
 
     int compteur =0;
     Message toSend(ID, Reponse);
@@ -92,8 +111,9 @@ void Parking::processusNegocitation(){
             toSend.contenuMessage.setTexte("Proposition acceptée");
             sendMessage(recu.emmeteur, toSend);
 
-            // Appeller une fonction qui gare la voiture à la première place 
-            // libre
+            // On ajoute la voiture dans le parking
+            ajouteVoiture(recu.emmeteur, recu.contenuMessage.getDateFin());
+
             return;
         }
         else{
@@ -115,10 +135,13 @@ void Parking::processusNegocitation(){
 
 void Parking::Boucle(){
 
-    while(!IsFull()){
+    cout << nb_place_occup << " place occupé" << endl;
 
+    while(!IsFull()){
+        Date now;
+        cout << nb_place_occup << " place occupé à " << now << endl;
         processusNegocitation();
-        
+        updatePlacesStatus();
 
         usleep(600000);
     }

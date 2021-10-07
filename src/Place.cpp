@@ -1,6 +1,8 @@
 #include "Place.h"
 
 Place::Place(){
+    isOccupied=false;
+    occupant="NULL";
 }
 
 Place::~Place(){
@@ -19,12 +21,26 @@ Date Place::getOccupiedUntil() const{
 }
 
 
-void Place::updateStatus(){
+bool Place::updateStatus(){
     if(isOccupied){
         Date now;
         if(now >= occupiedUntil){
             isOccupied=false;
+            occupant = "NULL";
+            return true;
         }
     }
+    return false;
+}
+
+
+bool Place::ajouteVoiture(string occupant_, Date dateDepart){
+    if(isOccupied){
+        return false;
+    }
+    occupiedUntil = dateDepart;
+    occupant = occupant_;
+    isOccupied = true;
+    return true;
 }
 

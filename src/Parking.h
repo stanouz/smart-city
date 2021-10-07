@@ -22,8 +22,8 @@ public:
     void updatePlacesStatus();
     void Boucle();
     void processusNegocitation();
-    int pourcentageUtilisation();
-    void placeVoiture();
+    double pourcentageRemplissage();
+    void ajouteVoiture(string occupant, Date dateDepart);
 
 private:
     Place tabPlaces[100];

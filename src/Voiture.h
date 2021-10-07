@@ -20,7 +20,7 @@ public:
     void negociation(string id_destinataire);
     bool checkLastUnreadMessage(Message & m);
     void premierMessage(string id_destinataire);
-    void processusNegocitionVoiture(Message & recu);
+    void processusNegocition();
 
 private:
     string immatriculation;

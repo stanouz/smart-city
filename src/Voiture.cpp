@@ -35,7 +35,15 @@ void Voiture::negociation(string id_destinataire)
     m = BoiteAuxLettresPrivé.back();
     float prix_parking = m.contenuMessage.getPrix();
 
+
+
+
     Message m_new(immatriculation, DemandePlace);
+
+    Date debut;
+    Date fin(debut, 1);
+    m_new.contenuMessage.setDateDebut(debut);
+    m_new.contenuMessage.setDateFin(fin);
     m_new.contenuMessage.setPrix(prix_parking-0.1*prix_parking);
     m.contenuMessage.setTexte("Je vous fais une autre proposition");
     sendMessage(id_destinataire,m_new);
@@ -56,38 +64,52 @@ void Voiture::premierMessage(string id_destinataire)
 {
     Message m(immatriculation, DemandePlace);
     string mess = "Premier message de voiture";
-    m.contenuMessage.setDateDebut(Date());
+    Date debut;
+    Date fin(debut,1);
+    m.contenuMessage.setDateDebut(debut);
+    m.contenuMessage.setDateFin(fin);
     m.contenuMessage.setPrix(3);
     m.contenuMessage.setTexte(mess);
     m.recepteur = id_destinataire;
     sendMessage(id_destinataire, m);
 }
 
-void Voiture::processusNegocitionVoiture(Message & recu)
+void Voiture::processusNegocition()
 {
+    Message recu;
+
+    // Si pas de message recu on quitte la fonction
+    if(!checkLastUnreadMessage(recu)){
+        return;
+    }
+    else{
+        // On verifie que le messagge est une réponse
+        if(recu.performatif!=Reponse){
+            return;
+        }
+    }
+    
     int compteur=0;
     bool propositionAccepte = false;
     while(compteur<3 && !propositionAccepte){
-        Message read;
 
-        //boucle d'attente d'un nouveau message
-        while(!checkLastUnreadMessage(read))
+        
+        if(recu.contenuMessage.getTexte()=="Proposition acceptée")
         {
-            
+            recu.display();
+            propositionAccepte = true;
+            cout << "Parking a accepter ma proposition" << endl;
         }
-        if(read.performatif==Reponse)
+        else if(recu.contenuMessage.getTexte()=="Proposition refusée")
         {
-            if(read.contenuMessage.getTexte()=="Proposition acceptée")
-            {
-                propositionAccepte = true;
-                cout << "Parking a accepter ma proposition" << endl;
-            }
-            else if(read.contenuMessage.getTexte()=="Proposition refusée")
-            {
-                read.display();
-                cout << "Le parking a refusé ma proposition" << endl;
-                negociation(read.emmeteur);
-            } 
+            recu.display();
+            cout << "Le parking a refusé ma proposition" << endl;
+            negociation(recu.emmeteur);
+        } 
+        
+        //boucle d'attente d'un nouveau message
+        while(!checkLastUnreadMessage(recu))
+        {
         
             compteur++;
             usleep(1600000);
@@ -99,10 +121,10 @@ void Voiture::processusNegocitionVoiture(Message & recu)
 void Voiture::Boucle(){
     
     premierMessage("P1");
-    Message recu;
+   
     while(true)
     {
-        processusNegocitionVoiture(recu);
+        processusNegocition();
         usleep(1600000);
     }
 }
