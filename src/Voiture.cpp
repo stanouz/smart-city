@@ -47,14 +47,12 @@ void Voiture::negociation(string id_destinataire)
 
 bool Voiture::checkLastUnreadMessage(Message & m) 
 {
-    if(!BoiteAuxLettres.empty()){
+    if(!BoiteAuxLettres[immatriculation].empty()){
         m = BoiteAuxLettres[immatriculation].front();
         BoiteAuxLettresPrivé.push_back(m);
         BoiteAuxLettres[immatriculation].pop();
-        cout << "ok" << endl;
         return true;
     }
-    cout << "okkkk" << endl;
     return false;
 }
 
@@ -71,12 +69,12 @@ void Voiture::Boucle(){
 
     while(true){
         int compteur=0;
-       /*
+       
         while(compteur<=3){
             Message read;
             while(!checkLastUnreadMessage(read))
             {
-                cout << "pause" << endl;
+        
             }
                 
 
@@ -85,7 +83,7 @@ void Voiture::Boucle(){
             cout << "Message " << compteur << endl;
             compteur++;
             usleep(1600000);
-        }*/
+        }
         
         usleep(1600000);
     }

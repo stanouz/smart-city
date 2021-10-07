@@ -41,11 +41,10 @@ void Parking::sendMessage(string id_destinataire, Message & m){
 
 
 bool Parking::GetLastUnreadMsg(Message & m){
-    if(!BoiteAuxLettres.empty()){
+    if(!BoiteAuxLettres[ID].empty()){
         m = BoiteAuxLettres[ID].front();
         BoiteAuxLettresPrivé.push_back(m);
         BoiteAuxLettres[ID].pop();
-        cout << "Unread" << endl;
         return true;
     }
     return false;
@@ -71,7 +70,7 @@ void Parking::Boucle(){
                 }
 
                 
-                //sendMessage(recu.emmeteur, toSend);
+                sendMessage(recu.emmeteur, toSend);
             }
         }
         
