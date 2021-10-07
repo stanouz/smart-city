@@ -12,11 +12,15 @@ CFLAGS = -Wall -ggdb -std=c++17
 COMPILATIONOBJ = $(CC) $(CFLAGS) -c $< -o $@ 
 
 
+INCLUDE_SFML = -I./extern/SFML/include 
+LIBS_SFML = -Lextern/SFML/lib -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system 
+
+
 
 all: $(EXEC)
 
 bin/exec : $(OBJ_FILES)
-	$(CC) $(CFLAGS) $^ -lpthread -o $@ 
+	$(CC) $(CFLAGS) $^ -lpthread -o $@ $(LIBS_SFML)
 
 # Objects
 obj/main.o: src/main.cpp src/Date.h src/Voiture.h
@@ -27,6 +31,7 @@ obj/Parking.o : src/Parking.cpp src/Parking.h
 
 obj/Place.o : src/Place.cpp src/Place.h
 	$(COMPILATIONOBJ)
+
 
 obj/Voiture.o : src/Voiture.cpp src/Voiture.h
 	$(COMPILATIONOBJ)

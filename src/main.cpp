@@ -7,6 +7,9 @@
 #include "Voiture.h"
 #include "time.h"
 
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
 
 using namespace std;
 
