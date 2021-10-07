@@ -56,35 +56,58 @@ bool Voiture::checkLastUnreadMessage(Message & m)
     return false;
 }
 
-
-void Voiture::Boucle(){
-    
+void Voiture::premierMessage(string id_destinataire)
+{
     Message m(immatriculation, DemandePlace);
-    string mess = "Bonjour";
+    string mess = "Premier message de voiture";
     m.contenuMessage.setDateDebut(Date());
     m.contenuMessage.setPrix(6);
     m.contenuMessage.setTexte(mess);
-    m.performatif = DemandePlace;
-    sendMessage("P1",m);
+    m.recepteur = id_destinataire;
+    sendMessage(id_destinataire, m);
+}
 
-    while(true){
-        int compteur=0;
-       
-        while(compteur<=3){
-            Message read;
-            while(!checkLastUnreadMessage(read))
+void Voiture::processusNegocitionVoiture(Message & recu)
+{
+    int compteur=0;
+    bool propositionAccepte = false;
+    while(compteur<3 && !propositionAccepte){
+        Message read;
+
+        //boucle d'attente d'un nouveau message
+        while(!checkLastUnreadMessage(read))
+        {
+            
+        }
+        if(read.performatif==Reponse)
+        {
+            if(read.contenuMessage.getTexte()=="Ok")
             {
-        
+                propositionAccepte = true;
+                cout << "Parking a accepter ma proposition" << endl;
             }
-                
-
-            read.display();
-            negociation(read.emmeteur);
-            cout << "Message " << compteur << endl;
+            else if(read.contenuMessage.getTexte()=="Non")
+            {
+                cout << "Le parking a refusé ma proposition" << endl;
+                read.display();
+                negociation(read.emmeteur);
+            } 
+        
             compteur++;
             usleep(1600000);
         }
         
+    }
+}
+
+void Voiture::Boucle(){
+    
+    premierMessage("P1");
+    Message recu;
+    while(true)
+    {
+        processusNegocitionVoiture(recu);
         usleep(1600000);
     }
 }
+    
