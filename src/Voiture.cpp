@@ -1,5 +1,7 @@
 #include "Voiture.h"
 #include <unistd.h>
+#include <stdlib.h>     
+#include <time.h>
 
 #include <iostream>
 
@@ -45,7 +47,7 @@ void Voiture::negociation(string id_destinataire)
     m_new.contenuMessage.setDateDebut(debut);
     m_new.contenuMessage.setDateFin(fin);
     m_new.contenuMessage.setPrix(prix_parking-0.1*prix_parking);
-    m.contenuMessage.setTexte("Je vous fais une autre proposition");
+    m_new.contenuMessage.setTexte("Je vous fais une autre proposition");
     sendMessage(id_destinataire,m_new);
 }
 
@@ -68,9 +70,12 @@ void Voiture::premierMessage(string id_destinataire)
     Date fin(debut,1);
     m.contenuMessage.setDateDebut(debut);
     m.contenuMessage.setDateFin(fin);
-    m.contenuMessage.setPrix(3);
     m.contenuMessage.setTexte(mess);
     m.recepteur = id_destinataire;
+
+    srand (time(NULL));
+    int prix_rand = (rand() % 5)+1;
+    m.contenuMessage.setPrix(prix_rand);
     sendMessage(id_destinataire, m);
 }
 
