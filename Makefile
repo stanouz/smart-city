@@ -26,23 +26,23 @@ bin/exec : $(OBJ_FILES)
 obj/main.o: src/main.cpp src/Date.h src/Voiture.h
 	$(COMPILATIONOBJ) 
 
-obj/Parking.o : src/Parking.cpp src/Parking.h
+obj/Parking.o : src/Parking.cpp src/Parking.h src/Agent.cpp src/Agent.h src/Place.cpp src/Place.h
 	$(COMPILATIONOBJ)
 
-obj/Place.o : src/Place.cpp src/Place.h
+obj/Place.o : src/Place.cpp src/Place.h src/Date.cpp src/Date.h
 	$(COMPILATIONOBJ)
 
 
-obj/Voiture.o : src/Voiture.cpp src/Voiture.h
+obj/Voiture.o : src/Voiture.cpp src/Voiture.h src/Agent.cpp src/Agent.h
 	$(COMPILATIONOBJ)
 
 obj/Date.o : src/Date.cpp src/Date.h 
 	$(COMPILATIONOBJ)
 
-obj/Agent.o : src/Agent.cpp src/Agent.h
+obj/Agent.o : src/Agent.cpp src/Agent.h src/Message.cpp src/Message.h
 	$(COMPILATIONOBJ)
 
-obj/Message.o : src/Message.cpp src/Message.h
+obj/Message.o : src/Message.cpp src/Message.h src/Contenu.cpp src/Contenu.h
 	$(COMPILATIONOBJ)
 
 obj/Contenu.o : src/Contenu.cpp src/Contenu.h
