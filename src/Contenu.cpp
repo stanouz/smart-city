@@ -8,7 +8,7 @@ Contenu::Contenu(){
     texte = "pas de texte";
 }
 
-Contenu::Contenu(int d, float _prix, string t){
+Contenu::Contenu(double d, float _prix, string t){
     duree = d;
     prix = _prix;
     texte = t;
@@ -23,7 +23,7 @@ void Contenu::display() const{
     cout << " | durée : " << duree << "h | prix : " << prix << " | texte : " << texte << endl;
 }
 
-int Contenu::getDuree(){
+double Contenu::getDuree(){
     return duree;
 }
 
@@ -38,7 +38,7 @@ string Contenu:: getTexte()
 }
 
 
-void Contenu::setDuree(int d){
+void Contenu::setDuree(double d){
     duree = d;
 }
 

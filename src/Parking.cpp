@@ -110,7 +110,7 @@ void Parking::processusNegocitation(){
             toSend.contenuMessage.setTexte("Proposition acceptée");
             sendMessage(recu.emmeteur, toSend);
 
-            int duree = recu.contenuMessage.getDuree();
+            double duree = recu.contenuMessage.getDuree();
             Date now;
             Date nowPlusDuree(now, duree);
 

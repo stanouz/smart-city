@@ -61,19 +61,29 @@ void Fenetre(){
     }
 }
 
+
+void displayHeure(){
+    while(true){
+        Date now;
+        cout << "======= " << now << endl;
+        usleep(1000000);
+    }
+}
+
 int main(int argc, char ** argv){
     
-
+    
     Parking p("P1");
     Voiture v("AAA-123-AAA");
     
     thread thread_voiture(&Voiture::Boucle, ref(v));
     thread thread_parking(&Parking::Boucle, ref(p));
-    thread thread_affichage(Fenetre);
+    //thread thread_heure(displayHeure);
 
     thread_voiture.join();
     thread_parking.join();
     
+
 
 
     return 0;

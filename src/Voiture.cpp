@@ -5,6 +5,8 @@
 
 using namespace std;
 
+const double DUREE_STATIONNEMENT = 0.1;
+
 Voiture::Voiture(){
 }
 
@@ -38,7 +40,7 @@ void Voiture::negociation(string id_destinataire)
 
     Message m_new(immatriculation, DemandePlace);
 
-    m_new.contenuMessage.setDuree(1);
+    m_new.contenuMessage.setDuree(DUREE_STATIONNEMENT);
     m_new.contenuMessage.setPrix(prix_parking-0.1*prix_parking);
     m.contenuMessage.setTexte("Je vous fais une autre proposition");
     sendMessage(id_destinataire,m_new);
@@ -59,7 +61,7 @@ void Voiture::premierMessage(string id_destinataire)
 {
     Message m(immatriculation, DemandePlace);
     string mess = "Premier message de voiture";
-    m.contenuMessage.setDuree(1);
+    m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
     m.contenuMessage.setPrix(3);
     m.contenuMessage.setTexte(mess);
     m.recepteur = id_destinataire;

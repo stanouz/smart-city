@@ -37,12 +37,20 @@ A FAIRE :
     Changement de weedDay 
 */
 
-Date::Date(Date & d, int hours){
+Date::Date(Date & d, double hours){
     *this = d;
 
-    hour = d.hour + hours;
+    int minutesToAdd = (hours - (int)hours)*60;
+    
+    minute += minutesToAdd;
+
+    if(minute >= 60){
+        hour += minute/60;
+    }
+
+    hour = d.hour + (int)hours;
     if(hour >= 24){
-        int addDay = (hour+1 - hour%24) / 24;
+        int addDay = (hour+ hour/24 - hour%24) / 24;
         day += addDay;
         hour = hour % 24;
         

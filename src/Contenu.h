@@ -9,22 +9,22 @@ using namespace std;
 class Contenu{
 public:
     Contenu();
-    Contenu(int duree, float _prix, string t);
+    Contenu(double duree, float _prix, string t);
     ~Contenu();
 
     void display() const;
 
 
-    int getDuree();
+    double getDuree();
     float getPrix();
     string getTexte();
 
-    void setDuree(int d);
+    void setDuree(double d);
     void setPrix(float _prix);
     void setTexte(string t);
 
 private:
-    int duree; // en heures
+    double duree; // en heures
     float prix;
     string texte;
 };
