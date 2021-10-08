@@ -38,7 +38,7 @@ void Parking::updatePlacesStatus(){
 
 double Parking::pourcentageRemplissage()
 {
-    return (nb_place_occup/NB_PLACES_TOTAL)*100;
+    return nb_place_occup/NB_PLACES_TOTAL;
 }
 
 void Parking::sendMessage(string id_destinataire, Message & m){
@@ -92,7 +92,11 @@ void Parking::propositionRefusee(float _prix, Message recu)
     Message toSend(ID, Reponse);
 
     toSend.contenuMessage.setTexte("Proposition refusée");
-    toSend.contenuMessage.setPrix(_prix+prix*0.1);
+
+    float prix_remplissage = pourcentageRemplissage()+0.50;
+    float prix_total = _prix+_prix*prix_remplissage;
+    cout<<"prix total = "<<prix_total<<endl;
+    toSend.contenuMessage.setPrix(prix_total);
     sendMessage(recu.emmeteur, toSend);
 }
 
@@ -129,7 +133,7 @@ void Parking::processusNegocitation(){
         recu.display();
         float prixDemande = recu.contenuMessage.getPrix();
         
-        if(pourcentageRemplissage()>=95)
+        if(pourcentageRemplissage()>=0.95)
         {
             if(prixDemande<10)
             {
@@ -140,7 +144,7 @@ void Parking::processusNegocitation(){
                 propositionAcceptee(recu);
             }
         }
-        else if((50<=pourcentageRemplissage()) && (pourcentageRemplissage()<95))
+        else if((0.50<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.95))
         {
             if(prixDemande<5)
             {
@@ -151,7 +155,7 @@ void Parking::processusNegocitation(){
                 propositionAcceptee(recu);
             }
         }
-        else if((20<=pourcentageRemplissage()) && (pourcentageRemplissage()<50))
+        else if((0.20<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.50))
         {
             if(prixDemande<3)
             {
@@ -162,7 +166,7 @@ void Parking::processusNegocitation(){
                 propositionAcceptee(recu);
             }
         }
-        else if((0<=pourcentageRemplissage()) && (pourcentageRemplissage()<20))
+        else if((0<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.20))
         {
             if(prixDemande<2)
             {

@@ -85,7 +85,7 @@ void Voiture::premierMessage(string id_destinataire)
 
     srand (time(NULL));
     int prix_rand = (rand() % 5)+1;
-    m.contenuMessage.setPrix(prix_rand);
+    m.contenuMessage.setPrix(1);
     sendMessage(id_destinataire, m);
 }
 
@@ -113,13 +113,11 @@ void Voiture::processusNegocition()
         {
             recu.display();
             propositionAccepte = true;
-            cout << "compteur = "<<compteur<<endl;
             cout << "Parking a accepter ma proposition" << endl;
         }
         else if(recu.contenuMessage.getTexte()=="Proposition refusée")
         {
             recu.display();
-            cout << "compteur = "<<compteur<<endl;
             cout << "Le parking a refusé ma proposition" << endl;
             negociation(recu.emmeteur, compteur);
         } 
