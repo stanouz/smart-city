@@ -124,7 +124,6 @@ void Parking::processusNegocitation(){
 
         // Boucle bloquant l'attente d'un nouveau message
         while(!GetLastUnreadMsg(recu)){
-            //cout << "Boucle d'attente" << endl;
         }
         
         compteur++;

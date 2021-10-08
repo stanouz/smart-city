@@ -104,13 +104,8 @@ void Voiture::processusNegocition()
         } 
         
         //boucle d'attente d'un nouveau message
-        while(!checkLastUnreadMessage(recu))
-        {
-        
-            compteur++;
-            usleep(1600000);
-        }
-        
+        while(!checkLastUnreadMessage(recu)){}
+        compteur++;  
     }
 }
 
@@ -121,7 +116,6 @@ void Voiture::Boucle(){
     while(true)
     {
         processusNegocition();
-        usleep(1600000);
     }
 }
     
