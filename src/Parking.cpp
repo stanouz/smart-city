@@ -138,8 +138,6 @@ void Parking::Boucle(){
 
         processusNegocitation();
         updatePlacesStatus();
-
-        usleep(600000);
     }
 }
 
