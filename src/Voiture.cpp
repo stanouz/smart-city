@@ -36,8 +36,6 @@ void Voiture::negociation(string id_destinataire)
     float prix_parking = m.contenuMessage.getPrix();
 
 
-
-
     Message m_new(immatriculation, DemandePlace);
 
     Date debut;
@@ -92,8 +90,6 @@ void Voiture::processusNegocition()
     int compteur=0;
     bool propositionAccepte = false;
     while(compteur<3 && !propositionAccepte){
-
-        
         if(recu.contenuMessage.getTexte()=="Proposition acceptée")
         {
             recu.display();

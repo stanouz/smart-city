@@ -26,40 +26,46 @@ void LoadFont()
     }
 }
 int main(int argc, char ** argv){
+    /*
+    if(argc>0){
+        
+        if(argv[1]==string("1")){
+            
+            //cration d'une fenetre de type RenderWindow
+            RenderWindow window(VideoMode(1500,1500,32),"mon titre");
 
-    
-  //cration d'une fenetre de type RenderWindow
-    RenderWindow window(VideoMode(1500,1500,32),"mon titre");
 
-
-    LoadFont();
-    Text txt; 
-    txt.setFont(font);
-    txt.setString("Gestion intelligente de parkings dans un centre urbain");
-    txt.setCharacterSize(36);
-    txt.setFillColor(Color::Blue);
-    
-    //txt.setScale(10,10);
-    txt.setPosition(350,400);
-    //txt.move(5,5);
-    
-    while(window.isOpen())
-    {
-        Event event ;
-        while (window.pollEvent(event))
-        {
-            //Si on clique sur la croix
-            if(event.type == Event::Closed)
+            LoadFont();
+            Text txt; 
+            txt.setFont(font);
+            txt.setString("Gestion intelligente de parkings dans un centre urbain");
+            txt.setCharacterSize(36);
+            txt.setFillColor(Color::Blue);
+            
+            //txt.setScale(10,10);
+            txt.setPosition(350,400);
+            //txt.move(5,5);
+            
+            while(window.isOpen())
             {
-                //On ferme la fenetre
-                window.close();
+                Event event ;
+                while (window.pollEvent(event))
+                {
+                    //Si on clique sur la croix
+                    if(event.type == Event::Closed)
+                    {
+                        //On ferme la fenetre
+                        window.close();
+                    }
+                }
+                window.clear(Color::Black);
+                window.draw(txt);
+                
+                window.display();
             }
         }
-        window.clear(Color::Black);
-        window.draw(txt);
-        
-        window.display();
     }
+    */
 
 
  

@@ -63,7 +63,6 @@ void Parking::ajouteVoiture(string occupant, Date dateDepart){
 
 bool Parking::GetLastUnreadMsg(Message & m){
     if(!BoiteAuxLettres[ID].empty()){
-        cout << "Voiture à un nouveau msg" << endl;
         m = BoiteAuxLettres[ID].front();
         BoiteAuxLettresPrivé.push_back(m);
         BoiteAuxLettres[ID].pop();
@@ -135,11 +134,9 @@ void Parking::processusNegocitation(){
 
 void Parking::Boucle(){
 
-    cout << nb_place_occup << " place occupé" << endl;
 
-    while(!IsFull()){
-        Date now;
-        cout << nb_place_occup << " place occupé à " << now << endl;
+    while(true){
+
         processusNegocitation();
         updatePlacesStatus();
 
