@@ -32,17 +32,21 @@ void Voiture::sendMessage(string id_destinataire, Message m){
 void Voiture::negociation(string id_destinataire)
 {
     Message m(immatriculation, DemandePlace);
-    string non = "Non, -10%";
-    string oui = "Oui";
-    float alea = rand() % 100;
-    m.performatif = DemandePlace;
-    if(alea<=80)
-    {
-        m.contenuMessage.setTexte(non); 
-    }
-    else m.contenuMessage.setTexte(oui);
+    m = BoiteAuxLettresPrivé.back();
+    float prix_parking = m.contenuMessage.getPrix();
 
-    sendMessage(id_destinataire,m);
+
+
+
+    Message m_new(immatriculation, DemandePlace);
+
+    Date debut;
+    Date fin(debut, 1);
+    m_new.contenuMessage.setDateDebut(debut);
+    m_new.contenuMessage.setDateFin(fin);
+    m_new.contenuMessage.setPrix(prix_parking-0.1*prix_parking);
+    m.contenuMessage.setTexte("Je vous fais une autre proposition");
+    sendMessage(id_destinataire,m_new);
 }
 
 bool Voiture::checkLastUnreadMessage(Message & m) 
@@ -56,35 +60,72 @@ bool Voiture::checkLastUnreadMessage(Message & m)
     return false;
 }
 
-
-void Voiture::Boucle(){
-    
+void Voiture::premierMessage(string id_destinataire)
+{
     Message m(immatriculation, DemandePlace);
-    string mess = "Bonjour";
-    m.contenuMessage.setDateDebut(Date());
-    m.contenuMessage.setPrix(6);
+    string mess = "Premier message de voiture";
+    Date debut;
+    Date fin(debut,1);
+    m.contenuMessage.setDateDebut(debut);
+    m.contenuMessage.setDateFin(fin);
+    m.contenuMessage.setPrix(3);
     m.contenuMessage.setTexte(mess);
-    m.performatif = DemandePlace;
-    sendMessage("P1",m);
+    m.recepteur = id_destinataire;
+    sendMessage(id_destinataire, m);
+}
 
-    while(true){
-        int compteur=0;
-       
-        while(compteur<=3){
-            Message read;
-            while(!checkLastUnreadMessage(read))
-            {
+void Voiture::processusNegocition()
+{
+    Message recu;
+
+    // Si pas de message recu on quitte la fonction
+    if(!checkLastUnreadMessage(recu)){
+        return;
+    }
+    else{
+        // On verifie que le messagge est une réponse
+        if(recu.performatif!=Reponse){
+            return;
+        }
+    }
+    
+    int compteur=0;
+    bool propositionAccepte = false;
+    while(compteur<3 && !propositionAccepte){
+
         
-            }
-                
-
-            read.display();
-            negociation(read.emmeteur);
-            cout << "Message " << compteur << endl;
+        if(recu.contenuMessage.getTexte()=="Proposition acceptée")
+        {
+            recu.display();
+            propositionAccepte = true;
+            cout << "Parking a accepter ma proposition" << endl;
+        }
+        else if(recu.contenuMessage.getTexte()=="Proposition refusée")
+        {
+            recu.display();
+            cout << "Le parking a refusé ma proposition" << endl;
+            negociation(recu.emmeteur);
+        } 
+        
+        //boucle d'attente d'un nouveau message
+        while(!checkLastUnreadMessage(recu))
+        {
+        
             compteur++;
             usleep(1600000);
         }
         
+    }
+}
+
+void Voiture::Boucle(){
+    
+    premierMessage("P1");
+   
+    while(true)
+    {
+        processusNegocition();
         usleep(1600000);
     }
 }
+    

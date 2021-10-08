@@ -7,11 +7,13 @@ using namespace std;
 
 Parking::Parking(){
     prix = 5.;
+    nb_place_occup = 0;
 }
 
 Parking::Parking(string id){
     ID = id;
     prix = 5.;
+    nb_place_occup = 0;
 }
 
 Parking::~Parking(){
@@ -19,18 +21,24 @@ Parking::~Parking(){
 }
 
 bool Parking::IsFull() const{
-    for(int i=0; i<(int)places.size(); i++){
-        if(places[i].getIsOccupied()==false){
-            return true;
-        }
+    if(nb_place_occup<NB_PLACES_TOTAL){
+        return false;
     }
-    return false;
+    return true;
 }
 
 void Parking::updatePlacesStatus(){
-    for(int i=0; i<places.size(); i++){
-        places[i].updateStatus();
+    for(int i=0; i<NB_PLACES_TOTAL; i++){
+        if(tabPlaces[i].updateStatus()){
+            nb_place_occup--;
+        }
+        
     }
+}
+
+double Parking::pourcentageRemplissage()
+{
+    return (nb_place_occup/NB_PLACES_TOTAL)*100;
 }
 
 void Parking::sendMessage(string id_destinataire, Message & m){
@@ -38,13 +46,24 @@ void Parking::sendMessage(string id_destinataire, Message & m){
     BoiteAuxLettres[id_destinataire].push(m);
 }
 
+void Parking::ajouteVoiture(string occupant, Date dateDepart){
 
+    int i=0;
+    bool ajouter = false;
+    while(i<NB_PLACES_TOTAL && !ajouter){
+        ajouter = tabPlaces[i].ajouteVoiture(occupant, dateDepart);
+    }
+    if(ajouter){
+        nb_place_occup++;
+    }
+}
 
 
 
 
 bool Parking::GetLastUnreadMsg(Message & m){
     if(!BoiteAuxLettres[ID].empty()){
+        cout << "Voiture à un nouveau msg" << endl;
         m = BoiteAuxLettres[ID].front();
         BoiteAuxLettresPrivé.push_back(m);
         BoiteAuxLettres[ID].pop();
@@ -68,13 +87,21 @@ void Parking::processusNegocitation(){
         }
     }
 
+    // Si le parking est plein on refuse directement 
+    if(IsFull()){
+        Message toSend(ID, Refut);
+        toSend.contenuMessage.setTexte("Désolé nous sommes complet");
+        sendMessage(recu.emmeteur, toSend);
+        return;
+    }
+
 
     int compteur =0;
     Message toSend(ID, Reponse);
     while(compteur<3){
         
 
-        cout << "===== COMPTEUR " << compteur << "=======" << endl;
+        cout << endl<<endl<<endl<<"===== COMPTEUR " << compteur << "=======" << endl;
         recu.display();
         float prixDemande = recu.contenuMessage.getPrix();
         
@@ -84,19 +111,21 @@ void Parking::processusNegocitation(){
             toSend.contenuMessage.setTexte("Proposition acceptée");
             sendMessage(recu.emmeteur, toSend);
 
-            // Appeller une fonction qui gare la voiture à la première place 
-            // libre
+            // On ajoute la voiture dans le parking
+            ajouteVoiture(recu.emmeteur, recu.contenuMessage.getDateFin());
+
             return;
         }
         else{
             toSend.contenuMessage.setTexte("Proposition refusée");
+            toSend.contenuMessage.setPrix(prix + 0.1*prix);
             sendMessage(recu.emmeteur, toSend);
         }
                     
 
         // Boucle bloquant l'attente d'un nouveau message
         while(!GetLastUnreadMsg(recu)){
-            cout << "Boucle d'attente" << endl;
+            //cout << "Boucle d'attente" << endl;
         }
         
         compteur++;
@@ -106,10 +135,13 @@ void Parking::processusNegocitation(){
 
 void Parking::Boucle(){
 
-    while(true){
+    cout << nb_place_occup << " place occupé" << endl;
 
+    while(!IsFull()){
+        Date now;
+        cout << nb_place_occup << " place occupé à " << now << endl;
         processusNegocitation();
-        
+        updatePlacesStatus();
 
         usleep(600000);
     }

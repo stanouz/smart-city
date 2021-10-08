@@ -19,6 +19,8 @@ public:
     void Boucle();
     void negociation(string id_destinataire);
     bool checkLastUnreadMessage(Message & m);
+    void premierMessage(string id_destinataire);
+    void processusNegocition();
 
 private:
     string immatriculation;
