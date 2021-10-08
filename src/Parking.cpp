@@ -110,8 +110,12 @@ void Parking::processusNegocitation(){
             toSend.contenuMessage.setTexte("Proposition acceptée");
             sendMessage(recu.emmeteur, toSend);
 
+            int duree = recu.contenuMessage.getDuree();
+            Date now;
+            Date nowPlusDuree(now, duree);
+
             // On ajoute la voiture dans le parking
-            ajouteVoiture(recu.emmeteur, recu.contenuMessage.getDateFin());
+            ajouteVoiture(recu.emmeteur, nowPlusDuree);
 
             return;
         }

@@ -3,13 +3,13 @@
 #include<iostream>
 
 Contenu::Contenu(){
+    duree = 0;
     prix=0;
     texte = "pas de texte";
 }
 
-Contenu::Contenu(Date dd, Date df, float _prix, string t){
-    dateDebut = dd;
-    dateFin = df;
+Contenu::Contenu(int d, float _prix, string t){
+    duree = d;
     prix = _prix;
     texte = t;
 }
@@ -20,17 +20,11 @@ Contenu::~Contenu(){
 
 
 void Contenu::display() const{
-    cout << "Date début : " << dateDebut << " | Date Fin : " << dateFin << " | prix : " << prix << " | texte : " << texte << endl;
+    cout << " | durée : " << duree << "h | prix : " << prix << " | texte : " << texte << endl;
 }
 
-Date Contenu:: getDateDebut()
-{
-    return dateDebut;
-}
-
-Date Contenu:: getDateFin()
-{
-    return dateFin;
+int Contenu::getDuree(){
+    return duree;
 }
 
 float Contenu:: getPrix()
@@ -44,14 +38,8 @@ string Contenu:: getTexte()
 }
 
 
-void Contenu:: setDateDebut(Date d)
-{
-    dateDebut = d;
-}
-
-void Contenu:: setDateFin(Date d)
-{
-    dateFin = d;
+void Contenu::setDuree(int d){
+    duree = d;
 }
 
 void Contenu:: setPrix(float p)

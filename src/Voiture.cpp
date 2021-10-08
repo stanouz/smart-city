@@ -38,10 +38,7 @@ void Voiture::negociation(string id_destinataire)
 
     Message m_new(immatriculation, DemandePlace);
 
-    Date debut;
-    Date fin(debut, 1);
-    m_new.contenuMessage.setDateDebut(debut);
-    m_new.contenuMessage.setDateFin(fin);
+    m_new.contenuMessage.setDuree(1);
     m_new.contenuMessage.setPrix(prix_parking-0.1*prix_parking);
     m.contenuMessage.setTexte("Je vous fais une autre proposition");
     sendMessage(id_destinataire,m_new);
@@ -62,10 +59,7 @@ void Voiture::premierMessage(string id_destinataire)
 {
     Message m(immatriculation, DemandePlace);
     string mess = "Premier message de voiture";
-    Date debut;
-    Date fin(debut,1);
-    m.contenuMessage.setDateDebut(debut);
-    m.contenuMessage.setDateFin(fin);
+    m.contenuMessage.setDuree(1);
     m.contenuMessage.setPrix(3);
     m.contenuMessage.setTexte(mess);
     m.recepteur = id_destinataire;
