@@ -24,6 +24,9 @@ public:
     void processusNegocitation();
     double pourcentageRemplissage();
     void ajouteVoiture(string occupant, Date dateDepart);
+    void propositionAcceptee(Message recu);
+    void propositionRefusee(float _prix, Message recu);
+
 
 private:
     Place tabPlaces[100];
