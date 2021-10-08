@@ -31,13 +31,13 @@ void Voiture::sendMessage(string id_destinataire, Message m){
     BoiteAuxLettres[id_destinataire].push(m);
 }
 
-void Voiture::negociation(string id_destinataire)
+void Voiture::negociation(string id_destinataire, int compteur)
 {
-    Message m(immatriculation, DemandePlace);
-    m = BoiteAuxLettresPrivé.back();
-    float prix_parking = m.contenuMessage.getPrix();
-
-
+    Message m_voiture = BoiteAuxLettres[id_destinataire].back();
+    Message m_parking = BoiteAuxLettres[immatriculation].back();
+    
+    float prix_parking = m_parking.contenuMessage.getPrix();
+    float prix_voiture = m_voiture.contenuMessage.getPrix();
 
 
     Message m_new(immatriculation, DemandePlace);
@@ -46,8 +46,18 @@ void Voiture::negociation(string id_destinataire)
     Date fin(debut, 1);
     m_new.contenuMessage.setDateDebut(debut);
     m_new.contenuMessage.setDateFin(fin);
-    m_new.contenuMessage.setPrix(prix_parking-0.1*prix_parking);
     m_new.contenuMessage.setTexte("Je vous fais une autre proposition");
+
+    if(compteur==0)
+    {
+        m_new.contenuMessage.setPrix(prix_voiture+0.5*prix_voiture);
+    }
+    else if(compteur==1)
+    {
+        m_new.contenuMessage.setPrix(prix_parking);
+    }
+    
+
     sendMessage(id_destinataire,m_new);
 }
 
@@ -103,13 +113,15 @@ void Voiture::processusNegocition()
         {
             recu.display();
             propositionAccepte = true;
+            cout << "compteur = "<<compteur<<endl;
             cout << "Parking a accepter ma proposition" << endl;
         }
         else if(recu.contenuMessage.getTexte()=="Proposition refusée")
         {
             recu.display();
+            cout << "compteur = "<<compteur<<endl;
             cout << "Le parking a refusé ma proposition" << endl;
-            negociation(recu.emmeteur);
+            negociation(recu.emmeteur, compteur);
         } 
         
         //boucle d'attente d'un nouveau message
