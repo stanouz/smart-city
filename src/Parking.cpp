@@ -78,12 +78,6 @@ bool Parking::GetLastUnreadMsg(Message & m, string emeteur){
                 BoiteAuxLettres[ID].pop();
                 return true;
             }
-            else{
-                
-                BoiteAuxLettres[ID].pop();
-                BoiteAuxLettres[ID].push(tmp);
-            }
-
         }
         
     }
@@ -92,7 +86,7 @@ bool Parking::GetLastUnreadMsg(Message & m, string emeteur){
 
 void Parking::processusNegocitation(){
     Message recu;
-    
+
     // Si pas de message recu on quitte la fonction
     if(!GetLastUnreadMsg(recu, "NULL")){
         return;
