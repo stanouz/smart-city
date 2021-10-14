@@ -76,14 +76,20 @@ int main(int argc, char ** argv){
     Parking p("P1");
     Voiture v1("AAA-123-AAA");
     Voiture v2("BBB-123-BBB");
+    Voiture v3("CCC-123-BBB");
+    Voiture v4("DDD-123-BBB");
     
     thread thread_voiture1(&Voiture::Boucle, ref(v1));
     thread thread_voiture2(&Voiture::Boucle, ref(v2));
+    thread thread_voiture3(&Voiture::Boucle, ref(v3));
+    thread thread_voiture4(&Voiture::Boucle, ref(v4));
     thread thread_parking(&Parking::Boucle, ref(p));
     //thread thread_heure(displayHeure);
 
     thread_voiture1.join();
     thread_voiture2.join();
+    thread_voiture3.join();
+    thread_voiture4.join();
     thread_parking.join();
     //thread_heure.join();
     
