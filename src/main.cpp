@@ -35,6 +35,17 @@ if(!myfont.loadFromFile("res/poppins.ttf"))
     }
 
 }
+//********
+ bool isSpriteHover(sf::FloatRect sprite, sf::Vector2f mp) 
+        {
+                if (sprite.contains(mp)){
+                return true;
+                }
+                return false;
+        }
+
+
+//*************
 int main(int argc, char ** argv){
     
 
@@ -48,6 +59,8 @@ int main(int argc, char ** argv){
     
     txt.setFont(font);
     txt.setString("Gestion intelligente de parkings dans un centre urbain");
+  
+
     txt.setCharacterSize(32);
     txt.setFillColor(Color::Blue);
     txt.setPosition(350,40);
@@ -77,7 +90,7 @@ LoadFont();
   
     imageSprite.setPosition(800., 600.);
  
-//***********
+
 
     while(window.isOpen())
     {
@@ -119,7 +132,14 @@ LoadFont();
     thread_voiture.join();
     thread_parking.join();
     */
+   
 
+
+       
+      
+
+       
 
     return 0;
 }
+
