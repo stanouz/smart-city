@@ -35,17 +35,7 @@ if(!myfont.loadFromFile("res/poppins.ttf"))
     }
 
 }
-//********
- bool isSpriteHover(sf::FloatRect sprite, sf::Vector2f mp) 
-        {
-                if (sprite.contains(mp)){
-                return true;
-                }
-                return false;
-        }
 
-
-//*************
 int main(int argc, char ** argv){
     
 
@@ -85,12 +75,10 @@ LoadFont();
     
     Sprite imageSprite(textureImg);
 
-    Vector2u size = textureImg.getSize();
+    sf::Vector2u size = textureImg.getSize();
     imageSprite.setOrigin(size.x /2, size.y/2);
   
     imageSprite.setPosition(800., 600.);
- 
-
 
     while(window.isOpen())
     {
@@ -103,24 +91,18 @@ LoadFont();
                 //On ferme la fenetre
                 window.close();
             }
+          
         }
         window.clear(Color::Black);
         window.draw(txt);
         window.draw(txt1);
         window.draw(imageSprite);
-
         window.display();
 
+
+               
     }
-/*RenderWindow window(VideoMode(900, 614), "VAUDOO");
- 
-	sf::Texture texture;
-	if (!texture.loadFromFile("res/photo1.webp"))
-	{
-		std::cout <<"Le fichier n'est pas charge" << std::endl;
-	}
-	sf::Sprite sprite;
-	sprite.setTexture(texture);*/
+
 
     /*
     Parking p("P1");
@@ -135,7 +117,6 @@ LoadFont();
    
 
 
-       
       
 
        
