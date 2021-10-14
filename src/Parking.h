@@ -18,6 +18,7 @@ public:
     bool IsFull() const;
     void sendMessage(string id_destinataire, Message & m);
     void negociation();
+    bool GetLastUnreadMsg(Message & msg, string emeteur);
     bool GetLastUnreadMsg(Message & msg);
     void updatePlacesStatus();
     void Boucle();

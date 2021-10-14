@@ -61,12 +61,25 @@ void Parking::ajouteVoiture(string occupant, Date dateDepart){
 
 
 
-bool Parking::GetLastUnreadMsg(Message & m){
+bool Parking::GetLastUnreadMsg(Message & m, string emeteur){
     if(!BoiteAuxLettres[ID].empty()){
-        m = BoiteAuxLettres[ID].front();
-        BoiteAuxLettresPrivé.push_back(m);
-        BoiteAuxLettres[ID].pop();
-        return true;
+        Message tmp;
+        tmp = BoiteAuxLettres[ID].front();
+        if(emeteur=="NULL"){
+            m = tmp;
+            BoiteAuxLettresPrivé.push_back(m);
+            BoiteAuxLettres[ID].pop();
+            return true;
+        }
+        else{
+            if(emeteur==tmp.emmeteur){
+                m = tmp;
+                BoiteAuxLettresPrivé.push_back(m);
+                BoiteAuxLettres[ID].pop();
+                return true;
+            }
+        }
+        
     }
     return false;
 }
@@ -75,7 +88,7 @@ void Parking::processusNegocitation(){
     Message recu;
 
     // Si pas de message recu on quitte la fonction
-    if(!GetLastUnreadMsg(recu)){
+    if(!GetLastUnreadMsg(recu, "NULL")){
         return;
     }
     else{
@@ -127,7 +140,7 @@ void Parking::processusNegocitation(){
                     
 
         // Boucle bloquant l'attente d'un nouveau message
-        while(!GetLastUnreadMsg(recu)){
+        while(!GetLastUnreadMsg(recu, recu.emmeteur)){
         }
         
         compteur++;
