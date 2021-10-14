@@ -38,7 +38,7 @@ void Parking::updatePlacesStatus(){
 
 double Parking::pourcentageRemplissage()
 {
-    return (nb_place_occup/NB_PLACES_TOTAL)*100;
+    return nb_place_occup/NB_PLACES_TOTAL;
 }
 
 void Parking::sendMessage(string id_destinataire, Message & m){
@@ -52,6 +52,7 @@ void Parking::ajouteVoiture(string occupant, Date dateDepart){
     bool ajouter = false;
     while(i<NB_PLACES_TOTAL && !ajouter){
         ajouter = tabPlaces[i].ajouteVoiture(occupant, dateDepart);
+        i++;
     }
     if(ajouter){
         nb_place_occup++;
@@ -78,15 +79,52 @@ bool Parking::GetLastUnreadMsg(Message & m, string emeteur){
                 BoiteAuxLettres[ID].pop();
                 return true;
             }
+            else{
+                BoiteAuxLettres[ID].pop();
+                BoiteAuxLettres[ID].push(tmp);
+            }
+
         }
         
     }
     return false;
+
+}
+
+void Parking::propositionAcceptee(Message recu)
+{
+    Message toSend(ID, Reponse);
+
+    // Si la proposition est accepté on previent la voiture et 
+    // on quitte le processus de négociation.
+    toSend.contenuMessage.setTexte("Proposition acceptée");
+    sendMessage(recu.emmeteur, toSend);
+
+    double duree = recu.contenuMessage.getDuree();
+    Date now;
+    Date nowPlusDuree(now, duree);
+
+    // On ajoute la voiture dans le parking
+    ajouteVoiture(recu.emmeteur, nowPlusDuree);
+
+}
+
+void Parking::propositionRefusee(float _prix, Message recu)
+{
+    Message toSend(ID, Reponse);
+
+    toSend.contenuMessage.setTexte("Proposition refusée");
+
+    float prix_remplissage = pourcentageRemplissage()+0.50;
+    float prix_total = _prix+_prix*prix_remplissage;
+    cout<<"prix total = "<<prix_total<<endl;
+    toSend.contenuMessage.setPrix(prix_total);
+    sendMessage(recu.emmeteur, toSend);
 }
 
 void Parking::processusNegocitation(){
-    Message recu;
 
+    Message recu;
     // Si pas de message recu on quitte la fonction
     if(!GetLastUnreadMsg(recu, "NULL")){
         return;
@@ -117,28 +155,55 @@ void Parking::processusNegocitation(){
         recu.display();
         float prixDemande = recu.contenuMessage.getPrix();
         
-        if(prixDemande >= prix*0.9){
-            // Si la proposition est accepté on previent la voiture et 
-            // on quitte le processus de négociation.
-            toSend.contenuMessage.setTexte("Proposition acceptée");
-            sendMessage(recu.emmeteur, toSend);
-
-            double duree = recu.contenuMessage.getDuree();
-            Date now;
-            Date nowPlusDuree(now, duree);
-
-            // On ajoute la voiture dans le parking
-            ajouteVoiture(recu.emmeteur, nowPlusDuree);
-
-            return;
+        if(pourcentageRemplissage()>=0.95)
+        {
+            if(prixDemande<10)
+            {
+                propositionRefusee(10, recu);
+            }
+            else
+            {
+                propositionAcceptee(recu);
+                return;
+            }
         }
-        else{
-            toSend.contenuMessage.setTexte("Proposition refusée");
-            toSend.contenuMessage.setPrix(prix + 0.1*prix);
-            sendMessage(recu.emmeteur, toSend);
+        else if((0.50<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.95))
+        {
+            if(prixDemande<5)
+            {
+                propositionRefusee(5, recu);
+            }
+            else 
+            {
+                propositionAcceptee(recu);
+                return;
+            }
+        }
+        else if((0.20<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.50))
+        {
+            if(prixDemande<3)
+            {
+                propositionRefusee(3, recu);
+            }
+            else 
+            {
+                propositionAcceptee(recu);
+                return;
+            }
+        }
+        else if((0<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.20))
+        {
+            if(prixDemande<2)
+            {
+                propositionRefusee(2, recu);
+            }
+            else 
+            {
+                propositionAcceptee(recu);
+                return;
+            }
         }
                     
-
         // Boucle bloquant l'attente d'un nouveau message
         while(!GetLastUnreadMsg(recu, recu.emmeteur)){
         }

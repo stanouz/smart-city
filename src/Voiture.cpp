@@ -106,19 +106,20 @@ void Voiture::processusNegocition()
     while(compteur<3 && !propositionAccepte){
         if(recu.contenuMessage.getTexte()=="Proposition acceptée")
         {
-            recu.display();
+            //recu.display();
             propositionAccepte = true;
             cout << "Parking a accepter ma proposition" << endl;
         }
         else if(recu.contenuMessage.getTexte()=="Proposition refusée")
         {
-            recu.display();
+            //recu.display();
             cout << "Le parking a refusé ma proposition" << endl;
             negociation(recu.emmeteur, compteur);
         } 
         
         //boucle d'attente d'un nouveau message
-        while(!checkLastUnreadMessage(recu)){}
+        while(!checkLastUnreadMessage(recu)){
+        }
         compteur++;  
     }
 }
