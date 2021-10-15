@@ -105,6 +105,7 @@ void Parking::processusNegocitation(){
 
 
     int compteur =0;
+    bool accepte = false;
     Message toSend(ID, Reponse);
     while(compteur<3){
         
@@ -113,30 +114,60 @@ void Parking::processusNegocitation(){
         recu.display();
         float prixDemande = recu.contenuMessage.getPrix();
         
-        if(prixDemande >= prix*0.9){
-            // Si la proposition est accepté on previent la voiture et 
-            // on quitte le processus de négociation.
-            toSend.contenuMessage.setTexte("Proposition acceptée");
-            sendMessage(toSend, ID, recu.emmeteur);
-
-            double duree = recu.contenuMessage.getDuree();
-            Date now;
-            Date nowPlusDuree(now, duree);
-
-            // On ajoute la voiture dans le parking
-            ajouteVoiture(recu.emmeteur, nowPlusDuree);
-
-            return;
+        if(pourcentageRemplissage()>=0.95)
+        {
+            if(prixDemande<10)
+            {
+                propositionRefusee(10, recu);
+            }
+            else
+            {
+                propositionAcceptee(recu);
+                accepte = true;
+            }
         }
-        else{
-            toSend.contenuMessage.setTexte("Proposition refusée");
-            toSend.contenuMessage.setPrix(prix + 0.1*prix);
-            sendMessage(toSend, ID, recu.emmeteur);
+        else if((0.50<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.95))
+        {
+            if(prixDemande<5)
+            {
+                propositionRefusee(5, recu);
+            }
+            else 
+            {
+                propositionAcceptee(recu);
+                accepte = true;
+            }
         }
+        else if((0.20<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.50))
+        {
+            if(prixDemande<3)
+            {
+                propositionRefusee(3, recu);
+            }
+            else 
+            {
+                propositionAcceptee(recu);
+                accepte = true;
+            }
+        }
+        else if((0<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.20))
+        {
+            if(prixDemande<2)
+            {
+                propositionRefusee(2, recu);
+            }
+            else 
+            {
+                propositionAcceptee(recu);
+                accepte = true;
+            }
+        }
+
                     
 
         // Boucle bloquant l'attente d'un nouveau message
-        recu = getMessageFrom(ID, recu.emmeteur);
+        if(!accepte)
+            recu = getMessageFrom(ID, recu.emmeteur);
         
         compteur++;
     }
