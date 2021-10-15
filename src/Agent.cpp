@@ -23,9 +23,10 @@ Message Agent::getMessage(string recepteur){
     unique_lock<mutex> l(m);
 
     while(BoiteAuxLettres[recepteur].empty()){
+        cout << recepteur << " bloquer" << endl;
         cv.wait(l);
     }
-
+    cout << recepteur << " libre" << endl;
     Message msg = BoiteAuxLettres[recepteur][0];
     BoiteAuxLettresPrivé.push_back(msg);
     BoiteAuxLettres[recepteur].erase(BoiteAuxLettres[recepteur].begin());

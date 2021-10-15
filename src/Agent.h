@@ -21,7 +21,7 @@ public:
     Message getMessage(string recepteur);
     Message getMessageFrom(string recepteur, string emmeteur);
 
-private:
+protected:
     inline static mutex m;
     inline static condition_variable cv;
     inline static map<string, vector<Message> > BoiteAuxLettres;

@@ -28,6 +28,7 @@ bool Parking::IsFull() const{
 }
 
 void Parking::updatePlacesStatus(){
+
     for(int i=0; i<NB_PLACES_TOTAL; i++){
         if(tabPlaces[i].updateStatus()){
             nb_place_occup--;
@@ -144,10 +145,9 @@ void Parking::processusNegocitation(){
 
 void Parking::Boucle(){
 
-
     while(true){
-
-        processusNegocitation();
+        if(!BoiteAuxLettres[ID].empty())
+            processusNegocitation();
         updatePlacesStatus();
         
     }
