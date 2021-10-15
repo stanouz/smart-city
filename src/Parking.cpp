@@ -38,7 +38,7 @@ void Parking::updatePlacesStatus(){
 
 double Parking::pourcentageRemplissage()
 {
-    return nb_place_occup/NB_PLACES_TOTAL;
+    return (nb_place_occup/NB_PLACES_TOTAL)*100;
 }
 
 void Parking::ajouteVoiture(string occupant, Date dateDepart){
@@ -112,55 +112,28 @@ void Parking::processusNegocitation(){
         recu.display();
         float prixDemande = recu.contenuMessage.getPrix();
         
-        if(pourcentageRemplissage()>=0.95)
-        {
-            if(prixDemande<10)
-            {
-                propositionRefusee(10, recu);
-            }
-            else
-            {
-                propositionAcceptee(recu);
-                return;
-            }
+        if(prixDemande >= prix*0.9){
+            // Si la proposition est accepté on previent la voiture et 
+            // on quitte le processus de négociation.
+            toSend.contenuMessage.setTexte("Proposition acceptée");
+            sendMessage(toSend, ID, recu.emmeteur);
+
+            double duree = recu.contenuMessage.getDuree();
+            Date now;
+            Date nowPlusDuree(now, duree);
+
+            // On ajoute la voiture dans le parking
+            ajouteVoiture(recu.emmeteur, nowPlusDuree);
+
+            return;
         }
-        else if((0.50<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.95))
-        {
-            if(prixDemande<5)
-            {
-                propositionRefusee(5, recu);
-            }
-            else 
-            {
-                propositionAcceptee(recu);
-                return;
-            }
-        }
-        else if((0.20<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.50))
-        {
-            if(prixDemande<3)
-            {
-                propositionRefusee(3, recu);
-            }
-            else 
-            {
-                propositionAcceptee(recu);
-                return;
-            }
-        }
-        else if((0<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.20))
-        {
-            if(prixDemande<2)
-            {
-                propositionRefusee(2, recu);
-            }
-            else 
-            {
-                propositionAcceptee(recu);
-                return;
-            }
+        else{
+            toSend.contenuMessage.setTexte("Proposition refusée");
+            toSend.contenuMessage.setPrix(prix + 0.1*prix);
+            sendMessage(toSend, ID, recu.emmeteur);
         }
                     
+
         // Boucle bloquant l'attente d'un nouveau message
         recu = getMessageFrom(ID, recu.emmeteur);
         
@@ -176,6 +149,7 @@ void Parking::Boucle(){
 
         processusNegocitation();
         updatePlacesStatus();
+        
     }
 }
 
