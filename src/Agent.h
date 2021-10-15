@@ -6,16 +6,25 @@
 #include <vector>
 #include <map>
 #include <queue>
+
 #include <thread>
+#include <mutex>
+#include <condition_variable>
 
 using namespace std;
 
 class Agent{
-public:
+public: 
     Agent();
     ~Agent();
-protected:
-    inline static map<string, queue<Message> > BoiteAuxLettres;
+    void sendMessage(Message & m, string emmeteur, string recepteur);
+    Message getMessage(string recepteur);
+    Message getMessageFrom(string recepteur, string emmeteur);
+
+private:
+    inline static mutex m;
+    inline static condition_variable cv;
+    inline static map<string, vector<Message> > BoiteAuxLettres;
     vector<Message> BoiteAuxLettresPrivé;
 };
 

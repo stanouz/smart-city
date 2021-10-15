@@ -28,18 +28,15 @@ string Voiture::getImat() const{
     return immatriculation;
 }
 
-void Voiture::sendMessage(string id_destinataire, Message m){
-    m.recepteur = id_destinataire;
-    BoiteAuxLettres[id_destinataire].push(m);
-}
+
 
 void Voiture::negociation(string id_destinataire, int compteur)
 {
-    Message m_voiture = BoiteAuxLettres[id_destinataire].back();
-    Message m_parking = BoiteAuxLettres[immatriculation].back();
+    //Message m_voiture = BoiteAuxLettres[id_destinataire].back();
+    //Message m_parking = BoiteAuxLettres[immatriculation].back();
     
-    float prix_parking = m_parking.contenuMessage.getPrix();
-    float prix_voiture = m_voiture.contenuMessage.getPrix();
+    float prix_parking = 1.;//m_parking.contenuMessage.getPrix();
+    float prix_voiture = 10.; //m_voiture.contenuMessage.getPrix();
 
 
     Message m_new(immatriculation, DemandePlace);
@@ -59,19 +56,9 @@ void Voiture::negociation(string id_destinataire, int compteur)
     }
     
 
-    sendMessage(id_destinataire,m_new);
+    sendMessage(m_new, immatriculation, id_destinataire);
 }
 
-bool Voiture::checkLastUnreadMessage(Message & m) 
-{
-    if(!BoiteAuxLettres[immatriculation].empty()){
-        m = BoiteAuxLettres[immatriculation].front();
-        BoiteAuxLettresPrivé.push_back(m);
-        BoiteAuxLettres[immatriculation].pop();
-        return true;
-    }
-    return false;
-}
 
 void Voiture::premierMessage(string id_destinataire)
 {
@@ -83,43 +70,33 @@ void Voiture::premierMessage(string id_destinataire)
     m.recepteur = id_destinataire;
 
     m.contenuMessage.setPrix(1);
-    sendMessage(id_destinataire, m);
+    sendMessage(m, immatriculation, id_destinataire);
 }
 
 void Voiture::processusNegocition()
 {
-    Message recu;
+    Message recu = getMessage(immatriculation);
 
-    // Si pas de message recu on quitte la fonction
-    if(!checkLastUnreadMessage(recu)){
-        return;
-    }
-    else{
-        // On verifie que le messagge est une réponse
-        if(recu.performatif!=Reponse){
-            return;
-        }
-    }
+    
     
     int compteur=0;
     bool propositionAccepte = false;
     while(compteur<3 && !propositionAccepte){
         if(recu.contenuMessage.getTexte()=="Proposition acceptée")
         {
-            //recu.display();
+            recu.display();
             propositionAccepte = true;
             cout << "Parking a accepter ma proposition" << endl;
         }
         else if(recu.contenuMessage.getTexte()=="Proposition refusée")
         {
-            //recu.display();
+            recu.display();
             cout << "Le parking a refusé ma proposition" << endl;
             negociation(recu.emmeteur, compteur);
         } 
         
         //boucle d'attente d'un nouveau message
-        while(!checkLastUnreadMessage(recu)){
-        }
+        recu = getMessageFrom(immatriculation, recu.emmeteur);
         compteur++;  
     }
 }

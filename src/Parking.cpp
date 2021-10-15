@@ -41,11 +41,6 @@ double Parking::pourcentageRemplissage()
     return nb_place_occup/NB_PLACES_TOTAL;
 }
 
-void Parking::sendMessage(string id_destinataire, Message & m){
-    m.recepteur = id_destinataire;
-    BoiteAuxLettres[id_destinataire].push(m);
-}
-
 void Parking::ajouteVoiture(string occupant, Date dateDepart){
 
     int i=0;
@@ -62,34 +57,7 @@ void Parking::ajouteVoiture(string occupant, Date dateDepart){
 
 
 
-bool Parking::GetLastUnreadMsg(Message & m, string emeteur){
-    if(!BoiteAuxLettres[ID].empty()){
-        Message tmp;
-        tmp = BoiteAuxLettres[ID].front();
-        if(emeteur=="NULL"){
-            m = tmp;
-            BoiteAuxLettresPrivé.push_back(m);
-            BoiteAuxLettres[ID].pop();
-            return true;
-        }
-        else{
-            if(emeteur==tmp.emmeteur){
-                m = tmp;
-                BoiteAuxLettresPrivé.push_back(m);
-                BoiteAuxLettres[ID].pop();
-                return true;
-            }
-            else{
-                BoiteAuxLettres[ID].pop();
-                BoiteAuxLettres[ID].push(tmp);
-            }
 
-        }
-        
-    }
-    return false;
-
-}
 
 void Parking::propositionAcceptee(Message recu)
 {
@@ -98,7 +66,7 @@ void Parking::propositionAcceptee(Message recu)
     // Si la proposition est accepté on previent la voiture et 
     // on quitte le processus de négociation.
     toSend.contenuMessage.setTexte("Proposition acceptée");
-    sendMessage(recu.emmeteur, toSend);
+    sendMessage(toSend, ID, recu.emmeteur);
 
     double duree = recu.contenuMessage.getDuree();
     Date now;
@@ -119,29 +87,18 @@ void Parking::propositionRefusee(float _prix, Message recu)
     float prix_total = _prix+_prix*prix_remplissage;
     cout<<"prix total = "<<prix_total<<endl;
     toSend.contenuMessage.setPrix(prix_total);
-    sendMessage(recu.emmeteur, toSend);
+    sendMessage(toSend, ID, recu.emmeteur);
 }
 
 void Parking::processusNegocitation(){
 
-    Message recu;
-    // Si pas de message recu on quitte la fonction
-    if(!GetLastUnreadMsg(recu, "NULL")){
-        return;
-    }
-    else{
-        // Si il y a un message recu mais ce n'est pas une demande de 
-        // place on quitte aussi
-        if(recu.performatif!=DemandePlace){
-            return;
-        }
-    }
+    Message recu = getMessage(ID);
 
     // Si le parking est plein on refuse directement 
     if(IsFull()){
         Message toSend(ID, Refut);
         toSend.contenuMessage.setTexte("Désolé nous sommes complet");
-        sendMessage(recu.emmeteur, toSend);
+        sendMessage(toSend, ID, recu.emmeteur);
         return;
     }
 
@@ -205,8 +162,7 @@ void Parking::processusNegocitation(){
         }
                     
         // Boucle bloquant l'attente d'un nouveau message
-        while(!GetLastUnreadMsg(recu, recu.emmeteur)){
-        }
+        recu = getMessageFrom(ID, recu.emmeteur);
         
         compteur++;
     }

@@ -15,10 +15,10 @@ public:
     Voiture(string immat);
     ~Voiture();
     string getImat() const;
-    void sendMessage(string id_destinataire, Message m);
+
     void Boucle();
     void negociation(string id_destinataire, int compteur);
-    bool checkLastUnreadMessage(Message & m);
+   
     void premierMessage(string id_destinataire);
     void processusNegocition();
 
