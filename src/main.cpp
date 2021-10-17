@@ -48,7 +48,7 @@ int main(int argc, char ** argv){
     Text txt;
     
     txt.setFont(font);
-    txt.setString("Gestion intelligente de parkings dans un centre urbain");
+    txt.setString("$$$$$$$");
   
 
     txt.setCharacterSize(32);
@@ -61,7 +61,7 @@ LoadFont();
     Text txt1;
       
     txt1.setFont(myfont);
-    txt1.setString("SMART CITY");
+    txt1.setString("hhhhhhhhhhhhh");
     txt1.setCharacterSize(48);
     txt1.setFillColor(Color::Green);
     txt1.setPosition(700,100);
