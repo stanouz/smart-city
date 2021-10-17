@@ -123,4 +123,3 @@ LoadFont();
 
     return 0;
 }
-

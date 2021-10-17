@@ -16,7 +16,7 @@ public:
     ~Agent();
 protected:
     inline static map<string, queue<Message> > BoiteAuxLettres;
-    vector<Message> BoiteAuxLettresPrivé;
+    vector<Message> BoiteAuxLettresPrive;
 };
 
 #endif

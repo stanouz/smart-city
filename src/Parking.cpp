@@ -46,7 +46,7 @@ void Parking::sendMessage(string id_destinataire, Message & m){
 bool Parking::GetLastUnreadMsg(Message & m){
     if(!BoiteAuxLettres[ID].empty()){
         m = BoiteAuxLettres[ID].front();
-        BoiteAuxLettresPrivé.push_back(m);
+        BoiteAuxLettresPrive.push_back(m);
         BoiteAuxLettres[ID].pop();
         return true;
     }

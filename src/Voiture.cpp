@@ -49,7 +49,7 @@ bool Voiture::checkLastUnreadMessage(Message & m)
 {
     if(!BoiteAuxLettres[immatriculation].empty()){
         m = BoiteAuxLettres[immatriculation].front();
-        BoiteAuxLettresPrivé.push_back(m);
+        BoiteAuxLettresPrive.push_back(m);
         BoiteAuxLettres[immatriculation].pop();
         return true;
     }
