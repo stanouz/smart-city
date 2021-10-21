@@ -65,11 +65,12 @@ void Voiture::premierMessage(string id_destinataire)
     Message m(immatriculation, DemandePlace);
     string mess = "Premier message de voiture";
     m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
-    m.contenuMessage.setPrix(3);
+    
+    float prix = (rand()%6)+1;
+    m.contenuMessage.setPrix(prix);
     m.contenuMessage.setTexte(mess);
     m.recepteur = id_destinataire;
 
-    m.contenuMessage.setPrix(1);
     sendMessage(m, immatriculation, id_destinataire);
 }
 
@@ -77,7 +78,7 @@ void Voiture::processusNegocition()
 {
     Message recu = getMessage(immatriculation);
 
-    
+    srand (time(NULL));
     
     int compteur=0;
     bool propositionAccepte = false;
