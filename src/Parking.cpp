@@ -39,7 +39,7 @@ void Parking::updatePlacesStatus(){
 
 double Parking::pourcentageRemplissage()
 {
-    return (nb_place_occup/NB_PLACES_TOTAL)*100;
+    return (nb_place_occup/NB_PLACES_TOTAL);
 }
 
 void Parking::ajouteVoiture(string occupant, Date dateDepart){
@@ -55,9 +55,28 @@ void Parking::ajouteVoiture(string occupant, Date dateDepart){
     }
 }
 
-
-
-
+double Parking::prixFinal(float duree)
+{
+    double reduc;
+    double percent = pourcentageRemplissage();
+    if(duree<=4)
+    {
+        reduc = 0;
+    }
+    else if(duree<=8)
+    {
+        reduc = 0.05;
+    }
+    else if(duree<=12)
+    {
+        reduc = 0.1;
+    }
+    else if(duree>12)
+    {
+        reduc = 0.2;
+    }
+    return prix - (prix*reduc) + (prix*percent);
+}
 
 
 void Parking::propositionAcceptee(Message recu)
@@ -75,21 +94,18 @@ void Parking::propositionAcceptee(Message recu)
 
     // On ajoute la voiture dans le parking
     ajouteVoiture(recu.emmeteur, nowPlusDuree);
-
 }
 
-void Parking::propositionRefusee(float _prix, Message recu)
+void Parking::propositionRefusee(Message recu)
 {
     Message toSend(ID, Reponse);
 
     toSend.contenuMessage.setTexte("Proposition refusée");
 
-    float prix_remplissage = pourcentageRemplissage()+0.50;
-    float prix_total = _prix+_prix*prix_remplissage;
-    cout<<"prix total = "<<prix_total<<endl;
-    toSend.contenuMessage.setPrix(prix_total);
+    toSend.contenuMessage.setPrix(recu.contenuMessage.getPrix());
     sendMessage(toSend, ID, recu.emmeteur);
 }
+
 
 void Parking::processusNegocitation(){
 
@@ -113,57 +129,17 @@ void Parking::processusNegocitation(){
         cout << endl<<endl<<endl<<"===== COMPTEUR " << compteur << "=======" << endl;
         recu.display();
         float prixDemande = recu.contenuMessage.getPrix();
+        float duree = recu.contenuMessage.getDuree();
         
-        if(pourcentageRemplissage()>=0.95)
+        if(prixDemande<prixFinal(duree))
         {
-            if(prixDemande<10)
-            {
-                propositionRefusee(10, recu);
-            }
-            else
-            {
-                propositionAcceptee(recu);
-                accepte = true;
-            }
+            propositionRefusee(recu);
         }
-        else if((0.50<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.95))
+        else 
         {
-            if(prixDemande<5)
-            {
-                propositionRefusee(5, recu);
-            }
-            else 
-            {
-                propositionAcceptee(recu);
-                accepte = true;
-            }
+            propositionAcceptee(recu);
+            accepte = true;
         }
-        else if((0.20<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.50))
-        {
-            if(prixDemande<3)
-            {
-                propositionRefusee(3, recu);
-            }
-            else 
-            {
-                propositionAcceptee(recu);
-                accepte = true;
-            }
-        }
-        else if((0<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.20))
-        {
-            if(prixDemande<2)
-            {
-                propositionRefusee(2, recu);
-            }
-            else 
-            {
-                propositionAcceptee(recu);
-                accepte = true;
-            }
-        }
-
-                    
 
         // Boucle bloquant l'attente d'un nouveau message
         if(!accepte)

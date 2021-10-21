@@ -96,7 +96,8 @@ void Voiture::processusNegocition()
         } 
         
         //boucle d'attente d'un nouveau message
-        recu = getMessageFrom(immatriculation, recu.emmeteur);
+        if(!propositionAccepte)
+            recu = getMessageFrom(immatriculation, recu.emmeteur);
         compteur++;  
     }
 }
