@@ -84,10 +84,8 @@ void Parking::propositionRefusee(float _prix, Message recu)
 
     toSend.contenuMessage.setTexte("Proposition refusée");
 
-    float prix_remplissage = pourcentageRemplissage()+0.50;
-    float prix_total = _prix+_prix*prix_remplissage;
-    cout<<"prix total = "<<prix_total<<endl;
-    toSend.contenuMessage.setPrix(prix_total);
+    
+    toSend.contenuMessage.setPrix(recu.contenuMessage.getPrix());
     sendMessage(toSend, ID, recu.emmeteur);
 }
 
