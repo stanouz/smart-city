@@ -30,30 +30,17 @@ string Voiture::getImat() const{
 
 
 
-void Voiture::negociation(string id_destinataire, int compteur)
+void Voiture::negociation(string id_destinataire, double prixPopositionPrecedente)
 {
-    //Message m_voiture = BoiteAuxLettres[id_destinataire].back();
-    //Message m_parking = BoiteAuxLettres[immatriculation].back();
-    
-    float prix_parking = 1.;//m_parking.contenuMessage.getPrix();
-    float prix_voiture = 10.; //m_voiture.contenuMessage.getPrix();
-
-
     Message m_new(immatriculation, DemandePlace);
 
     m_new.contenuMessage.setDuree(DUREE_STATIONNEMENT);
-    m_new.contenuMessage.setPrix(prix_parking-0.1*prix_parking);
     m_new.contenuMessage.setTexte("Je vous fais une autre proposition");
    
+    double coefAugmentation = (rand()%950 + 1050.)/1000.; // => valeur entre 1.050 et 2.000
 
-    if(compteur==0)
-    {
-        m_new.contenuMessage.setPrix(prix_voiture+0.5*prix_voiture);
-    }
-    else if(compteur==1)
-    {
-        m_new.contenuMessage.setPrix(prix_parking);
-    }
+    double nouveauPrix = prixPopositionPrecedente*coefAugmentation; // nouveauPrix > prixPropositionPrecedente
+    m_new.contenuMessage.setPrix(nouveauPrix);
     
 
     sendMessage(m_new, immatriculation, id_destinataire);
@@ -82,6 +69,7 @@ void Voiture::processusNegocition()
     
     int compteur=0;
     bool propositionAccepte = false;
+    
     while(compteur<3 && !propositionAccepte){
         if(recu.contenuMessage.getTexte()=="Proposition acceptée")
         {
@@ -93,7 +81,10 @@ void Voiture::processusNegocition()
         {
             recu.display();
             cout << "Le parking a refusé ma proposition" << endl;
-            negociation(recu.emmeteur, compteur);
+
+            // On recupère le prix de la proposition précédente que le
+            // parking renvoie dans le contenu du message
+            negociation(recu.emmeteur, recu.contenuMessage.getPrix());
         } 
         
         //boucle d'attente d'un nouveau message

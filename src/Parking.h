@@ -17,16 +17,17 @@ public:
     ~Parking();
     bool IsFull() const;
 
-    void negociation();
+    
 
     void updatePlacesStatus();
     void Boucle();
+
     void processusNegocitation();
-    double pourcentageRemplissage();
-    void ajouteVoiture(string occupant, Date dateDepart);
     void propositionAcceptee(Message recu);
     void propositionRefusee(Message recu);
     double prixFinal(float duree);
+    void ajouteVoiture(string occupant, Date dateDepart);
+    double pourcentageRemplissage();
 
 private:
     Place tabPlaces[100];
