@@ -1,9 +1,13 @@
 #include "Voiture.h"
 #include <unistd.h>
+#include <stdlib.h>     
+#include <time.h>
 
 #include <iostream>
 
 using namespace std;
+
+const double DUREE_STATIONNEMENT = 0.1;
 
 Voiture::Voiture(){
 }
@@ -24,67 +28,83 @@ string Voiture::getImat() const{
     return immatriculation;
 }
 
-void Voiture::sendMessage(string id_destinataire, Message m){
-    m.recepteur = id_destinataire;
-    BoiteAuxLettres[id_destinataire].push(m);
+
+
+void Voiture::negociation(string id_destinataire, double prixPopositionPrecedente)
+{
+    Message m_new(immatriculation, DemandePlace);
+
+    m_new.contenuMessage.setDuree(DUREE_STATIONNEMENT);
+    m_new.contenuMessage.setTexte("Je vous fais une autre proposition");
+   
+    double coefAugmentation = (rand()%950 + 1050.)/1000.; // => valeur entre 1.050 et 2.000
+
+    double nouveauPrix = prixPopositionPrecedente*coefAugmentation; // nouveauPrix > prixPropositionPrecedente
+    
+    // On garde que 2 chiffres après la virgule
+    int tmp = nouveauPrix*100;
+    nouveauPrix = tmp/100.;
+
+
+    m_new.contenuMessage.setPrix(nouveauPrix);
+    
+
+    sendMessage(m_new, immatriculation, id_destinataire);
 }
 
-void Voiture::negociation(string id_destinataire)
+
+void Voiture::premierMessage(string id_destinataire)
 {
     Message m(immatriculation, DemandePlace);
-    string non = "Non, -10%";
-    string oui = "Oui";
-    float alea = rand() % 100;
-    m.performatif = DemandePlace;
-    if(alea<=80)
-    {
-        m.contenuMessage.setTexte(non); 
-    }
-    else m.contenuMessage.setTexte(oui);
+    string mess = "Premier message de voiture";
+    m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
+    m.contenuMessage.setPrix(1.);
+    m.contenuMessage.setTexte(mess);
+    m.recepteur = id_destinataire;
 
-    sendMessage(id_destinataire,m);
+    sendMessage(m, immatriculation, id_destinataire);
 }
 
-bool Voiture::checkLastUnreadMessage(Message & m) 
+void Voiture::processusNegocition()
 {
-    if(!BoiteAuxLettres[immatriculation].empty()){
-        m = BoiteAuxLettres[immatriculation].front();
-        BoiteAuxLettresPrive.push_back(m);
-        BoiteAuxLettres[immatriculation].pop();
-        return true;
-    }
-    return false;
-}
+    Message recu = getMessage(immatriculation);
 
+    
+    
+    int compteur=0;
+    bool propositionAccepte = false;
+    
+    while(compteur<3 && !propositionAccepte){
+        if(recu.contenuMessage.getTexte()=="Proposition acceptée")
+        {
+            recu.display();
+            propositionAccepte = true;
+            cout << "Parking a accepter ma proposition" << endl;
+        }
+        else if(recu.contenuMessage.getTexte()=="Proposition refusée")
+        {
+            recu.display();
+            cout << "Le parking a refusé ma proposition" << endl;
+
+            // On recupère le prix de la proposition précédente que le
+            // parking renvoie dans le contenu du message
+            negociation(recu.emmeteur, recu.contenuMessage.getPrix());
+        } 
+        
+        //boucle d'attente d'un nouveau message
+        if(!propositionAccepte)
+            recu = getMessageFrom(immatriculation, recu.emmeteur);
+        compteur++;  
+    }
+}
 
 void Voiture::Boucle(){
     
-    Message m(immatriculation, DemandePlace);
-    string mess = "Bonjour";
-    m.contenuMessage.setDateDebut(Date());
-    m.contenuMessage.setPrix(6);
-    m.contenuMessage.setTexte(mess);
-    m.performatif = DemandePlace;
-    sendMessage("P1",m);
-
-    while(true){
-        int compteur=0;
-       
-        while(compteur<=3){
-            Message read;
-            while(!checkLastUnreadMessage(read))
-            {
-        
-            }
-                
-
-            read.display();
-            negociation(read.emmeteur);
-            cout << "Message " << compteur << endl;
-            compteur++;
-            usleep(1600000);
-        }
-        
-        usleep(1600000);
+    premierMessage("P1");
+   
+    while(true)
+    {
+        processusNegocition();
     }
 }
+    

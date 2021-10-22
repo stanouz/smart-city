@@ -17,7 +17,7 @@ public:
     string getImat() const;
 
     void Boucle();
-    void negociation(string id_destinataire, int compteur);
+    void negociation(string id_destinataire, double prixPopositionPrecedente);
    
     void premierMessage(string id_destinataire);
     void processusNegocition();

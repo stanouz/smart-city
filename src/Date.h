@@ -11,7 +11,7 @@ enum WeekDay{monday, tuesday, wednesday, thursday, friday, saturday, sunday};
 class Date{
 public:
     Date();
-    Date(Date & d, int hour);
+    Date(Date & d, double hour);
     ~Date();
     bool isBetween(Date date1, Date date2) const;
     void setDate(int day_, int month_, int year_);

@@ -7,11 +7,13 @@ using namespace std;
 
 Parking::Parking(){
     prix = 5.;
+    nb_place_occup = 0;
 }
 
 Parking::Parking(string id){
     ID = id;
     prix = 5.;
+    nb_place_occup = 0;
 }
 
 Parking::~Parking(){
@@ -19,23 +21,38 @@ Parking::~Parking(){
 }
 
 bool Parking::IsFull() const{
-    for(int i=0; i<(int)places.size(); i++){
-        if(places[i].getIsOccupied()==false){
-            return true;
-        }
+    if(nb_place_occup<NB_PLACES_TOTAL){
+        return false;
     }
-    return false;
+    return true;
 }
 
 void Parking::updatePlacesStatus(){
-    for(int i=0; i<places.size(); i++){
-        places[i].updateStatus();
+
+    for(int i=0; i<NB_PLACES_TOTAL; i++){
+        if(tabPlaces[i].updateStatus()){
+            nb_place_occup--;
+        }
+        
     }
 }
 
-void Parking::sendMessage(string id_destinataire, Message & m){
-    m.recepteur = id_destinataire;
-    BoiteAuxLettres[id_destinataire].push(m);
+double Parking::pourcentageRemplissage()
+{
+    return (nb_place_occup/NB_PLACES_TOTAL)*100;
+}
+
+void Parking::ajouteVoiture(string occupant, Date dateDepart){
+
+    int i=0;
+    bool ajouter = false;
+    while(i<NB_PLACES_TOTAL && !ajouter){
+        ajouter = tabPlaces[i].ajouteVoiture(occupant, dateDepart);
+        i++;
+    }
+    if(ajouter){
+        nb_place_occup++;
+    }
 }
 
 
@@ -43,61 +60,112 @@ void Parking::sendMessage(string id_destinataire, Message & m){
 
 
 
-bool Parking::GetLastUnreadMsg(Message & m){
-    if(!BoiteAuxLettres[ID].empty()){
-        m = BoiteAuxLettres[ID].front();
-        BoiteAuxLettresPrive.push_back(m);
-        BoiteAuxLettres[ID].pop();
-        return true;
-    }
-    return false;
+void Parking::propositionAcceptee(Message recu)
+{
+    Message toSend(ID, Reponse);
+
+    // Si la proposition est accepté on previent la voiture et 
+    // on quitte le processus de négociation.
+    toSend.contenuMessage.setTexte("Proposition acceptée");
+    sendMessage(toSend, ID, recu.emmeteur);
+
+    double duree = recu.contenuMessage.getDuree();
+    Date now;
+    Date nowPlusDuree(now, duree);
+
+    // On ajoute la voiture dans le parking
+    ajouteVoiture(recu.emmeteur, nowPlusDuree);
+
+}
+
+void Parking::propositionRefusee(float _prix, Message recu)
+{
+    Message toSend(ID, Reponse);
+
+    toSend.contenuMessage.setTexte("Proposition refusée");
+
+    
+    toSend.contenuMessage.setPrix(recu.contenuMessage.getPrix());
+    sendMessage(toSend, ID, recu.emmeteur);
 }
 
 void Parking::processusNegocitation(){
-    Message recu;
 
-    // Si pas de message recu on quitte la fonction
-    if(!GetLastUnreadMsg(recu)){
+    Message recu = getMessage(ID);
+
+    // Si le parking est plein on refuse directement 
+    if(IsFull()){
+        Message toSend(ID, Refut);
+        toSend.contenuMessage.setTexte("Désolé nous sommes complet");
+        sendMessage(toSend, ID, recu.emmeteur);
         return;
-    }
-    else{
-        // Si il y a un message recu mais ce n'est pas une demande de 
-        // place on quitte aussi
-        if(recu.performatif!=DemandePlace){
-            return;
-        }
     }
 
 
     int compteur =0;
+    bool accepte = false;
     Message toSend(ID, Reponse);
     while(compteur<3){
         
 
-        cout << "===== COMPTEUR " << compteur << "=======" << endl;
+        cout << endl<<endl<<endl<<"===== COMPTEUR " << compteur << "=======" << endl;
         recu.display();
         float prixDemande = recu.contenuMessage.getPrix();
         
-        if(prixDemande >= prix*0.9){
-            // Si la proposition est accepté on previent la voiture et 
-            // on quitte le processus de négociation.
-            toSend.contenuMessage.setTexte("Proposition acceptée");
-            sendMessage(recu.emmeteur, toSend);
+        if(pourcentageRemplissage()>=0.95)
+        {
+            if(prixDemande<10)
+            {
+                propositionRefusee(10, recu);
+            }
+            else
+            {
+                propositionAcceptee(recu);
+                accepte = true;
+            }
+        }
+        else if((0.50<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.95))
+        {
+            if(prixDemande<5)
+            {
+                propositionRefusee(5, recu);
+            }
+            else 
+            {
+                propositionAcceptee(recu);
+                accepte = true;
+            }
+        }
+        else if((0.20<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.50))
+        {
+            if(prixDemande<3)
+            {
+                propositionRefusee(3, recu);
+            }
+            else 
+            {
+                propositionAcceptee(recu);
+                accepte = true;
+            }
+        }
+        else if((0<=pourcentageRemplissage()) && (pourcentageRemplissage()<0.20))
+        {
+            if(prixDemande<2)
+            {
+                propositionRefusee(2, recu);
+            }
+            else 
+            {
+                propositionAcceptee(recu);
+                accepte = true;
+            }
+        }
 
-            // Appeller une fonction qui gare la voiture à la première place 
-            // libre
-            return;
-        }
-        else{
-            toSend.contenuMessage.setTexte("Proposition refusée");
-            sendMessage(recu.emmeteur, toSend);
-        }
                     
 
         // Boucle bloquant l'attente d'un nouveau message
-        while(!GetLastUnreadMsg(recu)){
-            cout << "Boucle d'attente" << endl;
-        }
+        if(!accepte)
+            recu = getMessageFrom(ID, recu.emmeteur);
         
         compteur++;
     }
@@ -107,11 +175,10 @@ void Parking::processusNegocitation(){
 void Parking::Boucle(){
 
     while(true){
-
-        processusNegocitation();
+        if(!BoiteAuxLettres[ID].empty())
+            processusNegocitation();
+        updatePlacesStatus();
         
-
-        usleep(600000);
     }
 }
 

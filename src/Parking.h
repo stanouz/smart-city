@@ -16,15 +16,26 @@ public:
     Parking(string id);
     ~Parking();
     bool IsFull() const;
-    void sendMessage(string id_destinataire, Message & m);
-    void negociation();
-    bool GetLastUnreadMsg(Message & msg);
+
+    
+
     void updatePlacesStatus();
     void Boucle();
+
     void processusNegocitation();
+    void propositionAcceptee(Message recu);
+    void propositionRefusee(float _prix, Message recu);
+
+    double pourcentageRemplissage();
+
+    void ajouteVoiture(string occupant, Date dateDepart);
+    
+
 
 private:
-    vector<Place> places;
+    Place tabPlaces[100];
+    const int NB_PLACES_TOTAL = 100;
+    int nb_place_occup;
     float prix;
     string ID;
 };
