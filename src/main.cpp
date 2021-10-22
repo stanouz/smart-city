@@ -3,6 +3,10 @@
 #include <pthread.h>
 #include <unistd.h>
 
+#include <fstream>
+#include <vector>
+#include <sstream>
+
 
 #include "Parking.h"
 #include "Voiture.h"
@@ -15,63 +19,111 @@
 
 using namespace std;
 
-using namespace sf;
-Font font;
 
-void LoadFont()
-{
-    if(!font.loadFromFile("res/poppins.ttf"))
-    {
+void DrawMap(sf::RenderWindow & window, vector<vector<int> > & map){
+    int winH = window.getSize().y;
+    int winW = window.getSize().x;
 
-        cout<<"erreur chargement"<<endl;
-    }
-}
+    int mapH = map.size();
+    int mapW = map[0].size();
+    double tileH = winH/(double)mapH;
+    double tileW = winW/(double)mapW;
+  
+    sf::Texture text;
+    text.loadFromFile("data/tilemap.png");
 
+    double scaleH = tileH / 16.; // tiles are 16x16 px
+    double scaleW = tileW / 16.;
 
-void Fenetre(){
-    //cration d'une fenetre de type RenderWindow
-    RenderWindow window(VideoMode(500,500,32),"mon titre");
+    sf::Sprite sprite;
+    sprite.setTexture(text);
+    int x, y;
 
-    
-    LoadFont();
-    Text txt; 
-    txt.setFont(font);
-    
-    txt.setCharacterSize(20);
-    txt.setFillColor(Color::Blue);
-    txt.setPosition(50,50);
-            
-    while(window.isOpen())
-    {
-        Event event ;
-        while (window.pollEvent(event))
-        {
-            if(event.type == Event::Closed)
-            {
-                window.close();
-            }
-            Date now;
-            txt.setString(now.DateToString());
-            window.clear(Color::Black);
-            window.draw(txt);
-                
-            window.display();
-            usleep(100000);
+    for(int i=0; i<mapW; i++){
+        for(int j=0; j<mapH; j++){   
+            int value = map[j][i];
+            x = ((value - 1) % 27) * 17; // 27 tile par ligne et 
+            y = ((value - 1) / 27) * 17; // * 17 car tile de 16px +1px d'espace
+
+            sprite.setPosition(i*tileH, j*tileW);
+            sprite.setScale(scaleH, scaleW);
+            sprite.setTextureRect(sf::IntRect(x, y, 16, 16));
+            window.draw(sprite);
         }
     }
+        
 }
 
 
-void displayHeure(){
-    while(true){
-        Date now;
-        cout << "======= " << now << endl;
-        usleep(1000000);
+std::vector<int> TxtLineToInt(std::string data)
+{
+
+    std::vector<int> vect;
+    std::stringstream ss(data);
+
+    // Tant qu'on lit dans la std::string on continu
+    for (int i; ss >> i;)
+    {
+        // On stock dans le std::vector les entiers
+        vect.push_back(i);
+        // Si le caractère est un espace on passe
+        if (ss.peek() == ' ')
+            ss.ignore();
+    }
+    return vect;
+}
+
+
+
+
+vector<vector<int> > fileToTab(){
+    ifstream my_file("data/map.txt");
+    if(!my_file){
+        exit(1);
+    }
+
+    vector<vector<int> > tab;
+    string ligne;
+    while(getline(my_file, ligne)){
+        tab.push_back(TxtLineToInt(ligne));
+    }
+   
+    
+    return tab;
+}
+
+
+void Affichage(){
+    
+    vector<vector<int> > map= fileToTab();
+
+    sf::RenderWindow window(sf::VideoMode(500, 500), "Test App SFML");
+
+    while (window.isOpen()) {
+        sf::Event event;
+        
+        // handle events
+        while (window.pollEvent(event)) {
+            switch (event.type) {
+                case sf::Event::Closed:
+                    window.close();
+                    break;
+                
+                default:
+                    break;
+                    
+            }
+        }
+        DrawMap(window, map);
+        window.display();
     }
 }
+
+
 
 int main(int argc, char ** argv){
     
+    thread thread_affichage(Affichage);
     
     Parking p("P1");
     Voiture v1("AAA-123-AAA");
@@ -92,7 +144,8 @@ int main(int argc, char ** argv){
     thread thread_voiture7(&Voiture::Boucle, ref(v7));
     thread thread_voiture8(&Voiture::Boucle, ref(v8));
     thread thread_parking(&Parking::Boucle, ref(p));
-    //thread thread_heure(displayHeure);
+
+    thread_affichage.join();
 
     thread_voiture1.join();
     thread_voiture2.join();
@@ -104,7 +157,7 @@ int main(int argc, char ** argv){
     thread_voiture8.join();
 
     thread_parking.join();
-    //thread_heure.join();
+
     
 
 
