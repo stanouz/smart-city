@@ -26,7 +26,7 @@ Message Agent::getMessage(string recepteur){
         cv.wait(l);
     }
     Message msg = BoiteAuxLettres[recepteur][0];
-    BoiteAuxLettresPrivé.push_back(msg);
+    BoiteAuxLettresPrive.push_back(msg);
     BoiteAuxLettres[recepteur].erase(BoiteAuxLettres[recepteur].begin());
 
     
@@ -57,7 +57,7 @@ Message Agent::getMessageFrom(string recepteur, string emmeteur){
             cv.wait(l);
         }
     }
-    BoiteAuxLettresPrivé.push_back(msg);
+    BoiteAuxLettresPrive.push_back(msg);
     BoiteAuxLettres[recepteur].erase(BoiteAuxLettres[recepteur].begin()+i);
     return msg;
 }   

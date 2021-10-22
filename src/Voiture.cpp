@@ -40,6 +40,12 @@ void Voiture::negociation(string id_destinataire, double prixPopositionPrecedent
     double coefAugmentation = (rand()%950 + 1050.)/1000.; // => valeur entre 1.050 et 2.000
 
     double nouveauPrix = prixPopositionPrecedente*coefAugmentation; // nouveauPrix > prixPropositionPrecedente
+    
+    // On garde que 2 chiffres après la virgule
+    int tmp = nouveauPrix*100;
+    nouveauPrix = tmp/100.;
+
+
     m_new.contenuMessage.setPrix(nouveauPrix);
     
 
