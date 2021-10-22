@@ -1,7 +1,12 @@
 #include "Voiture.h"
+
+
+
+
 #include <unistd.h>
 #include <stdlib.h>     
 #include <time.h>
+#include <thread>
 
 #include <iostream>
 
@@ -65,20 +70,26 @@ void Voiture::premierMessage(string id_destinataire)
     sendMessage(m, immatriculation, id_destinataire);
 }
 
-void Voiture::processusNegocition()
+void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> & prop)
 {
-    Message recu = getMessage(immatriculation);
-
+    premierMessage(id_parking);
     
-    
+    Message recu; 
     int compteur=0;
     bool propositionAccepte = false;
     
     while(compteur<3 && !propositionAccepte){
+        
+        //boucle d'attente d'un nouveau message
+        recu = getMessageFrom(immatriculation, id_parking);
+
+
         if(recu.contenuMessage.getTexte()=="Proposition acceptée")
         {
             recu.display();
             propositionAccepte = true;
+            PropositionAccepte p(recu.contenuMessage.getPrix(), recu.emmeteur);
+            prop.push_back(p);
             cout << "Parking a accepter ma proposition" << endl;
         }
         else if(recu.contenuMessage.getTexte()=="Proposition refusée")
@@ -91,20 +102,28 @@ void Voiture::processusNegocition()
             negociation(recu.emmeteur, recu.contenuMessage.getPrix());
         } 
         
-        //boucle d'attente d'un nouveau message
-        if(!propositionAccepte)
-            recu = getMessageFrom(immatriculation, recu.emmeteur);
+        
+        
         compteur++;  
     }
 }
 
-void Voiture::Boucle(){
-    
-    premierMessage("P1");
-   
-    while(true)
-    {
-        processusNegocition();
+
+
+PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop){
+    if(prop.size()>0){
+        cout << "ok" << endl;
+        return prop[0];
     }
+    return PropositionAccepte(0, "P0");
+}
+
+
+
+
+void Voiture::Boucle(){
+    vector<PropositionAccepte> propositions;
+    processusNegocition("P1", propositions);
+    compareProposition(propositions);
 }
     

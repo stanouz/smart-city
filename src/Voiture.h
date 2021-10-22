@@ -4,6 +4,7 @@
 #include <string>
 #include "Date.h"
 #include "Agent.h"
+#include "PropositionAccepte.h"
 
 
 using namespace std;
@@ -20,7 +21,9 @@ public:
     void negociation(string id_destinataire, double prixPopositionPrecedente);
    
     void premierMessage(string id_destinataire);
-    void processusNegocition();
+    void processusNegocition(string id_parking, vector<PropositionAccepte> & prop);
+
+    PropositionAccepte compareProposition(vector<PropositionAccepte> & prop);
 
 private:
     string immatriculation;

@@ -59,6 +59,7 @@ void Affichage::display(){
                     
             }
         }
+        window.clear();
         displayMap(window);
         window.display();
     }
