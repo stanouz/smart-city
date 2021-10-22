@@ -25,7 +25,7 @@ protected:
     inline static mutex m;
     inline static condition_variable cv;
     inline static map<string, vector<Message> > BoiteAuxLettres;
-    vector<Message> BoiteAuxLettresPrivé;
+    vector<Message> BoiteAuxLettresPrive;
 };
 
 #endif
