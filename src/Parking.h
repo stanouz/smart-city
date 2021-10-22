@@ -24,7 +24,7 @@ public:
 
     void processusNegocitation();
     void propositionAcceptee(Message recu);
-    void propositionRefusee(Message recu);
+    void propositionRefusee(Message recu, int compteur);
     double prixFinal(float duree);
     void ajouteVoiture(string occupant, Date dateDepart);
     double pourcentageRemplissage();

@@ -4,7 +4,7 @@
 #include <string>
 #include "Contenu.h"
 
-enum Performatif{DemandePlace, Reponse, Refut};
+enum Performatif{DemandePlace, Reponse, Refut, Accepter};
 
 class Message{
 public:

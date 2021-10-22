@@ -81,7 +81,7 @@ double Parking::prixFinal(float duree)
 
 void Parking::propositionAcceptee(Message recu)
 {
-    Message toSend(ID, Reponse);
+    Message toSend(ID, Accepter);
 
     // Si la proposition est accepté on previent la voiture et 
     // on quitte le processus de négociation.
@@ -96,13 +96,23 @@ void Parking::propositionAcceptee(Message recu)
     ajouteVoiture(recu.emmeteur, nowPlusDuree);
 }
 
-void Parking::propositionRefusee(Message recu)
+void Parking::propositionRefusee(Message recu, int compteur)
 {
     Message toSend(ID, Reponse);
 
     toSend.contenuMessage.setTexte("Proposition refusée");
 
     toSend.contenuMessage.setPrix(recu.contenuMessage.getPrix());
+
+    if(compteur==2)
+    {
+
+        toSend.performatif=Refut;
+        sendMessage(toSend, ID, recu.emmeteur);
+        cout<<"Parking a envoyé le message"<<endl;
+        return;
+    }
+
     sendMessage(toSend, ID, recu.emmeteur);
 }
 
@@ -133,7 +143,11 @@ void Parking::processusNegocitation(){
         
         if(prixDemande<prixFinal(duree))
         {
-            propositionRefusee(recu);
+            propositionRefusee(recu, compteur);
+            if(compteur==2)
+            {
+                return;
+            }
         }
         else 
         {

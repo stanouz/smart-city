@@ -77,21 +77,26 @@ void Voiture::processusNegocition()
     bool propositionAccepte = false;
     
     while(compteur<3 && !propositionAccepte){
-        if(recu.contenuMessage.getTexte()=="Proposition acceptée")
+        if(recu.performatif==Accepter)
         {
             recu.display();
             propositionAccepte = true;
             cout << "Parking a accepter ma proposition" << endl;
         }
-        else if(recu.contenuMessage.getTexte()=="Proposition refusée")
+        else if(recu.performatif == Reponse)
         {
             recu.display();
-            cout << "Le parking a refusé ma proposition" << endl;
+            cout << "Le parking negocie encore" << endl;
 
             // On recupère le prix de la proposition précédente que le
             // parking renvoie dans le contenu du message
             negociation(recu.emmeteur, recu.contenuMessage.getPrix());
         } 
+        else if(recu.performatif==Refut)
+        {
+            cout<<"Le parking refuse la proposition et stop la negociation"<<endl;
+            return;
+        }
         
         //boucle d'attente d'un nouveau message
         if(!propositionAccepte)
