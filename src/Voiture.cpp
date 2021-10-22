@@ -63,7 +63,9 @@ void Voiture::premierMessage(string id_destinataire)
     Message m(immatriculation, DemandePlace);
     string mess = "Premier message de voiture";
     m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
-    m.contenuMessage.setPrix(1.);
+    
+    float prix = (rand()%6)+1;
+    m.contenuMessage.setPrix(prix);
     m.contenuMessage.setTexte(mess);
     m.recepteur = id_destinataire;
 
@@ -82,9 +84,8 @@ void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> 
         
         //boucle d'attente d'un nouveau message
         recu = getMessageFrom(immatriculation, id_parking);
-
-
-        if(recu.contenuMessage.getTexte()=="Proposition acceptée")
+        
+        if(recu.performatif==Accepter)
         {
             recu.display();
             propositionAccepte = true;
@@ -92,15 +93,20 @@ void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> 
             prop.push_back(p);
             cout << "Parking a accepter ma proposition" << endl;
         }
-        else if(recu.contenuMessage.getTexte()=="Proposition refusée")
+        else if(recu.performatif == Reponse)
         {
             recu.display();
-            cout << "Le parking a refusé ma proposition" << endl;
+            cout << "Le parking negocie encore" << endl;
 
             // On recupère le prix de la proposition précédente que le
             // parking renvoie dans le contenu du message
             negociation(recu.emmeteur, recu.contenuMessage.getPrix());
         } 
+        else if(recu.performatif==Refut)
+        {
+            cout<<"Le parking refuse la proposition et stop la negociation"<<endl;
+            return;
+        }
         
         
         

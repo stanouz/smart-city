@@ -24,13 +24,10 @@ public:
 
     void processusNegocitation();
     void propositionAcceptee(Message recu);
-    void propositionRefusee(float _prix, Message recu);
-
-    double pourcentageRemplissage();
-
+    void propositionRefusee(Message recu, int compteur);
+    double prixFinal(float duree);
     void ajouteVoiture(string occupant, Date dateDepart);
-    
-
+    double pourcentageRemplissage();
 
 private:
     Place tabPlaces[100];
