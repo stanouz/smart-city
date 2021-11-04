@@ -2,7 +2,9 @@
 
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
+using namespace std;
 
 
 vector<int> TxtLineToInt(std::string data)
@@ -43,22 +45,25 @@ Affichage::~Affichage(){
 
 void Affichage::display(){
     sf::RenderWindow window(sf::VideoMode(500, 500), "Test App SFML");
-
     while (window.isOpen()) {
         sf::Event event;
-        
         // handle events
         while (window.pollEvent(event)) {
             switch (event.type) {
                 case sf::Event::Closed:
                     window.close();
                     break;
-                
+
                 default:
                     break;
                     
             }
         }
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+            if(clickParking(window))
+                cout << "OKKKKK" << endl;
+        }
+
         window.clear();
         displayMap(window);
         window.display();
@@ -97,4 +102,35 @@ void Affichage::displayMap(sf::RenderWindow & window){
             window.draw(sprite);
         }
     }
+}
+
+
+bool Affichage::clickParking(sf::RenderWindow & window){
+
+    int x = 0, y=0;
+
+    for(int i=0; i<map.size(); i++){
+        for(int j=0; j<map[0].size(); j++){
+            if(map[i][j]==443){
+                x = j;
+                y = i;
+            }
+        }
+    }
+    int winH = window.getSize().y;
+    int winW = window.getSize().x;
+    int mapH = map.size();
+    int mapW = map[0].size();
+    double tileH = winH/(double)mapH;
+    double tileW = winW/(double)mapW;
+
+
+    sf::Vector2i localPosition = sf::Mouse::getPosition(window);
+
+    if(localPosition.x > x*tileH && localPosition.x < (x+1)*tileH){
+        if(localPosition.y > y*tileW && localPosition.y < (y+1)*tileW){
+            return true;
+        }
+    }
+    return false;
 }

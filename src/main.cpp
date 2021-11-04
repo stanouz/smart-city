@@ -19,12 +19,12 @@ using namespace std;
 
 int main(int argc, char ** argv){
 
-    /*
-    Affichage affichage;
-
     
-    thread thread_affichage(&Affichage::display, ref(affichage));
-    */
+    Affichage affichage;
+    affichage.display();
+    
+    //thread thread_affichage(&Affichage::display, ref(affichage));
+    
     
     Parking p1("P1");
     Parking p2("P2");
