@@ -11,6 +11,8 @@ class PropositionAccepte{
 public:
     PropositionAccepte(double prix, string ID);
     ~PropositionAccepte();
+    string getId() const;
+    double getPrix() const;
 };
 
 

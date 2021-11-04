@@ -1,14 +1,12 @@
-#include "Voiture.h"
-
-
-
-
 #include <unistd.h>
 #include <stdlib.h>     
 #include <time.h>
 #include <thread>
-
 #include <iostream>
+
+
+
+#include "Voiture.h"
 
 using namespace std;
 
@@ -84,10 +82,10 @@ void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> 
         
         //boucle d'attente d'un nouveau message
         recu = getMessageFrom(immatriculation, id_parking);
+        recu.display();
         
         if(recu.performatif==Accepter)
         {
-            recu.display();
             propositionAccepte = true;
             PropositionAccepte p(recu.contenuMessage.getPrix(), recu.emmeteur);
             prop.push_back(p);
@@ -95,7 +93,6 @@ void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> 
         }
         else if(recu.performatif == Reponse)
         {
-            recu.display();
             cout << "Le parking negocie encore" << endl;
 
             // On recupère le prix de la proposition précédente que le
@@ -118,18 +115,53 @@ void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> 
 
 PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop){
     if(prop.size()>0){
-        cout << "ok" << endl;
-        return prop[0];
+        double prixMin = prop[0].getPrix();
+        int indMin=0;
+    
+        for(int i=0; i<prop.size(); i++){
+            if(prop[i].getPrix()<prixMin){
+                indMin=i;
+                prixMin = prop[i].getPrix();
+            }
+        }
+        return prop[indMin];
     }
-    return PropositionAccepte(0, "P0");
+    
+
+    return PropositionAccepte(-1, "P#");
 }
 
 
 
 
 void Voiture::Boucle(){
+    string parkings[3] = {"P1", "P2", "P3"};
+    vector<thread> negociations;
     vector<PropositionAccepte> propositions;
-    processusNegocition("P1", propositions);
-    compareProposition(propositions);
+    int size = 1;
+    for(int i=0; i<size; i++){
+        negociations.push_back(thread(&Voiture::processusNegocition, ref(*this),parkings[i], ref(propositions)));
+    }
+    for(int i=0; i<size; i++){
+        negociations[i].join();
+    }
+
+    PropositionAccepte meilleurOffre = compareProposition(propositions);
+
+    if(meilleurOffre.getPrix()!=-1 && meilleurOffre.getId()!="P#"){
+        Message m(immatriculation, Accepter);
+        m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
+        sendMessage(m, immatriculation, meilleurOffre.getId());
+        cout << "ACCEPTE" << endl;
+    }
+    else 
+        cout << "REFU" << endl;
+    
+    
 }
     
+/*
+
+Voir si les threads ne se bloque pas en attente de message
+
+*/

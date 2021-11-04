@@ -12,3 +12,11 @@ PropositionAccepte::PropositionAccepte(double prix_, string ID){
 PropositionAccepte::~PropositionAccepte(){
 
 }
+
+string PropositionAccepte::getId() const{
+    return ID_parking;
+}
+
+double PropositionAccepte::getPrix() const{
+    return prix;
+}

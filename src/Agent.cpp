@@ -40,9 +40,10 @@ Message Agent::getMessageFrom(string recepteur, string emmeteur){
 
     bool waitMsgFrom = true;
     int i=0;
+    
     while(waitMsgFrom)
     {
-        
+        int i=0;
         int size = BoiteAuxLettres[recepteur].size();
         while(i<size && waitMsgFrom){
             msg = BoiteAuxLettres[recepteur][i];
@@ -57,6 +58,7 @@ Message Agent::getMessageFrom(string recepteur, string emmeteur){
             cv.wait(l);
         }
     }
+
     BoiteAuxLettresPrive.push_back(msg);
     BoiteAuxLettres[recepteur].erase(BoiteAuxLettres[recepteur].begin()+i);
     return msg;

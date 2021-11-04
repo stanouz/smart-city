@@ -19,13 +19,18 @@ using namespace std;
 
 int main(int argc, char ** argv){
 
-
+    /*
     Affichage affichage;
 
     
     thread thread_affichage(&Affichage::display, ref(affichage));
+    */
     
-    Parking p("P1");
+    Parking p1("P1");
+    Parking p2("P2");
+    Parking p3("P3");
+
+
     Voiture v1("AAA-123-AAA");
     Voiture v2("BBB-123-BBB");
     Voiture v3("CCC-123-CCC");
@@ -43,9 +48,12 @@ int main(int argc, char ** argv){
     thread thread_voiture6(&Voiture::Boucle, ref(v6));
     thread thread_voiture7(&Voiture::Boucle, ref(v7));
     thread thread_voiture8(&Voiture::Boucle, ref(v8));
-    thread thread_parking(&Parking::Boucle, ref(p));
+
+    thread thread_parking1(&Parking::Boucle, ref(p1));
+    thread thread_parking2(&Parking::Boucle, ref(p2));
+    thread thread_parking3(&Parking::Boucle, ref(p3));
     
-    thread_affichage.join();
+    //thread_affichage.join();
     
     thread_voiture1.join();
     thread_voiture2.join();
@@ -56,7 +64,9 @@ int main(int argc, char ** argv){
     thread_voiture7.join();
     thread_voiture8.join();
 
-    thread_parking.join();
+    thread_parking1.join();
+    thread_parking2.join();
+    thread_parking3.join();
     
 
 

@@ -57,7 +57,7 @@ void Parking::ajouteVoiture(string occupant, Date dateDepart){
 
 double Parking::prixFinal(float duree)
 {
-    double reduc;
+    double reduc=0.;
     double percent = pourcentageRemplissage();
     if(duree<=4)
     {
@@ -71,7 +71,7 @@ double Parking::prixFinal(float duree)
     {
         reduc = 0.1;
     }
-    else if(duree>12)
+    else
     {
         reduc = 0.2;
     }
@@ -87,13 +87,6 @@ void Parking::propositionAcceptee(Message recu)
     // on quitte le processus de négociation.
     toSend.contenuMessage.setTexte("Proposition acceptée");
     sendMessage(toSend, ID, recu.emmeteur);
-
-    double duree = recu.contenuMessage.getDuree();
-    Date now;
-    Date nowPlusDuree(now, duree);
-
-    // On ajoute la voiture dans le parking
-    ajouteVoiture(recu.emmeteur, nowPlusDuree);
 }
 
 void Parking::propositionRefusee(Message recu, int compteur)
@@ -126,6 +119,17 @@ void Parking::processusNegocitation(){
         Message toSend(ID, Refut);
         toSend.contenuMessage.setTexte("Désolé nous sommes complet");
         sendMessage(toSend, ID, recu.emmeteur);
+        return;
+    }
+
+    if(recu.performatif==Accepter){
+        double duree = recu.contenuMessage.getDuree();
+        Date now;
+        Date nowPlusDuree(now, duree);
+
+        cout << "OKKKKKK \n \n \n \n \n \n";
+        // On ajoute la voiture dans le parking
+        ajouteVoiture(recu.emmeteur, nowPlusDuree);
         return;
     }
 

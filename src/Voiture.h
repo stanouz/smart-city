@@ -2,6 +2,8 @@
 #define __VOITURE__
 
 #include <string>
+
+
 #include "Date.h"
 #include "Agent.h"
 #include "PropositionAccepte.h"
