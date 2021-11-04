@@ -4,7 +4,7 @@ EXEC = bin/exec
 # All object files
 OBJ_FILES = obj/main.o obj/Date.o obj/Voiture.o obj/Place.o
 OBJ_FILES+= obj/Parking.o obj/Message.o obj/Contenu.o obj/Agent.o
-OBJ_FILES+= obj/Affichage.o
+OBJ_FILES+= obj/Affichage.o 
 
 
 # Compilator rules

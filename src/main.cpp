@@ -12,6 +12,7 @@
 
 
 #include "Affichage.h"
+#include "AffichageMessage.h"
 
 using namespace std;
 
@@ -21,9 +22,13 @@ int main(int argc, char ** argv){
 
 
     Affichage affichage;
+    AffichageMessage affichagemessage;
 
     
     thread thread_affichage(&Affichage::display, ref(affichage));
+
+   thread thread_affichagemessage(&AffichageMessage::display, ref(affichagemessage));
+
     
     Parking p("P1");
     Voiture v1("AAA-123-AAA");
@@ -46,6 +51,8 @@ int main(int argc, char ** argv){
     thread thread_parking(&Parking::Boucle, ref(p));
     
     thread_affichage.join();
+
+    //thread_affichagemessage.join();
     
     thread_voiture1.join();
     thread_voiture2.join();
