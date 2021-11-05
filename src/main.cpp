@@ -21,9 +21,13 @@ int main(int argc, char ** argv){
 
 
     Affichage affichage;
+    //AffichageMessage affichagemessage;
 
     
     thread thread_affichage(&Affichage::display, ref(affichage));
+
+   //thread thread_affichagemessage(&AffichageMessage::display, ref(affichagemessage));
+/*
     
     Parking p("P1");
     Voiture v1("AAA-123-AAA");
@@ -44,9 +48,11 @@ int main(int argc, char ** argv){
     thread thread_voiture7(&Voiture::Boucle, ref(v7));
     thread thread_voiture8(&Voiture::Boucle, ref(v8));
     thread thread_parking(&Parking::Boucle, ref(p));
-    
+    */
     thread_affichage.join();
-    
+
+    //thread_affichagemessage.join();
+/*    
     thread_voiture1.join();
     thread_voiture2.join();
     thread_voiture3.join();
@@ -59,6 +65,6 @@ int main(int argc, char ** argv){
     thread_parking.join();
     
 
-
+*/
     return 0;
 }
