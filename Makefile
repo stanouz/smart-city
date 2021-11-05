@@ -4,7 +4,7 @@ EXEC = bin/exec
 # All object files
 OBJ_FILES = obj/main.o obj/Date.o obj/Voiture.o obj/Place.o
 OBJ_FILES+= obj/Parking.o obj/Message.o obj/Contenu.o obj/Agent.o
-OBJ_FILES+= obj/Affichage.o obj/PropositionAccepte.o
+OBJ_FILES+= obj/Affichage.o obj/PropositionAccepte.o obj/Ville.o
 
 
 # Compilator rules
@@ -27,7 +27,10 @@ bin/exec : $(OBJ_FILES)
 obj/main.o: src/main.cpp src/Date.h src/Voiture.h
 	$(COMPILATIONOBJ) 
 
-obj/Affichage.o : src/Affichage.cpp src/Affichage.h
+obj/Affichage.o : src/Affichage.cpp src/Affichage.h src/Ville.cpp
+	$(COMPILATIONOBJ)
+
+obj/Ville.o : src/Ville.cpp src/Ville.h src/Parking.cpp src/Voiture.cpp
 	$(COMPILATIONOBJ)
 
 obj/Parking.o : src/Parking.cpp src/Parking.h src/Agent.cpp src/Agent.h src/Place.cpp src/Place.h

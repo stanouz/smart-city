@@ -14,7 +14,6 @@ using namespace std;
 class Voiture:public Agent{
 public:
     Voiture();
-    Voiture(Voiture & v);
     Voiture(string immat);
     ~Voiture();
     string getImat() const;

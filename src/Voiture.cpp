@@ -15,9 +15,7 @@ const double DUREE_STATIONNEMENT = 0.1;
 Voiture::Voiture(){
 }
 
-Voiture::Voiture(Voiture & v): Agent(){
-    immatriculation = v.immatriculation;
-}
+
 
 Voiture::Voiture(string immat){
     immatriculation = immat;
