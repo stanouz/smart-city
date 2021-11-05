@@ -12,8 +12,9 @@ public:
     Contenu(double duree, float _prix, string t);
     ~Contenu();
 
-    void display() const;
+    void display();
 
+    string to_string();
 
     double getDuree();
     float getPrix();

@@ -21,6 +21,8 @@ public:
     Message getMessage(string recepteur);
     Message getMessageFrom(string recepteur, string emmeteur);
 
+    Message getLastMessageBALprive();
+
 protected:
     inline static mutex m;
     inline static condition_variable cv;

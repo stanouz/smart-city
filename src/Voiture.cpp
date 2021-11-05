@@ -116,7 +116,7 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
         double prixMin = prop[0].getPrix();
         int indMin=0;
     
-        for(int i=0; i<prop.size(); i++){
+        for(int i=0; i<(int)prop.size(); i++){
             if(prop[i].getPrix()<prixMin){
                 indMin=i;
                 prixMin = prop[i].getPrix();
@@ -136,7 +136,7 @@ void Voiture::Boucle(){
     string parkings[3] = {"P1", "P2", "P3"};
     vector<thread> negociations;
     vector<PropositionAccepte> propositions;
-    int size = 1;
+    int size = 3;
     for(int i=0; i<size; i++){
         negociations.push_back(thread(&Voiture::processusNegocition, ref(*this),parkings[i], ref(propositions)));
     }

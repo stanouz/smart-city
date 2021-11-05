@@ -20,6 +20,10 @@ Affichage::~Affichage(){
 
 void Affichage::display(){
     sf::RenderWindow window(sf::VideoMode(500, 500), "Test App SFML");
+    sf::Font police;
+    police.loadFromFile("res/Poppins-Black.ttf");
+    
+
     while (window.isOpen()) {
         sf::Event event;
         // handle events
@@ -35,18 +39,26 @@ void Affichage::display(){
             }
         }
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-            if(clickParking(window)){
-                cout << "OKKKKK" << endl;
-
-                sf::RenderWindow windowP1(sf::VideoMode(400 ,400), "P1");
+            int idParking;
+            if(clickParking(window, idParking)){
+                sf::RenderWindow windowP1(sf::VideoMode(800 ,400), "P"+to_string(idParking));
                 while (windowP1.isOpen()){
                     sf::Event eventP1;
                     while (windowP1.pollEvent(eventP1)) {
                         if (eventP1.type == sf::Event::Closed)
                             windowP1.close();
-
                     }
                     windowP1.clear();
+                    int nbVoiture = ville->getTabParkings()[idParking-1].pourcentageRemplissage()*100;
+
+                    Message m = ville->getTabParkings()[idParking-1].getLastMessageBALprive();
+                    string txt = m.to_string();
+                    if(m.emmeteur=="PAS_DE_MESSAGE"){
+                        txt = "Aucun message dans la Boite aux lettres";
+                    }
+
+                    sf::Text text(txt, police, 10);
+                    windowP1.draw(text);
                     windowP1.display();     
                 }
             }
@@ -96,7 +108,7 @@ void Affichage::displayMap(sf::RenderWindow & window){
 }
 
 
-bool Affichage::clickParking(sf::RenderWindow & window){
+bool Affichage::clickParking(sf::RenderWindow & window, int & idParking){
     vector<vector<int> > map = ville->getMap();
     vector<int> tab_x;
     vector<int> tab_y;
@@ -121,7 +133,7 @@ bool Affichage::clickParking(sf::RenderWindow & window){
     for(int i=0; i<(int)tab_x.size(); i++){
         if(localPosition.x > tab_x[i]*tileH && localPosition.x < (tab_x[i]+1)*tileH){
             if(localPosition.y > tab_y[i]*tileW && localPosition.y < (tab_y[i]+1)*tileW){
-                cout << "CLICK" << endl;
+                idParking = i+1;
                 return true;
             }
         }

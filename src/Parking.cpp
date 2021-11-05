@@ -164,12 +164,13 @@ void Parking::processusNegocitation(){
             recu = getMessageFrom(ID, recu.emmeteur);
         
         compteur++;
+        sleep(3);
     }
 }
 
 
 void Parking::Boucle(){
-
+    sleep(2);
     while(true){
         if(!BoiteAuxLettres[ID].empty())
             processusNegocitation();

@@ -16,15 +16,21 @@ Message::~Message(){
 }
 
 
-void Message::display() const{
-    string strPerfo;
-    if(performatif==DemandePlace){
-        strPerfo="DemandePlace";
-    }
-    else{
-        strPerfo="Réponse";
-    }
+void Message::display(){
+    cout << to_string() << endl;
+}
 
-    cout << "Emeteur : " << emmeteur << " | Recepteur : " << recepteur << " | Perfo : " << strPerfo;
-    contenuMessage.display();
+string perfo_to_string(Performatif & p){
+    switch(p){
+        case 0 : return "Demande de place";
+        case 1 : return "Réponse";
+        case 2 : return "Refut";
+        case 3 : return "Accepté";
+        default : break;
+    }
+    return " ";
+}
+
+string Message::to_string(){
+    return "Emeteur : " + emmeteur + " | Recepteur : " + recepteur + " | Perfo : " + perfo_to_string(performatif)+ " | " +contenuMessage.to_string();
 }

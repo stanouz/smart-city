@@ -1,6 +1,7 @@
 #include "Contenu.h"
 
 #include<iostream>
+#include<string>
 
 Contenu::Contenu(){
     duree = 0;
@@ -18,9 +19,12 @@ Contenu::~Contenu(){
 
 }
 
+string Contenu::to_string(){
+    return "durée : " + std::to_string(duree) + "h | prix : " + std::to_string(prix) + " | texte : " + texte;
+}
 
-void Contenu::display() const{
-    cout << " | durée : " << duree << "h | prix : " << prix << " | texte : " << texte << endl;
+void Contenu::display(){
+    cout << to_string();
 }
 
 double Contenu::getDuree(){
