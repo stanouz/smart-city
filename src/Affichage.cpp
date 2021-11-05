@@ -3,6 +3,9 @@
 
 #include <iostream>
 #include <vector>
+#include <fstream>
+#include <sstream>
+
 
 using namespace std;
 
@@ -32,9 +35,24 @@ void Affichage::display(){
             }
         }
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-            clickParking(window);
-        }
+            if(clickParking(window)){
+                cout << "OKKKKK" << endl;
 
+                sf::RenderWindow windowP1(sf::VideoMode(400 ,400), "P1");
+                while (windowP1.isOpen()){
+                    sf::Event eventP1;
+                    while (windowP1.pollEvent(eventP1)) {
+                        if (eventP1.type == sf::Event::Closed)
+                            windowP1.close();
+
+                    }
+                    windowP1.clear();
+                    windowP1.display();     
+                }
+            }
+        } 
+        
+        
         window.clear();
         displayMap(window);
         window.display();
