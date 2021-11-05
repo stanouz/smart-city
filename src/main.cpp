@@ -7,9 +7,10 @@ using namespace std;
 
 
 int main(int argc, char ** argv){
-    Affichage affichage;
+    
     Ville v;
-   
+    Affichage affichage(&v);
+
     thread thread_affichage(&Affichage::display, ref(affichage));
     v.lancerThread();
     

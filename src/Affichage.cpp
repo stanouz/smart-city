@@ -1,42 +1,14 @@
 #include "Affichage.h"
 
-#include <fstream>
-#include <sstream>
+
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
 
-vector<int> TxtLineToInt(std::string data)
-{
-
-    vector<int> vect;
-    stringstream ss(data);
-
-    // Tant qu'on lit dans la std::string on continu
-    for (int i; ss >> i;)
-    {
-        // On stock dans le std::vector les entiers
-        vect.push_back(i);
-        // Si le caractère est un espace on passe
-        if (ss.peek() == ' ')
-            ss.ignore();
-    }
-    return vect;
-}
-
-
-
-Affichage::Affichage(){
-    ifstream my_file("data/map.txt");
-    if(!my_file){
-        exit(1);
-    }
-
-    string ligne;
-    while(getline(my_file, ligne)){
-        map.push_back(TxtLineToInt(ligne));
-    }
+Affichage::Affichage(Ville * v){
+    ville = v;
 }
 
 Affichage::~Affichage(){
@@ -60,8 +32,7 @@ void Affichage::display(){
             }
         }
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-            if(clickParking(window))
-                cout << "OKKKKK" << endl;
+            clickParking(window);
         }
 
         window.clear();
@@ -74,6 +45,8 @@ void Affichage::display(){
 void Affichage::displayMap(sf::RenderWindow & window){
     int winH = window.getSize().y;
     int winW = window.getSize().x;
+
+    vector<vector<int> > map = ville->getMap();
 
     int mapH = map.size();
     int mapW = map[0].size();
@@ -106,14 +79,15 @@ void Affichage::displayMap(sf::RenderWindow & window){
 
 
 bool Affichage::clickParking(sf::RenderWindow & window){
+    vector<vector<int> > map = ville->getMap();
+    vector<int> tab_x;
+    vector<int> tab_y;
 
-    int x = 0, y=0;
-
-    for(int i=0; i<map.size(); i++){
-        for(int j=0; j<map[0].size(); j++){
+    for(int i=0; i<(int)map.size(); i++){
+        for(int j=0; j<(int)map[0].size(); j++){
             if(map[i][j]==443){
-                x = j;
-                y = i;
+                tab_x.push_back(j);
+                tab_y.push_back(i);
             }
         }
     }
@@ -126,10 +100,12 @@ bool Affichage::clickParking(sf::RenderWindow & window){
 
 
     sf::Vector2i localPosition = sf::Mouse::getPosition(window);
-
-    if(localPosition.x > x*tileH && localPosition.x < (x+1)*tileH){
-        if(localPosition.y > y*tileW && localPosition.y < (y+1)*tileW){
-            return true;
+    for(int i=0; i<(int)tab_x.size(); i++){
+        if(localPosition.x > tab_x[i]*tileH && localPosition.x < (tab_x[i]+1)*tileH){
+            if(localPosition.y > tab_y[i]*tileW && localPosition.y < (tab_y[i]+1)*tileW){
+                cout << "CLICK" << endl;
+                return true;
+            }
         }
     }
     return false;

@@ -13,7 +13,7 @@ class Ville{
 private:
     vector<Parking> tab_parkings;
     vector<Voiture> tab_voitures;
-
+    vector<vector<int> > map;
 public:
     Ville();
     ~Ville();
@@ -22,6 +22,7 @@ public:
 
     vector<Parking> & getTabParkings();
     vector<Voiture> & getTabVoitures();
+    vector<vector<int> > & getMap();
 };
 
 

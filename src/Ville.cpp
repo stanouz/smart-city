@@ -1,5 +1,27 @@
 #include "Ville.h"
 
+#include <fstream>
+#include <sstream>
+
+
+vector<int> TxtLineToInt(std::string data)
+{
+
+    vector<int> vect;
+    stringstream ss(data);
+
+    // Tant qu'on lit dans la std::string on continu
+    for (int i; ss >> i;)
+    {
+        // On stock dans le std::vector les entiers
+        vect.push_back(i);
+        // Si le caractère est un espace on passe
+        if (ss.peek() == ' ')
+            ss.ignore();
+    }
+    return vect;
+}
+
 
 
 Ville::Ville(){
@@ -16,6 +38,17 @@ Ville::Ville(){
     tab_voitures.push_back(Voiture("FFF-123-FFF"));
     tab_voitures.push_back(Voiture("GGG-123-GGG"));
     tab_voitures.push_back(Voiture("HHH-123-HHH"));
+
+
+    ifstream my_file("data/map.txt");
+    if(!my_file){
+        exit(1);
+    }
+
+    string ligne;
+    while(getline(my_file, ligne)){
+        map.push_back(TxtLineToInt(ligne));
+    }
 }
 
 Ville::~Ville(){
@@ -48,3 +81,9 @@ vector<Parking> & Ville::getTabParkings(){
 vector<Voiture> & Ville::getTabVoitures(){
     return tab_voitures;
 }
+
+vector<vector<int> > & Ville::getMap(){
+    return map;
+}
+
+

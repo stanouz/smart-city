@@ -3,15 +3,17 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
-#include <vector>
+
+
+#include "Ville.h"
 
 
 using namespace std;
 
 class Affichage{
-    vector<vector<int> > map;
+    Ville * ville;
 public:
-    Affichage();
+    Affichage(Ville * v);
     ~Affichage();
     void display();
     void displayMap(sf::RenderWindow & window);
