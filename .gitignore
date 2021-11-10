@@ -1,0 +1,8 @@
+*.o
+.DS_Store
+*.out
+.git
+.vscode
+bin/*
+obj/*.o
+build/*
