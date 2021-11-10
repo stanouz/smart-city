@@ -2,8 +2,8 @@
 
 #include <fstream>
 #include <sstream>
-#include <iostream>
-#include <thread>
+
+
 
 using namespace std;
 
@@ -51,15 +51,7 @@ Ville::Ville(){
     while(getline(my_file, ligne)){
         map.push_back(TxtLineToInt(ligne));
     }
-}
 
-Ville::~Ville(){
-
-}
-
-void Ville::lancerThread(){
-    vector<thread> tabThreads;
-    
     for(int i=0; i<(int)tab_parkings.size();i++){
         tabThreads.push_back(thread(&Parking::Boucle, ref(tab_parkings[i])));
     }
@@ -67,6 +59,18 @@ void Ville::lancerThread(){
     for(int i=0; i<(int)tab_voitures.size();i++){
         tabThreads.push_back(thread(&Voiture::Boucle, ref(tab_voitures[i])));
     }
+}
+
+Ville::~Ville(){
+    for(int i=0; i<(int)tabThreads.size(); i++){
+        tabThreads[i].join();
+    }
+}
+
+void Ville::lancerThread(){
+    vector<thread> tabThreads;
+    
+    
 
     for(int i=0; i<(int)tabThreads.size(); i++){
         tabThreads[i].join();

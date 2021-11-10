@@ -23,7 +23,8 @@ void Affichage::display(){
             ImGui::SFML::ProcessEvent(event);
 
             if (event.type == sf::Event::Closed) {
-                window.close();
+                
+                ImGui::SFML::Shutdown();
             }
         }
 
@@ -32,7 +33,11 @@ void Affichage::display(){
        
 
         ImGui::Begin("Messagerie");
-    
+        vector<Message> tabMsg = ville->getTabParkings()[0].getBALPrive();
+        for(int i=0; i<(int)tabMsg.size(); i++){
+            ImGui::BulletText(tabMsg[i].to_string().c_str());
+        }
+        
         ImGui::End();
 
         window.clear();

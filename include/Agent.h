@@ -21,7 +21,8 @@ public:
     Message getMessage(string recepteur);
     Message getMessageFrom(string recepteur, string emmeteur);
 
-    Message getLastMessageBALprive();
+    vector<Message> getBALPrive();
+
 
 protected:
     inline static mutex m;

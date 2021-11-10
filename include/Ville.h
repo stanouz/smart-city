@@ -14,6 +14,8 @@ private:
     vector<Parking> tab_parkings;
     vector<Voiture> tab_voitures;
     vector<vector<int> > map;
+
+    vector<thread> tabThreads;
 public:
     Ville();
     ~Ville();

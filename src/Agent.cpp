@@ -65,10 +65,6 @@ Message Agent::getMessageFrom(string recepteur, string emmeteur){
 }   
 
 
-Message Agent::getLastMessageBALprive(){
-    int size = BoiteAuxLettresPrive.size();
-    if(size !=0){
-        return BoiteAuxLettresPrive[size-1];
-    }
-    return Message("PAS_DE_MESSAGE", Refut);
+vector<Message> Agent::getBALPrive(){
+    return BoiteAuxLettresPrive;
 }
