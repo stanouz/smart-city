@@ -15,8 +15,6 @@ void Affichage::display(){
     window.setFramerateLimit(60);
     ImGui::SFML::Init(window);
     
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
 
     sf::Clock deltaClock;
     while (window.isOpen()) {
@@ -38,7 +36,7 @@ void Affichage::display(){
         ImGui::End();
 
         window.clear();
-        window.draw(shape);
+     
         displayMap(window);
         ImGui::SFML::Render(window);
         window.display();
@@ -69,7 +67,7 @@ void Affichage::displayMap(sf::RenderWindow & window){
     sf::Sprite sprite;
     sprite.setTexture(text);
     int x, y;
-
+    
     for(int i=0; i<mapW; i++){
         for(int j=0; j<mapH; j++){   
             int value = map[j][i];
@@ -82,4 +80,38 @@ void Affichage::displayMap(sf::RenderWindow & window){
             window.draw(sprite);
         }
     }
+}
+
+
+bool Affichage::clickParking(sf::RenderWindow & window, int & idParking){
+    vector<vector<int> > map = ville->getMap();
+    vector<int> tab_x;
+    vector<int> tab_y;
+
+    for(int i=0; i<(int)map.size(); i++){
+        for(int j=0; j<(int)map[0].size(); j++){
+            if(map[i][j]==443){
+                tab_x.push_back(j);
+                tab_y.push_back(i);
+            }
+        }
+    }
+    int winH = window.getSize().y;
+    int winW = window.getSize().x;
+    int mapH = map.size();
+    int mapW = map[0].size();
+    double tileH = winH/(double)mapH;
+    double tileW = winW/(double)mapW;
+
+
+    sf::Vector2i localPosition = sf::Mouse::getPosition(window);
+    for(int i=0; i<(int)tab_x.size(); i++){
+        if(localPosition.x > tab_x[i]*tileH && localPosition.x < (tab_x[i]+1)*tileH){
+            if(localPosition.y > tab_y[i]*tileW && localPosition.y < (tab_y[i]+1)*tileW){
+                idParking = i+1;
+                return true;
+            }
+        }
+    }
+    return false;
 }

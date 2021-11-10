@@ -20,6 +20,7 @@ public:
     ~Affichage();
     void display();
     void displayMap(sf::RenderWindow & window);
+    bool clickParking(sf::RenderWindow & window, int & idParking);
 };
 
 

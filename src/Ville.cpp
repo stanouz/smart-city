@@ -44,7 +44,6 @@ Ville::Ville(){
     ifstream my_file("data/map.txt");
     
     if(!my_file){
-        cout << "crash" << endl;
         exit(1);
     }
 
@@ -72,7 +71,6 @@ void Ville::lancerThread(){
     for(int i=0; i<(int)tabThreads.size(); i++){
         tabThreads[i].join();
     }
-    
 }
 
 

@@ -11,6 +11,7 @@ using namespace std;
 int main(int argc, char ** argv){
     
     Ville v;
+    
     //v.lancerThread();
     Affichage a(&v);
     a.display();
