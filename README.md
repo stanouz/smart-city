@@ -1,8 +1,10 @@
 # Smart Parking
 
-Pour compiler et executer :
+## Comment compiler : 
 
-cd smart-city
-Cmake -B build
-make -C build
-./build/src/smart-city_exec
+`cd \[CHEMIN-VERS-REPO\]/smart-city`
+`Cmake -B build`
+`make -C build`
+
+## Comment executer :
+`./build/src/smart-city_exec`
