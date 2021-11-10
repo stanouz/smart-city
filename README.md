@@ -2,7 +2,7 @@
 
 * ## Comment générer le Makefile avec Cmake : 
 
-    * `cd \[CHEMIN-VERS-REPO\]/smart-city`
+    * `cd [CHEMIN-VERS-REPO]/smart-city`
     * `Cmake -B build`
 
 * ## Comment compiler avec le Makefile:
