@@ -6,11 +6,10 @@ add_executable(${PROJECT_NAME}_exec ${SRC_FILES})
 target_include_directories(${PROJECT_NAME}_exec PUBLIC ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/data)
 
 
-# Add pthread
+# find pthread
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 find_package(Threads REQUIRED)
-target_link_libraries(${PROJECT_NAME}_exec ${CMAKE_THREAD_LIBS_INIT})
 
-# Add ImGui-SFML
-target_link_libraries(${PROJECT_NAME}_exec PRIVATE ImGui-SFML::ImGui-SFML)
+# Add ImGui-SFML and pthread
+target_link_libraries(${PROJECT_NAME}_exec PRIVATE ImGui-SFML::ImGui-SFML ${CMAKE_THREAD_LIBS_INIT})
