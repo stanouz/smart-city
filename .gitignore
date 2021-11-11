@@ -6,4 +6,3 @@
 bin/*
 obj/*.o
 build/*
-imgui.ini

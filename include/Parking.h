@@ -29,9 +29,12 @@ public:
     void ajouteVoiture(string occupant, Date dateDepart);
     double pourcentageRemplissage();
 
+    string getId();
+    int getNbplace();
+    int getNbPlaceOccupe();
 private:
-    Place tabPlaces[100];
-    const int NB_PLACES_TOTAL = 100;
+    Place tabPlaces[10];
+    const int NB_PLACES_TOTAL = 10;
     int nb_place_occup;
     float prix;
     string ID;

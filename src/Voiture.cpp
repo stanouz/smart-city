@@ -80,7 +80,7 @@ void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> 
         
         //boucle d'attente d'un nouveau message
         recu = getMessageFrom(immatriculation, id_parking);
-        recu.display();
+        //recu.display();
         
         if(recu.performatif==Accepter)
         {

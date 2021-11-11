@@ -20,6 +20,19 @@ Parking::~Parking(){
 
 }
 
+
+string Parking::getId(){
+    return ID;
+}
+
+int Parking::getNbplace(){
+    return NB_PLACES_TOTAL;
+}
+
+int Parking::getNbPlaceOccupe(){
+    return nb_place_occup;
+}
+
 bool Parking::IsFull() const{
     if(nb_place_occup<NB_PLACES_TOTAL){
         return false;
@@ -140,8 +153,8 @@ void Parking::processusNegocitation(){
     while(compteur<3){
         
 
-        cout << endl<<endl<<endl<<"===== COMPTEUR " << compteur << "=======" << endl;
-        recu.display();
+        //cout << endl<<endl<<endl<<"===== COMPTEUR " << compteur << "=======" << endl;
+        //recu.display();
         float prixDemande = recu.contenuMessage.getPrix();
         float duree = recu.contenuMessage.getDuree();
         

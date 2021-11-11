@@ -13,6 +13,7 @@ public:
     ~Message();
     void display();
     string to_string();
+    string perfo_to_string();
 
     string emmeteur;
     string recepteur;
