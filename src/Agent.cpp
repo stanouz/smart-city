@@ -39,11 +39,11 @@ Message Agent::getMessageFrom(string recepteur, string emmeteur){
     Message msg;
 
     bool waitMsgFrom = true;
-    int i=0;
+    int i;
     
     while(waitMsgFrom)
     {
-        int i=0;
+        i=0;
         int size = BoiteAuxLettres[recepteur].size();
         while(i<size && waitMsgFrom){
             msg = BoiteAuxLettres[recepteur][i];
