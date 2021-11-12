@@ -115,23 +115,20 @@ void Affichage::displayMainWidget(){
 
     ImGui::Separator();
 
-    if (ImGui::CollapsingHeader("Info des parkings")){
-        ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable;
+    ImGui::CollapsingHeader("Info des parkings");
+    ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable;
 
-        if (ImGui::BeginTabBar("Parkings", tab_bar_flags)){
-            for(int i = 0; i < (int)ville->getTabParkings().size(); i++){
-                Parking p = ville->getTabParkings()[i];
-                if (ImGui::BeginTabItem(("Parking "+p.getId()).c_str(), showParking[i] , ImGuiTabItemFlags_None)){
-                    
-
-                    displayInfoParking(p);
-
-                    ImGui::EndTabItem();
-                }
+    if (ImGui::BeginTabBar("Parkings", tab_bar_flags)){
+        for(int i = 0; i < (int)ville->getTabParkings().size(); i++){
+            Parking p = ville->getTabParkings()[i];
+            if (ImGui::BeginTabItem(("Parking "+p.getId()).c_str(), showParking[i] , ImGuiTabItemFlags_None)){
+                displayInfoParking(p);
+                ImGui::EndTabItem();
             }
-            ImGui::EndTabBar();
         }
+        ImGui::EndTabBar();
     }
+    
 
     // Fermeture de la fenetre
     ImGui::End();
@@ -212,7 +209,7 @@ void Affichage::displayInfoParking(Parking & p){
                                    | ImGuiTableFlags_Hideable;
 
     // Titre du tableau
-    ImGui::Text("Messages reçu");
+    ImGui::Text("Messages reçu :");
     // Ouverture du tableau
     ImGui::BeginTable("Messagerie", 6, table_flags);
 
@@ -270,8 +267,11 @@ void Affichage::displayInfoParking(Parking & p){
     //        Tableau des messages envoyés
     // =========================================== 
 
+    // Saut de ligne
+    ImGui::NewLine();
+
     // Titre du tableau
-    ImGui::Text("Messages envoyés");
+    ImGui::Text("Messages envoyés :");
     // Ouverture du tableau
     ImGui::BeginTable("Messagerie", 6, table_flags);
 

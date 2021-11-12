@@ -38,9 +38,6 @@ void Voiture::negociation(string id_destinataire, double prixPopositionPrecedent
     double nouveauPrix = prixPopositionPrecedente*coefAugmentation; 
     m_new.contenuMessage.setPrix(nouveauPrix);
 
-    cout << id_destinataire+" => "+ immatriculation+" ancien prix = "+to_string(prixPopositionPrecedente)+" // nouveau prix = "+to_string(nouveauPrix) << endl;
-    
-
     sendMessage(m_new, immatriculation, id_destinataire);
 }
 
