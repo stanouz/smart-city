@@ -5,9 +5,4 @@
 .vscode
 bin/*
 obj/*.o
-build/_deps
-build/CMakeFiles
-build/extern
-build/src 
-build/cmake_install.cmake 
-build/CMakeCache.txt
+imgui.ini

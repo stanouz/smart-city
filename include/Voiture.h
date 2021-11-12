@@ -13,9 +13,8 @@ using namespace std;
 
 class Voiture:public Agent{
 public:
-    Voiture();
     Voiture(string immat);
-    ~Voiture();
+
     string getImat() const;
 
     void Boucle();

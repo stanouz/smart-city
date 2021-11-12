@@ -84,6 +84,15 @@ void Affichage::displayMap(){
             window.draw(sprite);
         }
     }
+    int value = 478;
+    x = ((value - 1) % 27) * 17; // 27 tile par ligne et 
+    y = ((value - 1) / 27) * 17;
+
+    sprite.setPosition(7*tileH, 10*tileW);
+    sprite.setScale(scaleH, scaleW);
+    sprite.setTextureRect(sf::IntRect(x, y, 16, 16));
+    window.draw(sprite);
+
 }
 
 
@@ -186,7 +195,7 @@ void Affichage::displayInfoParking(Parking & p){
 
 
     // ===========================================  
-    //          Tableau des messages
+    //        Tableau des messages recu
     // =========================================== 
     // flags du tableau qui définissent le style
     static ImGuiTableFlags table_flags =   ImGuiTableFlags_Borders 
@@ -202,6 +211,8 @@ void Affichage::displayInfoParking(Parking & p){
                                    | ImGuiTableFlags_SizingFixedFit
                                    | ImGuiTableFlags_Hideable;
 
+    // Titre du tableau
+    ImGui::Text("Messages reçu");
     // Ouverture du tableau
     ImGui::BeginTable("Messagerie", 6, table_flags);
 
@@ -231,6 +242,65 @@ void Affichage::displayInfoParking(Parking & p){
             // Colonne Voiture
             ImGui::TableSetColumnIndex(1);
             ImGui::Text("%s", msg.emmeteur.c_str());
+            
+            // Colonne Performatif
+            ImGui::TableSetColumnIndex(2);
+            ImGui::Text("%s", msg.perfo_to_string().c_str());
+
+            // Colonne prix 
+            ImGui::TableSetColumnIndex(3);
+            ImGui::Text("%.2f euros", msg.contenuMessage.getPrix());
+
+            // Colonne durée
+            ImGui::TableSetColumnIndex(4);
+            ImGui::Text("%.2f heures", msg.contenuMessage.getDuree());
+
+            // Colonne texte
+            ImGui::TableSetColumnIndex(5);
+            ImGui::Text("%s", msg.contenuMessage.getTexte().c_str());
+        }
+    }
+    
+    // Fermeture du tableau
+    ImGui::EndTable();
+
+
+
+    // ===========================================  
+    //        Tableau des messages envoyés
+    // =========================================== 
+
+    // Titre du tableau
+    ImGui::Text("Messages envoyés");
+    // Ouverture du tableau
+    ImGui::BeginTable("Messagerie", 6, table_flags);
+
+    // En-tête du tableau
+    ImGui::TableSetupColumn("#");
+    ImGui::TableSetupColumn("Voiture");
+    ImGui::TableSetupColumn("Performatif");
+    ImGui::TableSetupColumn("Prix");
+    ImGui::TableSetupColumn("Durée");
+    ImGui::TableSetupColumn("Texte");
+    ImGui::TableHeadersRow();
+
+    // Remplissage du tableau
+    for (int row = 0; row < (int)p.getMsgEnvoye().size(); row++)
+    {
+        Message msg = p.getMsgEnvoye()[row];
+        
+
+        // Si choix toute les voitures ou si choix correspond à la voiture
+        if(indSelected==0 || choixVoiture[indSelected]==msg.emmeteur){
+            ImGui::TableNextRow();
+
+            // Colonne n°
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("#%i", row);
+            
+            // Colonne Voiture
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("%s", msg.recepteur.c_str());
             
             // Colonne Performatif
             ImGui::TableSetColumnIndex(2);

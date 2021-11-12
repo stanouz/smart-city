@@ -9,15 +9,12 @@ Contenu::Contenu(){
     texte = "pas de texte";
 }
 
-Contenu::Contenu(double d, float _prix, string t){
+Contenu::Contenu(double d, double _prix, string t){
     duree = d;
     prix = _prix;
     texte = t;
 }
 
-Contenu::~Contenu(){
-
-}
 
 string Contenu::to_string(){
     return "durée : " + std::to_string(duree) + "h | prix : " + std::to_string(prix) + " | texte : " + texte;
@@ -31,13 +28,11 @@ double Contenu::getDuree(){
     return duree;
 }
 
-float Contenu:: getPrix()
-{
+double Contenu:: getPrix(){
     return prix;
 }
 
-string Contenu:: getTexte()
-{
+string Contenu:: getTexte(){
     return texte;
 }
 
@@ -46,12 +41,10 @@ void Contenu::setDuree(double d){
     duree = d;
 }
 
-void Contenu:: setPrix(float p)
-{
+void Contenu:: setPrix(double p){
     prix = p;
 }
 
-void Contenu:: setTexte(string t)
-{
+void Contenu:: setTexte(string t){
     texte = t;
 }

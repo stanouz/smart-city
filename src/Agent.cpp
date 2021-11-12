@@ -14,7 +14,7 @@ void Agent::sendMessage(Message & msg, string emmeteur, string recepteur){
     msg.recepteur = recepteur;
     msg.emmeteur = emmeteur;
     BoiteAuxLettres[recepteur].push_back(msg);
-
+    messagesEnvoye.push_back(msg);
     cv.notify_all();
 }
 
@@ -67,4 +67,9 @@ Message Agent::getMessageFrom(string recepteur, string emmeteur){
 
 vector<Message> Agent::getBALPrive(){
     return BoiteAuxLettresPrive;
+}
+
+
+vector<Message> Agent::getMsgEnvoye(){
+    return messagesEnvoye;
 }

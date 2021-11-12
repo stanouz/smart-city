@@ -22,6 +22,7 @@ public:
     Message getMessageFrom(string recepteur, string emmeteur);
 
     vector<Message> getBALPrive();
+    vector<Message> getMsgEnvoye();
 
 
 protected:
@@ -29,6 +30,7 @@ protected:
     inline static condition_variable cv;
     inline static map<string, vector<Message> > BoiteAuxLettres;
     vector<Message> BoiteAuxLettresPrive;
+    vector<Message> messagesEnvoye;
 };
 
 #endif

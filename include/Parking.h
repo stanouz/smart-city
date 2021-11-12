@@ -12,9 +12,9 @@ using namespace std;
 class Parking: public Agent{
     
 public:
-    Parking();
     Parking(string id);
-    ~Parking();
+    
+    
     bool IsFull() const;
 
     

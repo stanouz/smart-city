@@ -29,10 +29,13 @@ vector<int> TxtLineToInt(string data)
 
 Ville::Ville(){
     tab_parkings.push_back(Parking("P1"));
+    
     tab_parkings.push_back(Parking("P2"));
     tab_parkings.push_back(Parking("P3"));
+    
 
     tab_voitures.push_back(Voiture("AAA-123-AAA"));
+    /*
     tab_voitures.push_back(Voiture("BBB-123-BBB"));
     tab_voitures.push_back(Voiture("CCC-123-CCC"));
     tab_voitures.push_back(Voiture("DDD-123-DDD"));
@@ -40,7 +43,7 @@ Ville::Ville(){
     tab_voitures.push_back(Voiture("FFF-123-FFF"));
     tab_voitures.push_back(Voiture("GGG-123-GGG"));
     tab_voitures.push_back(Voiture("HHH-123-HHH"));
-
+    */
     ifstream my_file("data/map.txt");
     
     if(!my_file){

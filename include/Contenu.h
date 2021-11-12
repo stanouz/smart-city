@@ -8,25 +8,24 @@ using namespace std;
 
 class Contenu{
 public:
+    Contenu(double duree, double _prix, string t);
     Contenu();
-    Contenu(double duree, float _prix, string t);
-    ~Contenu();
-
+    
     void display();
 
     string to_string();
 
     double getDuree();
-    float getPrix();
+    double getPrix();
     string getTexte();
 
     void setDuree(double d);
-    void setPrix(float _prix);
+    void setPrix(double _prix);
     void setTexte(string t);
 
 private:
     double duree; // en heures
-    float prix;
+    double prix;
     string texte;
 };
 
