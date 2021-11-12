@@ -23,6 +23,7 @@ public:
     ~Affichage();
     void display();
     void displayMap();
+    void displayCars(int i,int j);
     void displayMainWidget();
     void displayInfoParking(Parking & p);
 };

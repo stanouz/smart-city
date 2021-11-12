@@ -43,6 +43,11 @@ void Affichage::display(){
 
         window.clear();
         displayMap();
+        displayCars(2,14);
+        displayCars(15,14);
+        
+        
+
         ImGui::SFML::Render(window);
         window.display();
     }
@@ -84,6 +89,128 @@ void Affichage::displayMap(){
             window.draw(sprite);
         }
     }
+   
+   
+}
+
+void Affichage :: displayCars(int i, int j)
+{
+    int winH = window.getSize().y;
+    int winW = window.getSize().x;
+    vector<vector<int> > map = ville->getMap();
+    int mapH = map.size();
+    int mapW = map[0].size();
+    double tileH = winH/(double)(mapH-1);
+    double tileW = winW/(double)(mapW-1);
+    double scaleH = tileH / 16.; // tiles are 16x16 px
+    double scaleW = tileW / 16.;
+     sf::Texture text;
+    text.loadFromFile("data/tilemap.png");
+     sf::Sprite sprite;
+      sprite.setTexture(text);
+int x,y;
+
+
+         int tab[4]={478,479,451,452};
+            //int value1 = 478;
+            
+            for(int a=0;a<4;a++){
+
+                switch(tab[a]){
+                 case 478:
+                        x = ((tab[a] - 1) % 27) * 17; // 27 tile par ligne et 
+                        y = ((tab[a] - 1) / 27) * 17; // * 17 car tile de 16px +1px d'espace
+                        sprite.setPosition((i-1)*tileH, j*tileW);
+                       
+
+                  break;
+
+                  case 479:
+                        x = ((tab[a] - 1) % 27) * 17; // 27 tile par ligne et 
+                        y = ((tab[a] - 1) / 27) * 17; // * 17 car tile de 16px +1px d'espace
+                        sprite.setPosition((i)*tileH, j*tileW);
+                       
+
+                  break;
+
+                  case 451:
+                        x = ((tab[a] - 1) % 27) * 17; // 27 tile par ligne et 
+                        y = ((tab[a] - 1) / 27) * 17; // * 17 car tile de 16px +1px d'espace
+                        sprite.setPosition((i-1)*tileH, (j-1)*tileW);
+                        
+
+                  break;
+
+                  case 452:
+                        x = ((tab[a] - 1) % 27) * 17; // 27 tile par ligne et 
+                        y = ((tab[a] - 1) / 27) * 17; // * 17 car tile de 16px +1px d'espace
+                        sprite.setPosition((i)*tileH, (j-1)*tileW);
+                        
+
+                  break;
+                  default:
+                    cout<<"erruer"<<endl;
+
+
+                }  
+                sprite.setScale(scaleH, scaleW);
+                        sprite.setTextureRect(sf::IntRect(x, y, 16, 16));
+                        window.draw(sprite); 
+
+            }
+            
+            
+            
+        
+    
+
+
+
+/*
+        int v=478;
+        int x,y;
+        x = ((v - 1) % 27) * 17; // 27 tile par ligne et 
+        y = ((v - 1) / 27) * 17; // * 17 car tile de 16px +1px d'espace
+        
+        
+                sprite.setPosition(1*tileH, 15.5*tileW);
+                sprite.setScale(scaleH, scaleW);
+                sprite.setTextureRect(sf::IntRect(x, y, 16, 16));
+                window.draw(sprite);
+                //*****
+        int v1=479;
+        int x1,y1;
+        x1 = ((v1 - 1) % 27) * 17; // 27 tile par ligne et 
+        y1 = ((v1 - 1) / 27) * 17; // * 17 car tile de 16px +1px d'espace
+        
+        
+                sprite.setPosition(2*tileH, 15.5*tileW);
+                sprite.setScale(scaleH, scaleW);
+                sprite.setTextureRect(sf::IntRect(x1, y1, 16, 16));
+                window.draw(sprite);
+    //****
+    int x2,y2;
+    int v2=451;
+        x2 = ((v2 - 1) % 27) * 17; // 27 tile par ligne et 
+        y2 = ((v2 - 1) / 27) * 17; // * 17 car tile de 16px +1px d'espace
+        
+        
+                sprite.setPosition(1*tileH, 14.5*tileW);
+                sprite.setScale(scaleH, scaleW);
+                sprite.setTextureRect(sf::IntRect(x2, y2, 16, 16));
+                window.draw(sprite);
+    //******
+int x3,y3;
+    int v3=452;
+        x3 = ((v3 - 1) % 27) * 17; // 27 tile par ligne et 
+        y3 = ((v3 - 1) / 27) * 17; // * 17 car tile de 16px +1px d'espace
+        
+        
+                sprite.setPosition(2*tileH, 14.5*tileW);
+                sprite.setScale(scaleH, scaleW);
+                sprite.setTextureRect(sf::IntRect(x3, y3, 16, 16));
+                window.draw(sprite);
+                */
 }
 
 

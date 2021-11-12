@@ -1,0 +1,40 @@
+Performing C++ SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: /home/rami/Documents/projet/smart-city/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make cmTC_ab73f/fast && /usr/bin/make -f CMakeFiles/cmTC_ab73f.dir/build.make CMakeFiles/cmTC_ab73f.dir/build
+make[1] : on entre dans le répertoire « /home/rami/Documents/projet/smart-city/CMakeFiles/CMakeTmp »
+Building CXX object CMakeFiles/cmTC_ab73f.dir/src.cxx.o
+/usr/bin/c++    -DCMAKE_HAVE_LIBC_PTHREAD   -std=gnu++17 -o CMakeFiles/cmTC_ab73f.dir/src.cxx.o -c /home/rami/Documents/projet/smart-city/CMakeFiles/CMakeTmp/src.cxx
+Linking CXX executable cmTC_ab73f
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ab73f.dir/link.txt --verbose=1
+/usr/bin/c++   -DCMAKE_HAVE_LIBC_PTHREAD    CMakeFiles/cmTC_ab73f.dir/src.cxx.o  -o cmTC_ab73f 
+/usr/bin/ld : CMakeFiles/cmTC_ab73f.dir/src.cxx.o : dans la fonction « main » :
+src.cxx:(.text+0x46) : référence indéfinie vers « pthread_create »
+/usr/bin/ld : src.cxx:(.text+0x52) : référence indéfinie vers « pthread_detach »
+/usr/bin/ld : src.cxx:(.text+0x63) : référence indéfinie vers « pthread_join »
+collect2: error: ld returned 1 exit status
+make[1]: *** [CMakeFiles/cmTC_ab73f.dir/build.make:87 : cmTC_ab73f] Erreur 1
+make[1] : on quitte le répertoire « /home/rami/Documents/projet/smart-city/CMakeFiles/CMakeTmp »
+make: *** [Makefile:121 : cmTC_ab73f/fast] Erreur 2
+
+
+Source file was:
+#include <pthread.h>
+
+void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
