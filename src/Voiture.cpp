@@ -12,13 +12,28 @@ using namespace std;
 
 const double DUREE_STATIONNEMENT = 0.1;
 
-Voiture::Voiture(string immat){
+Voiture::Voiture(string immat, int x, int y, Direction dir){
     immatriculation = immat;
+    posX = x;
+    posY = y;
+    direction = dir;
 }
 
 
 string Voiture::getImat() const{
     return immatriculation;
+}
+
+double Voiture::getPosX() const{
+    return posX;
+}
+
+double Voiture::getPosY() const{
+    return posY;
+}
+
+Direction Voiture::getDirection(){
+    return direction;
 }
 
 
@@ -114,6 +129,208 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
 }
 
 
+void Voiture::turnLeft(){
+
+}
+
+void Voiture::turnRight(){
+
+}
+
+void Voiture::goStraight(){
+    double vitesse =0.0001;
+
+    int newX, newY;
+
+    if(direction==Gauche){
+        newX = posX-1;
+        while(posX > newX){
+            posX-= vitesse;
+            usleep(60);
+        }
+        posX = newX;
+    }
+    else if(direction==Droite){
+        newX = posX+1;
+        while(posX < newX){
+            posX+= vitesse;
+            usleep(60);
+        }
+        posX = newX;
+    }
+    else if(direction==Bas){
+        newY = posY+1;
+        while(posY < newY){
+            posY+= vitesse;
+            usleep(60);
+        }
+        posY = newY;
+    }
+    else if(direction==Haut){
+        newY = posY-1;
+        while(posY > newY){
+            posY-= vitesse;
+            usleep(60);
+        }
+        posY = newY;
+    }
+}
+
+void Voiture::halfTurn(){
+    switch(direction)
+    {
+        case Droite: direction = Gauche; posY -= 2; posX+=2; break;
+        case Gauche: direction = Droite; posY += 2; posX-=2; break;
+        case Haut: direction = Bas; posX -= 2; posY-=2; break;
+        case Bas: direction = Haut; posX += 2; posY+=2;break;
+    }
+}
+
+void Voiture::Avancer(vector< vector<int> > & map){
+    
+    vector<bool> deplacementPossible;
+    deplacementPossible.push_back(canGoStraight(map));
+    deplacementPossible.push_back(canGoRight(map));
+    deplacementPossible.push_back(canGoLeft(map));
+
+    // On verifie qu'il y ai bien un true
+    bool hasTrue = false;
+
+    for(int i=0; i<3; i++){
+        if(deplacementPossible[i])
+            hasTrue= true;
+    }
+
+    // ==========================================
+    // A FAIRE : 
+    // Améliorer le système de choix aléatoire 
+    // pour pas avoir à faire plusieur rand()
+    // ==========================================
+
+    // Si pas de deplacement possible alors demi-tour
+    
+    if(!hasTrue){
+        halfTurn(); 
+        return;
+    }
+
+    srand(time(NULL));
+        
+    int random;
+    do{
+        random = rand()%3;
+    }
+    while(!deplacementPossible[random]);
+
+    if(random==0)
+        goStraight();
+    
+    // Fonctions pas encore faites
+    /*
+    if(random==1)
+        turnRight();
+        
+    if(random==2)
+        turnRight();*/    
+}
+
+
+bool Voiture::canGoRight(vector< vector<int> > & map){
+    int val;
+    switch (direction)
+    {
+        case Droite:
+            val = map[posY+1][posX];
+            if(val==462 || val==435)
+                return true;
+            break;
+
+        case Gauche:
+            val = map[posY-1][posX];
+            if(val==464 || val==437)
+                return true;
+            break;
+        
+        case Haut:
+            val = map[posY][posX-1];
+            if(val==406 || val==407)
+                return true;
+            break;
+
+        case Bas:
+            val = map[posY][posX+1];
+            if(val==460 || val==461)
+                return true;
+            break;
+    }
+    return false;
+}
+
+bool Voiture::canGoLeft(vector< vector<int> > & map){
+    int val;
+    switch (direction)
+    {
+        case Droite:
+            val = map[posY-3][posX+2];
+            if(val==464 || val==437)
+                return true;
+            break;
+
+        case Gauche:
+            val = map[posY+3][posX-2];
+            if(val==462 || val==435)
+                return true;
+            break;
+        
+        case Haut:
+            val = map[posY-2][posX-3];
+            if(val==406 || val==407)
+                return true;
+            break;
+
+        case Bas:
+            val = map[posY+2][posX+3];
+            if(val==460 || val==461)
+                return true;
+            break;
+    }
+    return false;
+}
+
+bool Voiture::canGoStraight(vector< vector<int> > & map){
+    int val;
+    switch (direction)
+    {
+        case Droite:
+            val = map[posY][posX+2];
+            if(val!=464 && val!=466)
+                return true;
+            break;
+
+        case Gauche:
+            val = map[posY][posX-2];
+            if(val!=438 && val!=462)
+                return true;
+            break;
+        
+        case Haut:
+            val = map[posY-2][posX];
+            if(val!=439 && val!=407)
+                return true;
+            break;
+
+        case Bas:
+            val = map[posY+2][posX];
+            if(val!=465 && val!=461)
+                return true;
+            break;
+    }
+    return false;
+}
+
+
+
+
 
 
 void Voiture::Boucle(){
@@ -121,6 +338,7 @@ void Voiture::Boucle(){
     vector<thread> negociations;
     vector<PropositionAccepte> propositions;
     int size = 3;
+
     for(int i=0; i<size; i++){
         negociations.push_back(thread(&Voiture::processusNegocition, ref(*this),parkings[i], ref(propositions)));
     }

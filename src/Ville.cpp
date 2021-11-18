@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 
+#include <unistd.h>
+
 
 
 using namespace std;
@@ -26,6 +28,11 @@ vector<int> TxtLineToInt(string data)
 }
 
 
+void AvanceVoiture(Ville & v){
+    while(true){
+        v.getTabVoitures()[0].Avancer(v.getMap());
+    }
+}
 
 Ville::Ville(){
     tab_parkings.push_back(Parking("P1"));
@@ -34,15 +41,15 @@ Ville::Ville(){
     tab_parkings.push_back(Parking("P3"));
     
 
-    tab_voitures.push_back(Voiture("AAA-123-AAA"));
-    
-    tab_voitures.push_back(Voiture("BBB-123-BBB"));
+    tab_voitures.push_back(Voiture("AAA-123-AAA", 2,16, Droite));
+    tab_voitures.push_back(Voiture("BBB-123-BBB", 15,14, Gauche));
+    /*
     tab_voitures.push_back(Voiture("CCC-123-CCC"));
     tab_voitures.push_back(Voiture("DDD-123-DDD"));
     tab_voitures.push_back(Voiture("EEE-123-EEE"));
     tab_voitures.push_back(Voiture("FFF-123-FFF"));
     tab_voitures.push_back(Voiture("GGG-123-GGG"));
-    tab_voitures.push_back(Voiture("HHH-123-HHH"));
+    tab_voitures.push_back(Voiture("HHH-123-HHH"));*/
     
     ifstream my_file("data/map.txt");
     
@@ -55,14 +62,23 @@ Ville::Ville(){
         map.push_back(TxtLineToInt(ligne));
     }
 
+    // Thread negociation des parkings
     for(int i=0; i<(int)tab_parkings.size();i++){
         tabThreads.push_back(thread(&Parking::Boucle, ref(tab_parkings[i])));
     }
 
+    // Thread negociation des voitures
     for(int i=0; i<(int)tab_voitures.size();i++){
         tabThreads.push_back(thread(&Voiture::Boucle, ref(tab_voitures[i])));
     }
+
+    // Thread mouvement des voitures
+    for(int i=0; i<(int)tab_voitures.size();i++){
+        tabThreads.push_back(thread(AvanceVoiture, ref(*this)));
+    }
 }
+
+
 
 Ville::~Ville(){
     for(int i=0; i<(int)tabThreads.size(); i++){

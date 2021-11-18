@@ -16,8 +16,11 @@ using namespace std;
 
 class Affichage{
     Ville * ville;
-    sf::RenderWindow window;
     vector<bool*> showParking;
+
+    sf::RenderWindow window;
+    sf::Sprite sprite;
+    sf::Texture tileset;
 public:
     Affichage(Ville * v);
     ~Affichage();
@@ -25,6 +28,9 @@ public:
     void displayMap();
     void displayMainWidget();
     void displayInfoParking(Parking & p);
+    void displayCar(double x, double y, Direction dir);
+    void displayMessage(Message & msg, string & immatVoiture, int row);
+    void drawTile(int nTile, double x, double y);
 };
 
 
