@@ -130,7 +130,84 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
 
 
 void Voiture::turnLeft(){
+
+    int newX, newY;
+    double vitesse =0.0001;
+    if(direction==Droite){
+        newX = posX + 2;
+        while(posX < newX){
+            posX += vitesse;
+            usleep(60);
+        }
+        posX = newX;
+
+        direction=Haut;
+        newY = posY - 3;
+        while(posY > newY){
+            posY -= vitesse;
+            usleep(60);
+        }
+        posY = newY;
+
+        return;
+    }
+    if(direction==Gauche){
+        newX = posX - 2;
+        while(posX > newX){
+            posX -= vitesse;
+            usleep(60);
+        }
+        posX = newX;
+
+        direction=Bas;
+        newY = posY + 3;
+        while(posY < newY){
+            posY += vitesse;
+            usleep(60);
+        }
+        posY = newY;
+
+        return;
+    }
+    if(direction==Haut){
     
+        newY = posY - 2;
+        while(posY > newY){
+            posY -= vitesse;
+            usleep(60);
+        }
+        posY = newY;
+
+        direction=Gauche;
+
+        newX = posX - 3;
+        while(posX > newX){
+            posX -= vitesse;
+            usleep(60);
+        }
+        posX = newX;
+
+
+        return;
+    }
+    if(direction==Bas){
+        newY = posY + 2;
+        while(posY < newY){
+            posY += vitesse;
+            usleep(60);
+        }
+        posY = newY;
+
+        direction=Droite;
+
+        newX = posX + 3;
+        while(posX < newX){
+            posX += vitesse;
+            usleep(60);
+        }
+        posX = newX;
+        return;
+    }
 }
 
 void Voiture::turnRight(){
@@ -271,15 +348,14 @@ void Voiture::Avancer(vector< vector<int> > & map){
     if(random==0)
         goStraight();
     
-    /*
+    
     else if(random==1)
-        turnRight();*/
+        turnRight();
+
+    else if(random==2)
+        turnLeft();
     
     
-    // Fonctions pas encore faites
-    /*
-    if(random==1)
-        turnRight();*/
         
     
 }
@@ -301,13 +377,13 @@ bool Voiture::canGoRight(vector< vector<int> > & map){
                 return true;
             break;
         
-        case Haut:
+        case Bas:
             val = map[posY][posX-1];
             if(val==406 || val==407)
                 return true;
             break;
 
-        case Bas:
+        case Haut:
             val = map[posY][posX+1];
             if(val==460 || val==461)
                 return true;

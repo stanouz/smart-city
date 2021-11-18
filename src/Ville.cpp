@@ -28,9 +28,9 @@ vector<int> TxtLineToInt(string data)
 }
 
 
-void AvanceVoiture(Ville & v){
+void AvanceVoiture(Ville & v, int indice){
     while(true){
-        v.getTabVoitures()[0].Avancer(v.getMap());
+        v.getTabVoitures()[indice].Avancer(v.getMap());
     }
 }
 
@@ -42,7 +42,7 @@ Ville::Ville(){
     
 
     tab_voitures.push_back(Voiture("AAA-123-AAA", 2,16, Droite));
-    tab_voitures.push_back(Voiture("BBB-123-BBB", 15,14, Gauche));
+    tab_voitures.push_back(Voiture("BBB-123-BBB", 17,14, Gauche));
     /*
     tab_voitures.push_back(Voiture("CCC-123-CCC"));
     tab_voitures.push_back(Voiture("DDD-123-DDD"));
@@ -74,7 +74,7 @@ Ville::Ville(){
 
     // Thread mouvement des voitures
     for(int i=0; i<(int)tab_voitures.size();i++){
-        tabThreads.push_back(thread(AvanceVoiture, ref(*this)));
+        tabThreads.push_back(thread(AvanceVoiture, ref(*this), i));
     }
 }
 
