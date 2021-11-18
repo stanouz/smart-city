@@ -130,7 +130,84 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
 
 
 void Voiture::turnLeft(){
+
+    int newX, newY;
+    double vitesse =0.0001;
+    if(direction==Droite){
+        newX = posX + 2;
+        while(posX < newX){
+            posX += vitesse;
+            usleep(60);
+        }
+        posX = newX;
+
+        direction=Haut;
+        newY = posY - 3;
+        while(posY > newY){
+            posY -= vitesse;
+            usleep(60);
+        }
+        posY = newY;
+
+        return;
+    }
+    if(direction==Gauche){
+        newX = posX - 2;
+        while(posX > newX){
+            posX -= vitesse;
+            usleep(60);
+        }
+        posX = newX;
+
+        direction=Bas;
+        newY = posY + 3;
+        while(posY < newY){
+            posY += vitesse;
+            usleep(60);
+        }
+        posY = newY;
+
+        return;
+    }
+    if(direction==Haut){
     
+        newY = posY - 2;
+        while(posY > newY){
+            posY -= vitesse;
+            usleep(60);
+        }
+        posY = newY;
+
+        direction=Gauche;
+
+        newX = posX - 3;
+        while(posX > newX){
+            posX -= vitesse;
+            usleep(60);
+        }
+        posX = newX;
+
+
+        return;
+    }
+    if(direction==Bas){
+        newY = posY + 2;
+        while(posY < newY){
+            posY += vitesse;
+            usleep(60);
+        }
+        posY = newY;
+
+        direction=Droite;
+
+        newX = posX + 3;
+        while(posX < newX){
+            posX += vitesse;
+            usleep(60);
+        }
+        posX = newX;
+        return;
+    }
 }
 
 void Voiture::turnRight(){
@@ -274,12 +351,11 @@ void Voiture::Avancer(vector< vector<int> > & map){
     
     else if(random==1)
         turnRight();
+
+    else if(random==2)
+        turnLeft();
     
     
-    // Fonctions pas encore faites
-    /*
-    if(random==2)
-        turnLeft();*/
         
     
 }
