@@ -28,12 +28,6 @@ vector<int> TxtLineToInt(string data)
 }
 
 
-void AvanceVoiture(Ville & v, int indice){
-    while(true){
-        v.getTabVoitures()[indice].Avancer(v.getMap());
-    }
-}
-
 Ville::Ville(){
     tab_parkings.push_back(Parking("P1"));
     
@@ -74,7 +68,7 @@ Ville::Ville(){
 
     // Thread mouvement des voitures
     for(int i=0; i<(int)tab_voitures.size();i++){
-        tabThreads.push_back(thread(AvanceVoiture, ref(*this), i));
+        tabThreads.push_back(thread(&Voiture::Avancer, ref(tab_voitures[i]), ref(map)));
     }
 }
 
