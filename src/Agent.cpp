@@ -8,6 +8,9 @@ Agent::~Agent(){
     
 }
 
+mutex Agent::m;
+condition_variable Agent::cv;
+map<string, vector<Message> > Agent::BoiteAuxLettres;
 
 void Agent::sendMessage(Message & msg, string emmeteur, string recepteur){
     unique_lock<mutex> l(m);

@@ -130,17 +130,63 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
 
 
 void Voiture::turnLeft(){
-
+    
 }
 
 void Voiture::turnRight(){
+    int newX, newY;
+    double vitesse =0.0001;
 
+    if(direction==Droite){
+        direction=Bas;
+        newY = posY +1;
+        while(posY < newY){
+            posY += vitesse;
+            usleep(60);
+        }
+        posY = newY;
+        return;
+    }
+    if(direction==Gauche){
+        direction=Haut;
+        newY = posY - 1;
+        while(posY > newY){
+            posY -= vitesse;
+            usleep(60);
+        }
+        posY = newY;
+        return;
+    }
+
+    if(direction==Haut){
+        direction=Droite;
+        newX = posX +1;
+        while(posX < newY){
+            posX += vitesse;
+            usleep(60);
+        }
+        posX = newX;
+        return;
+    }
+    if(direction==Bas){
+        direction=Gauche;
+        newX = posX -1;
+        while(posX > newY){
+            posX -= vitesse;
+            usleep(60);
+        }
+        posX = newX;
+        return;
+    }
 }
 
 void Voiture::goStraight(){
     double vitesse =0.0001;
 
     int newX, newY;
+
+
+    // Implementer un DeltaTime à la place du sleep()
 
     if(direction==Gauche){
         newX = posX-1;
@@ -225,13 +271,17 @@ void Voiture::Avancer(vector< vector<int> > & map){
     if(random==0)
         goStraight();
     
+    /*
+    else if(random==1)
+        turnRight();*/
+    
+    
     // Fonctions pas encore faites
     /*
     if(random==1)
-        turnRight();
+        turnRight();*/
         
-    if(random==2)
-        turnRight();*/    
+    
 }
 
 
