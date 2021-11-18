@@ -271,15 +271,15 @@ void Voiture::Avancer(vector< vector<int> > & map){
     if(random==0)
         goStraight();
     
-    /*
+    
     else if(random==1)
-        turnRight();*/
+        turnRight();
     
     
     // Fonctions pas encore faites
     /*
-    if(random==1)
-        turnRight();*/
+    if(random==2)
+        turnLeft();*/
         
     
 }
@@ -301,13 +301,13 @@ bool Voiture::canGoRight(vector< vector<int> > & map){
                 return true;
             break;
         
-        case Haut:
+        case Bas:
             val = map[posY][posX-1];
             if(val==406 || val==407)
                 return true;
             break;
 
-        case Bas:
+        case Haut:
             val = map[posY][posX+1];
             if(val==460 || val==461)
                 return true;
