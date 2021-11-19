@@ -2,7 +2,7 @@
 
 #include <string>
 
-Affichage::Affichage(Ville * v): window(sf::VideoMode(700, 700), "smart parking"){
+Affichage::Affichage(Ville * v): window(sf::VideoMode(900, 900), "smart parking"){
     ville = v;
     
     for(int i=0; i<(int)ville->getTabParkings().size(); i++)
@@ -10,6 +10,10 @@ Affichage::Affichage(Ville * v): window(sf::VideoMode(700, 700), "smart parking"
 
     window.setFramerateLimit(60);
     ImGui::SFML::Init(window);
+
+    /* Pour ne pas sauvegarder la position des widgets dans imgui.ini
+    ImGuiIO io = ImGui::GetIO();
+    io.IniFilename = NULL;*/
 
     tileset.loadFromFile("data/tilemap.png");
     sprite.setTexture(tileset);
