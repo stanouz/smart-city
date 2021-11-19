@@ -34,9 +34,6 @@ void Affichage::display(){
 
         ImGui::SFML::Update(window, deltaClock.restart());
 
-        ImGui::ShowDemoWindow();
-
-
         displayMainWidget();
 
         window.clear();

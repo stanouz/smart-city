@@ -208,8 +208,6 @@ void Voiture::Avancer(vector< vector<int> > & map){
     }
 }
 
-
-// Ajouter un delta time au lieu du sleep
 void Voiture::rouler(int dirX, int dirY){
     // deplacement en diagonale impossible
     if(dirX!=0 && dirY!=0){
