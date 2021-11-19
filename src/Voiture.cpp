@@ -12,6 +12,8 @@ using namespace std;
 
 const double DUREE_STATIONNEMENT = 0.1;
 
+// Constructeur
+
 Voiture::Voiture(string immat, int x, int y, Direction dir){
     immatriculation = immat;
     posX = x;
@@ -19,6 +21,7 @@ Voiture::Voiture(string immat, int x, int y, Direction dir){
     direction = dir;
 }
 
+// Getters
 
 string Voiture::getImat() const{
     return immatriculation;
@@ -37,6 +40,7 @@ Direction Voiture::getDirection(){
 }
 
 
+// Fonctions de négociation
 
 void Voiture::negociation(string id_destinataire, double prixPopositionPrecedente)
 {
@@ -55,7 +59,6 @@ void Voiture::negociation(string id_destinataire, double prixPopositionPrecedent
 
     sendMessage(m_new, immatriculation, id_destinataire);
 }
-
 
 void Voiture::premierMessage(string id_destinataire)
 {
@@ -108,8 +111,6 @@ void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> 
     }
 }
 
-
-
 PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop){
     if(prop.size()>0){
         double prixMin = prop[0].getPrix();
@@ -128,6 +129,36 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
     return PropositionAccepte(-1, "P#");
 }
 
+void Voiture::Boucle(){
+    string parkings[3] = {"P1", "P2", "P3"};
+    vector<thread> negociations;
+    vector<PropositionAccepte> propositions;
+    int size = 3;
+
+    for(int i=0; i<size; i++){
+        negociations.push_back(thread(&Voiture::processusNegocition, ref(*this),parkings[i], ref(propositions)));
+    }
+    for(int i=0; i<size; i++){
+        negociations[i].join();
+    }
+
+    PropositionAccepte meilleurOffre = compareProposition(propositions);
+
+    if(meilleurOffre.getPrix()!=-1 && meilleurOffre.getId()!="P#"){
+        Message m(immatriculation, Accepter);
+        m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
+        sendMessage(m, immatriculation, meilleurOffre.getId());
+        cout << "ACCEPTE "+immatriculation+" pour "+ meilleurOffre.getId() << endl;
+    }
+    else 
+        cout << "REFU " +immatriculation+" pour "+ meilleurOffre.getId() << endl;
+    
+    
+}
+    
+
+
+// Fonctions de déplacement
 
 void Voiture::turnLeft(){
     switch(direction){
@@ -353,32 +384,3 @@ bool Voiture::canGoStraight(vector< vector<int> > & map){
 
 
 
-
-
-void Voiture::Boucle(){
-    string parkings[3] = {"P1", "P2", "P3"};
-    vector<thread> negociations;
-    vector<PropositionAccepte> propositions;
-    int size = 3;
-
-    for(int i=0; i<size; i++){
-        negociations.push_back(thread(&Voiture::processusNegocition, ref(*this),parkings[i], ref(propositions)));
-    }
-    for(int i=0; i<size; i++){
-        negociations[i].join();
-    }
-
-    PropositionAccepte meilleurOffre = compareProposition(propositions);
-
-    if(meilleurOffre.getPrix()!=-1 && meilleurOffre.getId()!="P#"){
-        Message m(immatriculation, Accepter);
-        m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
-        sendMessage(m, immatriculation, meilleurOffre.getId());
-        cout << "ACCEPTE "+immatriculation+" pour "+ meilleurOffre.getId() << endl;
-    }
-    else 
-        cout << "REFU " +immatriculation+" pour "+ meilleurOffre.getId() << endl;
-    
-    
-}
-    
