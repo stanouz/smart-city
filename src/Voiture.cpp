@@ -19,6 +19,7 @@ Voiture::Voiture(string immat, int x, int y, Direction dir){
     posX = x;
     posY = y;
     direction = dir;
+    estGaree = false;
 }
 
 // Getters
@@ -149,11 +150,17 @@ void Voiture::Boucle(){
         m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
         sendMessage(m, immatriculation, meilleurOffre.getId());
         cout << "ACCEPTE "+immatriculation+" pour "+ meilleurOffre.getId() << endl;
-    }
-    else 
-        cout << "REFU " +immatriculation+" pour "+ meilleurOffre.getId() << endl;
-    
-    
+        estGaree = true;
+
+        Message msg;
+        do{
+            msg = getMessageFrom(immatriculation, meilleurOffre.getId());
+        }
+        while(msg.performatif != LibererPlace);
+
+        estGaree = false;
+        
+    }    
 }
     
 

@@ -49,6 +49,7 @@ private:
     string immatriculation;
     double posX, posY;
     Direction direction;
+    bool estGaree;
 };
 
 #endif

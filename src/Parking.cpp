@@ -31,8 +31,11 @@ bool Parking::IsFull() const{
 
 void Parking::updatePlacesStatus(){
     for(int i=0; i<NB_PLACES_TOTAL; i++){
-        if(tabPlaces[i].updateStatus()){
+        string update_immat = tabPlaces[i].updateStatus();
+        if(update_immat!="NULL"){
             nb_place_occup--;
+            Message msg(ID, LibererPlace);
+            sendMessage(msg, ID, update_immat);
         }  
     }
 }
@@ -53,8 +56,7 @@ void Parking::ajouteVoiture(string occupant, Date dateDepart){
         nb_place_occup++;
 }
 
-double Parking::prixFinal(float duree)
-{
+double Parking::prixFinal(float duree){
     double reduc=0.;
     double percent = pourcentageRemplissage();
     if(duree<=4){
