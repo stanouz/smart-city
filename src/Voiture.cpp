@@ -10,7 +10,7 @@
 
 using namespace std;
 
-const double DUREE_STATIONNEMENT = 0.1;
+const double DUREE_STATIONNEMENT = 1.5;
 
 // Constructeur
 

@@ -176,6 +176,19 @@ void Affichage::displayInfoParking(Parking & p){
         ImGui::ProgressBar((double)p.getNbPlaceOccupe()/p.getNbplace(), ImVec2(0.f, 0.f), buf);
 
         ImGui::NewLine();
+
+        // ===========================================  
+        //  Liste des voitures garées dans le parking
+        // =========================================== 
+        for(int i=0; i<p.getNbplace(); i++){
+            string occupant = p.getPlace(i).getOccupant();
+            if(occupant!="NULL"){
+                ImGui::BulletText("%s", occupant.c_str());
+            }
+        }
+
+
+
         ImGui::Unindent();
     }
     
