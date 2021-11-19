@@ -32,6 +32,7 @@ public:
     string getId();
     int getNbplace();
     int getNbPlaceOccupe();
+    Place & getPlace(int ind);
 private:
     Place tabPlaces[10];
     const int NB_PLACES_TOTAL = 10;

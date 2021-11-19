@@ -46,6 +46,7 @@ Date::Date(Date & d, double hours){
 
     if(minute >= 60){
         hour += minute/60;
+        minute %= 60;
     }
 
     hour = d.hour + (int)hours;

@@ -11,7 +11,7 @@ public:
     Place();
     ~Place();
     
-    int getID() const;
+    string getOccupant() const;
     bool getIsOccupied() const;
     Date getOccupiedUntil() const;
     string updateStatus();
@@ -19,7 +19,6 @@ public:
 
 
 private:
-    int ID;
     Date occupiedUntil;
     bool isOccupied;
     string occupant;

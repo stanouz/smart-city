@@ -12,8 +12,8 @@ Place::Place(){
 Place::~Place(){
 }
 
-int Place::getID() const{
-    return ID;
+string Place::getOccupant() const{
+    return occupant;
 }
 
 bool Place::getIsOccupied() const{
