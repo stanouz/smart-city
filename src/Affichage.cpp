@@ -183,7 +183,7 @@ void Affichage::displayInfoParking(Parking & p){
         for(int i=0; i<p.getNbplace(); i++){
             string occupant = p.getPlace(i).getOccupant();
             if(occupant!="NULL"){
-                ImGui::BulletText("%s", occupant.c_str());
+                ImGui::BulletText("%s jusqu'au %s", occupant.c_str(), p.getPlace(i).getOccupiedUntil().DateToString().c_str());
             }
         }
 
