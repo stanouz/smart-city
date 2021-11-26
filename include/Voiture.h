@@ -23,6 +23,7 @@ public:
     double getPosX() const;
     double getPosY() const;
     Direction getDirection();
+    bool getEstGaree();
 
     // Negociation
     void Boucle();
