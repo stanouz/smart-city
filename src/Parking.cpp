@@ -25,14 +25,21 @@ int Parking::getNbPlaceOccupe(){
     return nb_place_occup;
 }
 
+Place & Parking::getPlace(int ind){
+    return tabPlaces[ind];
+}
+
 bool Parking::IsFull() const{
     return nb_place_occup>=NB_PLACES_TOTAL;
 }
 
 void Parking::updatePlacesStatus(){
     for(int i=0; i<NB_PLACES_TOTAL; i++){
-        if(tabPlaces[i].updateStatus()){
+        string update_immat = tabPlaces[i].updateStatus();
+        if(update_immat!="NULL"){
             nb_place_occup--;
+            Message msg(ID, LibererPlace);
+            sendMessage(msg, ID, update_immat);
         }  
     }
 }
@@ -53,8 +60,7 @@ void Parking::ajouteVoiture(string occupant, Date dateDepart){
         nb_place_occup++;
 }
 
-double Parking::prixFinal(float duree)
-{
+double Parking::prixFinal(float duree){
     double reduc=0.;
     double percent = pourcentageRemplissage();
     if(duree<=4){
@@ -129,10 +135,7 @@ void Parking::processusNegocitation(){
     bool accepte = false;
     Message toSend(ID, Reponse);
     while(compteur<3 && !accepte){
-        
-
-        //cout << endl<<endl<<endl<<"===== COMPTEUR " << compteur << "=======" << endl;
-        //recu.display();
+    
         float prixDemande = recu.contenuMessage.getPrix();
         float duree = recu.contenuMessage.getDuree();
         
@@ -155,13 +158,11 @@ void Parking::processusNegocitation(){
             recu = getMessageFrom(ID, recu.emmeteur);
         
         compteur++;
-        sleep(3);
     }
 }
 
 
 void Parking::Boucle(){
-    sleep(2);
     while(true){
         if(!BoiteAuxLettres[ID].empty())
             processusNegocitation();

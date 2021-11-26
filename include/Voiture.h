@@ -33,6 +33,7 @@ public:
 
     // Deplacement
     void Avancer(vector< vector<int> > & map);
+    void rouler(int dirX, int dirY);
     void halfTurn();
     void turnLeft();
     void turnRight();
@@ -48,6 +49,7 @@ private:
     string immatriculation;
     double posX, posY;
     Direction direction;
+    bool estGaree;
 };
 
 #endif

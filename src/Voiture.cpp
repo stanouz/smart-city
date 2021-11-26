@@ -10,15 +10,19 @@
 
 using namespace std;
 
-const double DUREE_STATIONNEMENT = 0.1;
+const double DUREE_STATIONNEMENT = 1.5;
+
+// Constructeur
 
 Voiture::Voiture(string immat, int x, int y, Direction dir){
     immatriculation = immat;
     posX = x;
     posY = y;
     direction = dir;
+    estGaree = false;
 }
 
+// Getters
 
 string Voiture::getImat() const{
     return immatriculation;
@@ -37,6 +41,7 @@ Direction Voiture::getDirection(){
 }
 
 
+// Fonctions de négociation
 
 void Voiture::negociation(string id_destinataire, double prixPopositionPrecedente)
 {
@@ -55,7 +60,6 @@ void Voiture::negociation(string id_destinataire, double prixPopositionPrecedent
 
     sendMessage(m_new, immatriculation, id_destinataire);
 }
-
 
 void Voiture::premierMessage(string id_destinataire)
 {
@@ -108,8 +112,6 @@ void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> 
     }
 }
 
-
-
 PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop){
     if(prop.size()>0){
         double prixMin = prop[0].getPrix();
@@ -128,238 +130,170 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
     return PropositionAccepte(-1, "P#");
 }
 
+void Voiture::Boucle(){
+    string parkings[3] = {"P1", "P2", "P3"};
+    vector<thread> negociations;
+    vector<PropositionAccepte> propositions;
+    int size = 3;
+
+    for(int i=0; i<size; i++){
+        negociations.push_back(thread(&Voiture::processusNegocition, ref(*this),parkings[i], ref(propositions)));
+    }
+    for(int i=0; i<size; i++){
+        negociations[i].join();
+    }
+
+    PropositionAccepte meilleurOffre = compareProposition(propositions);
+
+    if(meilleurOffre.getPrix()!=-1 && meilleurOffre.getId()!="P#"){
+        Message m(immatriculation, Accepter);
+        m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
+        sendMessage(m, immatriculation, meilleurOffre.getId());
+        cout << "ACCEPTE "+immatriculation+" pour "+ meilleurOffre.getId() << endl;
+        estGaree = true;
+
+        Message msg;
+        do{
+            msg = getMessageFrom(immatriculation, meilleurOffre.getId());
+        }
+        while(msg.performatif != LibererPlace);
+
+        estGaree = false;
+        
+    }    
+}
+    
+
+
+// Fonctions de déplacement
 
 void Voiture::turnLeft(){
-
-    int newX, newY;
-    double vitesse =0.0001;
-    if(direction==Droite){
-        newX = posX + 2;
-        while(posX < newX){
-            posX += vitesse;
-            usleep(60);
-        }
-        posX = newX;
-
-        direction=Haut;
-        newY = posY - 3;
-        while(posY > newY){
-            posY -= vitesse;
-            usleep(60);
-        }
-        posY = newY;
-
-        return;
-    }
-    if(direction==Gauche){
-        newX = posX - 2;
-        while(posX > newX){
-            posX -= vitesse;
-            usleep(60);
-        }
-        posX = newX;
-
-        direction=Bas;
-        newY = posY + 3;
-        while(posY < newY){
-            posY += vitesse;
-            usleep(60);
-        }
-        posY = newY;
-
-        return;
-    }
-    if(direction==Haut){
-    
-        newY = posY - 2;
-        while(posY > newY){
-            posY -= vitesse;
-            usleep(60);
-        }
-        posY = newY;
-
-        direction=Gauche;
-
-        newX = posX - 3;
-        while(posX > newX){
-            posX -= vitesse;
-            usleep(60);
-        }
-        posX = newX;
-
-
-        return;
-    }
-    if(direction==Bas){
-        newY = posY + 2;
-        while(posY < newY){
-            posY += vitesse;
-            usleep(60);
-        }
-        posY = newY;
-
-        direction=Droite;
-
-        newX = posX + 3;
-        while(posX < newX){
-            posX += vitesse;
-            usleep(60);
-        }
-        posX = newX;
-        return;
+    switch(direction){
+        case Gauche: rouler(-2, 0);direction=Bas; rouler(0, 3); return; break;
+        case Droite: rouler(2, 0); direction=Haut; rouler(0, -3); return; break;
+        case Haut: rouler(0, -2); direction=Gauche; rouler(-3, 0); return; break;
+        case Bas: rouler(0, 2); direction=Droite; rouler(3, 0); return; break;
     }
 }
 
 void Voiture::turnRight(){
-    int newX, newY;
-    double vitesse =0.0001;
-
-    if(direction==Droite){
-        direction=Bas;
-        newY = posY +1;
-        while(posY < newY){
-            posY += vitesse;
-            usleep(60);
-        }
-        posY = newY;
-        return;
-    }
-    if(direction==Gauche){
-        direction=Haut;
-        newY = posY - 1;
-        while(posY > newY){
-            posY -= vitesse;
-            usleep(60);
-        }
-        posY = newY;
-        return;
-    }
-
-    if(direction==Haut){
-        direction=Droite;
-        newX = posX +1;
-        while(posX < newY){
-            posX += vitesse;
-            usleep(60);
-        }
-        posX = newX;
-        return;
-    }
-    if(direction==Bas){
-        direction=Gauche;
-        newX = posX -1;
-        while(posX > newY){
-            posX -= vitesse;
-            usleep(60);
-        }
-        posX = newX;
-        return;
+    switch(direction){
+        case Gauche: direction=Haut; rouler(0, -1); return; break;
+        case Droite: direction=Bas; rouler(0, 1); return; break;
+        case Haut: direction=Droite; rouler(1, 0); return; break;
+        case Bas: direction=Gauche; rouler(-1, 0); return; break;
     }
 }
 
 void Voiture::goStraight(){
-    double vitesse =0.0001;
-
-    int newX, newY;
-
-
-    // Implementer un DeltaTime à la place du sleep()
-
-    if(direction==Gauche){
-        newX = posX-1;
-        while(posX > newX){
-            posX-= vitesse;
-            usleep(60);
-        }
-        posX = newX;
-    }
-    else if(direction==Droite){
-        newX = posX+1;
-        while(posX < newX){
-            posX+= vitesse;
-            usleep(60);
-        }
-        posX = newX;
-    }
-    else if(direction==Bas){
-        newY = posY+1;
-        while(posY < newY){
-            posY+= vitesse;
-            usleep(60);
-        }
-        posY = newY;
-    }
-    else if(direction==Haut){
-        newY = posY-1;
-        while(posY > newY){
-            posY-= vitesse;
-            usleep(60);
-        }
-        posY = newY;
+    switch(direction){
+        case Gauche: rouler(-1, 0); break;
+        case Droite: rouler(1, 0); break;
+        case Haut: rouler(0, -1); break;
+        case Bas: rouler(0, 1); break;
     }
 }
 
 void Voiture::halfTurn(){
-    switch(direction)
-    {
-        case Droite: direction = Gauche; posY -= 2; posX+=2; break;
-        case Gauche: direction = Droite; posY += 2; posX-=2; break;
-        case Haut: direction = Bas; posX -= 2; posY-=2; break;
-        case Bas: direction = Haut; posX += 2; posY+=2;break;
+    switch(direction){
+        case Droite: rouler(2, 0); direction = Haut; rouler(0, -2); direction=Gauche; rouler(-1, 0); return; break;
+        case Gauche: rouler(-2, 0); direction = Bas; rouler(0, 2); direction=Droite; rouler(1, 0);  return; break;
+        case Haut: rouler(0, -2); direction = Gauche; rouler(-2, 0); direction=Bas; rouler(0, 1); return; break;
+        case Bas: rouler(0, 2); direction = Droite; rouler(2, 0); direction=Haut; rouler(0, -1); return; break;
     }
 }
 
 void Voiture::Avancer(vector< vector<int> > & map){
     
-    vector<bool> deplacementPossible;
-    deplacementPossible.push_back(canGoStraight(map));
-    deplacementPossible.push_back(canGoRight(map));
-    deplacementPossible.push_back(canGoLeft(map));
+    while(true){
+        vector<bool> deplacementPossible;
+        deplacementPossible.push_back(canGoStraight(map));
+        deplacementPossible.push_back(canGoRight(map));
+        deplacementPossible.push_back(canGoLeft(map));
 
-    // On verifie qu'il y ai bien un true
-    bool hasTrue = false;
+        // On verifie qu'il y ai bien un true
+        bool hasTrue = false;
 
-    for(int i=0; i<3; i++){
-        if(deplacementPossible[i])
-            hasTrue= true;
+        for(int i=0; i<3; i++){
+            if(deplacementPossible[i])
+                hasTrue= true;
+        }
+
+        // ==========================================
+        // A FAIRE : 
+        // Améliorer le système de choix aléatoire 
+        // pour pas avoir à faire plusieur rand()
+        // ==========================================
+
+        // Si pas de deplacement possible alors demi-tour
+        
+        if(!hasTrue){
+            halfTurn(); 
+        }
+        else{
+            srand(time(NULL));
+            
+            int random;
+            do{
+                random = rand()%3;
+            }
+            while(!deplacementPossible[random]);
+
+            if(random==0) goStraight();
+            else if(random==1) turnRight();
+            else if(random==2) turnLeft();
+        }
     }
+}
 
-    // ==========================================
-    // A FAIRE : 
-    // Améliorer le système de choix aléatoire 
-    // pour pas avoir à faire plusieur rand()
-    // ==========================================
-
-    // Si pas de deplacement possible alors demi-tour
-    
-    if(!hasTrue){
-        halfTurn(); 
+void Voiture::rouler(int dirX, int dirY){
+    // deplacement en diagonale impossible
+    if(dirX!=0 && dirY!=0){
         return;
     }
 
-    srand(time(NULL));
-        
-    int random;
-    do{
-        random = rand()%3;
+    double vitesse =0.0001;
+    if(dirX!=0){
+        int newX = posX + dirX;
+        if(dirX > 0){
+            while(posX < newX){
+                posX += vitesse;
+                usleep(60);
+            }
+            posX = newX;
+            return;
+        }
+        else{
+            while(posX > newX){
+                posX -= vitesse;
+                usleep(60);
+            }
+            posX = newX;
+            return;
+        }
     }
-    while(!deplacementPossible[random]);
 
-    if(random==0)
-        goStraight();
-    
-    
-    else if(random==1)
-        turnRight();
+    if(dirY!=0){
+        int newY = posY + dirY;
+        if(dirY > 0){
+            while(posY < newY){
+                posY += vitesse;
+                usleep(60);
+            }
+            posY = newY;
+            return;
+        }
+        else{
+            while(posY > newY){
+                posY -= vitesse;
+                usleep(60);
+            }
+            posY = newY;
+            return;
+        }
+    }
 
-    else if(random==2)
-        turnLeft();
-    
-    
-        
-    
 }
-
 
 bool Voiture::canGoRight(vector< vector<int> > & map){
     int val;
@@ -457,32 +391,3 @@ bool Voiture::canGoStraight(vector< vector<int> > & map){
 
 
 
-
-
-void Voiture::Boucle(){
-    string parkings[3] = {"P1", "P2", "P3"};
-    vector<thread> negociations;
-    vector<PropositionAccepte> propositions;
-    int size = 3;
-
-    for(int i=0; i<size; i++){
-        negociations.push_back(thread(&Voiture::processusNegocition, ref(*this),parkings[i], ref(propositions)));
-    }
-    for(int i=0; i<size; i++){
-        negociations[i].join();
-    }
-
-    PropositionAccepte meilleurOffre = compareProposition(propositions);
-
-    if(meilleurOffre.getPrix()!=-1 && meilleurOffre.getId()!="P#"){
-        Message m(immatriculation, Accepter);
-        m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
-        sendMessage(m, immatriculation, meilleurOffre.getId());
-        cout << "ACCEPTE "+immatriculation+" pour "+ meilleurOffre.getId() << endl;
-    }
-    else 
-        cout << "REFU " +immatriculation+" pour "+ meilleurOffre.getId() << endl;
-    
-    
-}
-    
