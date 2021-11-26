@@ -5,9 +5,6 @@
 Affichage::Affichage(Ville * v): window(sf::VideoMode(900, 900), "smart parking"){
     ville = v;
     
-    for(int i=0; i<(int)ville->getTabParkings().size(); i++)
-        showParking.push_back(new bool(true));
-
     window.setFramerateLimit(60);
     ImGui::SFML::Init(window);
 
@@ -37,6 +34,7 @@ void Affichage::display(){
         }
 
         ImGui::SFML::Update(window, deltaClock.restart());
+
 
         displayMainWidget();
 
@@ -127,36 +125,28 @@ void Affichage::drawTile(int nTile, double x, double y){
 void Affichage::displayMainWidget(){
     // Ouverture de la fenetre
     ImGui::Begin("Les parkings");
-
-    static bool opt_reorderable = true;
-    static ImGuiTabBarFlags opt_fitting_flags = ImGuiTabBarFlags_FittingPolicyDefault_;
     
-    if (ImGui::CollapsingHeader("Choix des parkings")){
-        //Add Checkbox for each parkings
-        ImGui::Indent();
-        for(int i=0; i<(int)ville->getTabParkings().size(); i++){
-            Parking p = ville->getTabParkings()[i];
-            
-            ImGui::Checkbox(p.getId().c_str(), showParking[i]);
+    // ==============
+    // Date et heure
+    // ==============
+    Date now;
+    ImGui::Text("%s", now.DateToString().c_str());
+
+    ImGui::NewLine();
+
+    // ==================
+    // Info des parkings
+    // ==================
+    ImGui::BeginTabBar("Parkings", ImGuiTabBarFlags_None);
+    for(int i = 0; i < (int)ville->getTabParkings().size(); i++){
+        Parking p = ville->getTabParkings()[i];
+        if (ImGui::BeginTabItem(("Parking "+p.getId()).c_str())){
+            displayInfoParking(p);
+            ImGui::EndTabItem();
         }
-        ImGui::Unindent();
     }
-
-    ImGui::Separator();
-
-    ImGui::CollapsingHeader("Info des parkings");
-    ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable;
-
-    if (ImGui::BeginTabBar("Parkings", tab_bar_flags)){
-        for(int i = 0; i < (int)ville->getTabParkings().size(); i++){
-            Parking p = ville->getTabParkings()[i];
-            if (ImGui::BeginTabItem(("Parking "+p.getId()).c_str(), showParking[i] , ImGuiTabItemFlags_None)){
-                displayInfoParking(p);
-                ImGui::EndTabItem();
-            }
-        }
-        ImGui::EndTabBar();
-    }
+    ImGui::EndTabBar();
+    
     
 
     // Fermeture de la fenetre
@@ -194,7 +184,7 @@ void Affichage::displayInfoParking(Parking & p){
         }
 
 
-
+        ImGui::NewLine();
         ImGui::Unindent();
     }
     

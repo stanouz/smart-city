@@ -167,7 +167,6 @@ void Parking::Boucle(){
         if(!BoiteAuxLettres[ID].empty())
             processusNegocitation();
         updatePlacesStatus();
-        
     }
 }
 
