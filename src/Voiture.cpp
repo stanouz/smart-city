@@ -156,7 +156,15 @@ void Voiture::Boucle(){
         sendMessage(m, immatriculation, meilleurOffre.getId());
         cout << "ACCEPTE "+immatriculation+" pour "+ meilleurOffre.getId() << endl;
         estGaree = true;
-
+        for(int i=0; i<3; i++)
+        {
+            if(meilleurOffre.getId()!=parkings[i])
+            {
+                Message m_refus(immatriculation, Refut);
+                sendMessage(m_refus, immatriculation, parkings[i]);
+            }
+        }
+        
         Message msg;
         do{
             msg = getMessageFrom(immatriculation, meilleurOffre.getId());

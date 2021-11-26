@@ -130,6 +130,11 @@ void Parking::processusNegocitation(){
         return;
     }
 
+    if(recu.performatif==Refut){
+        
+        return;
+    }
+
 
     int compteur =0;
     bool accepte = false;
