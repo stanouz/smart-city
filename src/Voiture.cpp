@@ -10,7 +10,7 @@
 
 using namespace std;
 
-const double DUREE_STATIONNEMENT = 1.5;
+const double DUREE_STATIONNEMENT = 0.1;
 
 // Constructeur
 
@@ -206,6 +206,7 @@ void Voiture::halfTurn(){
 void Voiture::Avancer(vector< vector<int> > & map){
     
     while(true){
+        if(!estGaree){
         vector<bool> deplacementPossible;
         deplacementPossible.push_back(canGoStraight(map));
         deplacementPossible.push_back(canGoRight(map));
@@ -242,6 +243,9 @@ void Voiture::Avancer(vector< vector<int> > & map){
             if(random==0) goStraight();
             else if(random==1) turnRight();
             else if(random==2) turnLeft();
+        }
+        }else {
+            sleep(1);
         }
     }
 }
@@ -294,7 +298,7 @@ void Voiture::rouler(int dirX, int dirY){
     }
 
 }
-
+// droite
 bool Voiture::canGoRight(vector< vector<int> > & map){
     int val;
     switch (direction)
@@ -325,7 +329,7 @@ bool Voiture::canGoRight(vector< vector<int> > & map){
     }
     return false;
 }
-
+// gauche 
 bool Voiture::canGoLeft(vector< vector<int> > & map){
     int val;
     switch (direction)

@@ -2,7 +2,7 @@
 
 #include <string>
 
-Affichage::Affichage(Ville * v): window(sf::VideoMode(700, 700), "smart parking"){
+Affichage::Affichage(Ville * v): window(sf::VideoMode(900, 900), "smart parking"){
     ville = v;
     
     for(int i=0; i<(int)ville->getTabParkings().size(); i++)
