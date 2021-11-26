@@ -10,7 +10,7 @@
 
 using namespace std;
 
-const double DUREE_STATIONNEMENT = 1.5;
+const double DUREE_STATIONNEMENT = 0.2;
 
 // Constructeur
 
@@ -38,6 +38,10 @@ double Voiture::getPosY() const{
 
 Direction Voiture::getDirection(){
     return direction;
+}
+
+bool Voiture::getEstGaree(){
+    return estGaree;
 }
 
 
@@ -131,6 +135,7 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
 }
 
 void Voiture::Boucle(){
+    sleep(2);
     string parkings[3] = {"P1", "P2", "P3"};
     vector<thread> negociations;
     vector<PropositionAccepte> propositions;
@@ -206,43 +211,52 @@ void Voiture::halfTurn(){
 void Voiture::Avancer(vector< vector<int> > & map){
     
     while(true){
-        vector<bool> deplacementPossible;
-        deplacementPossible.push_back(canGoStraight(map));
-        deplacementPossible.push_back(canGoRight(map));
-        deplacementPossible.push_back(canGoLeft(map));
+        if(!estGaree){
+            vector<bool> deplacementPossible;
+            deplacementPossible.push_back(canGoStraight(map));
+            deplacementPossible.push_back(canGoRight(map));
+            deplacementPossible.push_back(canGoLeft(map));
 
-        // On verifie qu'il y ai bien un true
-        bool hasTrue = false;
+            // On verifie qu'il y ai bien un true
+            bool hasTrue = false;
 
-        for(int i=0; i<3; i++){
-            if(deplacementPossible[i])
-                hasTrue= true;
-        }
+            for(int i=0; i<3; i++){
+                if(deplacementPossible[i])
+                    hasTrue= true;
+            }
 
-        // ==========================================
-        // A FAIRE : 
-        // Améliorer le système de choix aléatoire 
-        // pour pas avoir à faire plusieur rand()
-        // ==========================================
+            // ==========================================
+            // A FAIRE : 
+            // Améliorer le système de choix aléatoire 
+            // pour pas avoir à faire plusieur rand()
+            // ==========================================
 
-        // Si pas de deplacement possible alors demi-tour
-        
-        if(!hasTrue){
-            halfTurn(); 
+            // Si pas de deplacement possible alors demi-tour
+            
+            if(!hasTrue){
+                halfTurn(); 
+            }
+            else{                
+                int random;
+                do{
+                    random = rand()%3;
+                }
+                while(!deplacementPossible[random]);
+
+                if(random==0){
+                    goStraight();
+                } 
+                else if(random==1){
+                    turnRight();
+                }
+                else if(random==2){
+                    turnLeft();
+                }
+            }
         }
         else{
-            srand(time(NULL));
-            
-            int random;
-            do{
-                random = rand()%3;
-            }
-            while(!deplacementPossible[random]);
-
-            if(random==0) goStraight();
-            else if(random==1) turnRight();
-            else if(random==2) turnLeft();
-        }
+            sleep(1);
+        } 
     }
 }
 
