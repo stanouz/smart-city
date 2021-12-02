@@ -48,3 +48,8 @@ void Contenu:: setPrix(double p){
 void Contenu:: setTexte(string t){
     texte = t;
 }
+
+void Contenu::setTabPlace(int val, int i, int j)
+{
+    TabPlace[i][j] = val;
+}

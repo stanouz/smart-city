@@ -44,9 +44,10 @@ void Affichage::display(){
 
         for(int i=0; i<(int)ville->getTabVoitures().size(); i++){
             Voiture & v = ville->getTabVoitures()[i];
-            if(!v.getEstGaree()){
+            /*if(!v.getEstGaree()){
                 displayCar(v.getPosX(), v.getPosY(), v.getDirection());
-            }
+            }*/
+            displayCar(v.getPosX(), v.getPosY(), v.getDirection()); 
         }
 
 

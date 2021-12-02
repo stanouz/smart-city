@@ -82,10 +82,22 @@ double Parking::prixFinal(float duree, string immatriculation){
 
 void Parking::propositionAcceptee(Message recu)
 {
+    // Si la proposition est accepté on previent la voiture 
     Message toSend(ID, Accepter);
-
-    // Si la proposition est accepté on previent la voiture et 
-    // on quitte le processus de négociation.
+    //En fonction du parking, le parking attribut une place à la voiture
+    int i=0;
+    int ind;
+    int departP1_X = 9;
+    int departP1_Y = 11;
+    if(ID=="P1")
+    {
+        toSend.contenuMessage.setTabPlace(departP1_X, 0, ind);
+        toSend.contenuMessage.setTabPlace(departP1_Y - i, 1, ind);
+        i--;
+        ind ++;
+    }
+    
+    // on envoie le message à la voiture
     toSend.contenuMessage.setTexte("Proposition acceptée");
     sendMessage(toSend, ID, recu.emmeteur);
 }
@@ -160,6 +172,7 @@ void Parking::processusNegocitation(){
         {
             propositionAcceptee(recu);
             accepte = true;
+
         }
 
         // Boucle bloquant l'attente d'un nouveau message

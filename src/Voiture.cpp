@@ -96,7 +96,7 @@ void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> 
         if(recu.performatif==Accepter)
         {
             propositionAccepte = true;
-            PropositionAccepte p(recu.contenuMessage.getPrix(), recu.emmeteur);
+            PropositionAccepte p(recu.contenuMessage.getPrix(), recu.emmeteur, 10, 10);
             prop.push_back(p);
         }
         else if(recu.performatif == Reponse)
@@ -131,15 +131,18 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
     }
     
 
-    return PropositionAccepte(-1, "P#");
+    return PropositionAccepte(-1, "P#", -1,-1);
 }
 
 void Voiture::Boucle(){
     sleep(2);
     while(true){
-        int random = rand()%30;
-        sleep(random);
-
+        sleep(2);
+        while((((int)posY!=9) || ((int)posX!=6)) && (((int)posY!=24) || ((int)posX!=9)) && (((int)posY!=16) || ((int)posX!=18)))
+        {
+            cout<<"X = "<<posX<<" Y = "<<posY<<endl;
+            cout<<"J'ATTEND"<<endl;
+        }
 
         string parkings[3] = {"P1", "P2", "P3"};
         vector<thread> negociations;
@@ -161,6 +164,14 @@ void Voiture::Boucle(){
             sendMessage(m, immatriculation, meilleurOffre.getId());
             cout << "ACCEPTE "+immatriculation+" pour "+ meilleurOffre.getId() << endl;
             estGaree = true;
+
+            double tmpX, tmpY;
+            tmpX = posX;
+            tmpY = posY;
+            Direction tmpDir = direction;
+            posX = meilleurOffre.getPosX();
+            posY = meilleurOffre.getPosY();
+            direction = Droite;
 
             if(meilleurOffre.getId()!="P1")
             {
@@ -185,6 +196,9 @@ void Voiture::Boucle(){
             while(msg.performatif != LibererPlace);
 
             estGaree = false;
+            posX = tmpX;
+            posY = tmpY;
+            direction = tmpDir;
         }    
     }
 }
