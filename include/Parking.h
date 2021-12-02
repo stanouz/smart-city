@@ -25,7 +25,7 @@ public:
     void processusNegocitation();
     void propositionAcceptee(Message recu);
     void propositionRefusee(Message recu, int compteur);
-    double prixFinal(float duree);
+    double prixFinal(float duree, string immatriculation);
     void ajouteVoiture(string occupant, Date dateDepart);
     double pourcentageRemplissage();
 
@@ -39,6 +39,7 @@ private:
     int nb_place_occup;
     float prix;
     string ID;
+    map<string, double> score;
 };
 
 
