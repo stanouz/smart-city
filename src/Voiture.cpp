@@ -136,44 +136,41 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
 
 void Voiture::Boucle(){
     sleep(2);
-    string parkings[3] = {"P1", "P2", "P3"};
-    vector<thread> negociations;
-    vector<PropositionAccepte> propositions;
-    int size = 3;
+    while(true){
+        int random = rand()%30;
+        sleep(random);
 
-    for(int i=0; i<size; i++){
-        negociations.push_back(thread(&Voiture::processusNegocition, ref(*this),parkings[i], ref(propositions)));
-    }
-    for(int i=0; i<size; i++){
-        negociations[i].join();
-    }
 
-    PropositionAccepte meilleurOffre = compareProposition(propositions);
+        string parkings[3] = {"P1", "P2", "P3"};
+        vector<thread> negociations;
+        vector<PropositionAccepte> propositions;
+        int size = 3;
 
-    if(meilleurOffre.getPrix()!=-1 && meilleurOffre.getId()!="P#"){
-        Message m(immatriculation, Accepter);
-        m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
-        sendMessage(m, immatriculation, meilleurOffre.getId());
-        cout << "ACCEPTE "+immatriculation+" pour "+ meilleurOffre.getId() << endl;
-        estGaree = true;
-        for(int i=0; i<3; i++)
-        {
-            if(meilleurOffre.getId()!=parkings[i])
-            {
-                Message m_refus(immatriculation, Refut);
-                sendMessage(m_refus, immatriculation, parkings[i]);
+        for(int i=0; i<size; i++){
+            negociations.push_back(thread(&Voiture::processusNegocition, ref(*this),parkings[i], ref(propositions)));
+        }
+        for(int i=0; i<size; i++){
+            negociations[i].join();
+        }
+
+        PropositionAccepte meilleurOffre = compareProposition(propositions);
+
+        if(meilleurOffre.getPrix()!=-1 && meilleurOffre.getId()!="P#"){
+            Message m(immatriculation, Accepter);
+            m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
+            sendMessage(m, immatriculation, meilleurOffre.getId());
+            cout << "ACCEPTE "+immatriculation+" pour "+ meilleurOffre.getId() << endl;
+            estGaree = true;
+
+            Message msg;
+            do{
+                msg = getMessageFrom(immatriculation, meilleurOffre.getId());
             }
-        }
-        
-        Message msg;
-        do{
-            msg = getMessageFrom(immatriculation, meilleurOffre.getId());
-        }
-        while(msg.performatif != LibererPlace);
+            while(msg.performatif != LibererPlace);
 
-        estGaree = false;
-        
-    }    
+            estGaree = false;
+        }    
+    }
 }
     
 
@@ -217,47 +214,37 @@ void Voiture::halfTurn(){
 }
 
 void Voiture::Avancer(vector< vector<int> > & map){
-    
+
     while(true){
         if(!estGaree){
-            vector<bool> deplacementPossible;
-            deplacementPossible.push_back(canGoStraight(map));
-            deplacementPossible.push_back(canGoRight(map));
-            deplacementPossible.push_back(canGoLeft(map));
-
-            // On verifie qu'il y ai bien un true
-            bool hasTrue = false;
-
-            for(int i=0; i<3; i++){
-                if(deplacementPossible[i])
-                    hasTrue= true;
+            vector<int> deplacementPossible;
+            if(canGoStraight(map)){
+                deplacementPossible.push_back(0);
             }
 
-            // ==========================================
-            // A FAIRE : 
-            // Améliorer le système de choix aléatoire 
-            // pour pas avoir à faire plusieur rand()
-            // ==========================================
+            if(canGoRight(map)){
+                deplacementPossible.push_back(1);
+            }
 
-            // Si pas de deplacement possible alors demi-tour
+            if(canGoLeft(map)){
+                deplacementPossible.push_back(2);
+            }
+
             
-            if(!hasTrue){
+            // Si pas de deplacement possible alors demi-tour
+            if(deplacementPossible.size()==0){
                 halfTurn(); 
             }
             else{                
-                int random;
-                do{
-                    random = rand()%3;
-                }
-                while(!deplacementPossible[random]);
+                int random = rand()%deplacementPossible.size();
 
-                if(random==0){
+                if(deplacementPossible[random]==0){
                     goStraight();
                 } 
-                else if(random==1){
+                else if(deplacementPossible[random]==1){
                     turnRight();
                 }
-                else if(random==2){
+                else if(deplacementPossible[random]==2){
                     turnLeft();
                 }
             }
