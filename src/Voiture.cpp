@@ -10,7 +10,7 @@
 
 using namespace std;
 
-const double DUREE_STATIONNEMENT = 0.2;
+const double DUREE_STATIONNEMENT = 0.1;
 
 // Constructeur
 
@@ -96,8 +96,9 @@ void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> 
         if(recu.performatif==Accepter)
         {
             propositionAccepte = true;
-            PropositionAccepte p(recu.contenuMessage.getPrix(), recu.emmeteur, 10, 10);
+            PropositionAccepte p(recu.contenuMessage.getPrix(), recu.emmeteur, recu.contenuMessage.getPlaceX(), recu.contenuMessage.getPlaceY());
             prop.push_back(p);
+            cout<<" Position X de recu "<<recu.contenuMessage.getPlaceX()<< " Position Y de recu "<<recu.contenuMessage.getPlaceY()<<endl;
         }
         else if(recu.performatif == Reponse)
         {
@@ -135,13 +136,12 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
 }
 
 void Voiture::Boucle(){
-    sleep(2);
+    //sleep(2);
     while(true){
         sleep(2);
         while((((int)posY!=9) || ((int)posX!=6)) && (((int)posY!=24) || ((int)posX!=9)) && (((int)posY!=16) || ((int)posX!=18)))
         {
-            cout<<"X = "<<posX<<" Y = "<<posY<<endl;
-            cout<<"J'ATTEND"<<endl;
+            cout<<"";
         }
 
         string parkings[3] = {"P1", "P2", "P3"};
@@ -295,7 +295,7 @@ void Voiture::rouler(int dirX, int dirY){
     if(dirX!=0){
         int newX = posX + dirX;
         if(dirX > 0){
-            while(posX < newX){
+            while(posX < newX && !estGaree){
                 posX += vitesse;
                 usleep(60);
             }
@@ -303,7 +303,7 @@ void Voiture::rouler(int dirX, int dirY){
             return;
         }
         else{
-            while(posX > newX){
+            while(posX > newX && !estGaree){
                 posX -= vitesse;
                 usleep(60);
             }
@@ -315,7 +315,7 @@ void Voiture::rouler(int dirX, int dirY){
     if(dirY!=0){
         int newY = posY + dirY;
         if(dirY > 0){
-            while(posY < newY){
+            while(posY < newY && !estGaree){
                 posY += vitesse;
                 usleep(60);
             }
@@ -323,7 +323,7 @@ void Voiture::rouler(int dirX, int dirY){
             return;
         }
         else{
-            while(posY > newY){
+            while(posY > newY && !estGaree){
                 posY -= vitesse;
                 usleep(60);
             }

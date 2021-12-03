@@ -9,6 +9,8 @@ Parking::Parking(string id){
     ID = id;
     prix = 5.;
     nb_place_occup = 0;
+    indX=0;
+    indY=0;
 }
 
 
@@ -85,17 +87,21 @@ void Parking::propositionAcceptee(Message recu)
     // Si la proposition est accepté on previent la voiture 
     Message toSend(ID, Accepter);
     //En fonction du parking, le parking attribut une place à la voiture
-    int i=0;
-    int ind;
-    int departP1_X = 9;
-    int departP1_Y = 11;
+    
     if(ID=="P1")
     {
-        toSend.contenuMessage.setTabPlace(departP1_X, 0, ind);
-        toSend.contenuMessage.setTabPlace(departP1_Y - i, 1, ind);
-        i--;
-        ind ++;
+        toSend.contenuMessage.setPlaceX(tabP1[indX][indY]);
+        cout<<" DANS PARKING indX = "<<indX;
+        indY = (indY+1)%2;
+        
+        
+        toSend.contenuMessage.setPlaceY(tabP1[indX][indY]);
+        cout<<" DANS PARKING indY = "<<indY<<endl;
+        indX = (indX+1)%10;
+        
+        
     }
+    
     
     // on envoie le message à la voiture
     toSend.contenuMessage.setTexte("Proposition acceptée");
@@ -159,7 +165,7 @@ void Parking::processusNegocitation(){
         float prixDemande = recu.contenuMessage.getPrix();
         float duree = recu.contenuMessage.getDuree();
         
-        cout<<ID<<" PRIX FINAL = "<<prixFinal(duree,recu.emmeteur)<<endl;
+        //cout<<ID<<" PRIX FINAL = "<<prixFinal(duree,recu.emmeteur)<<endl;
         if(prixDemande<prixFinal(duree,recu.emmeteur))
         {
             propositionRefusee(recu, compteur);

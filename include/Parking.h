@@ -33,6 +33,7 @@ public:
     int getNbplace();
     int getNbPlaceOccupe();
     Place & getPlace(int ind);
+    
 private:
     Place tabPlaces[10];
     const int NB_PLACES_TOTAL = 10;
@@ -40,6 +41,9 @@ private:
     float prix;
     string ID;
     map<string, double> score;
+    int tabP1[10][2] = {10,11,9,10,9,9,9,8,9,7,10,11,10,10,10,9,10,8,10,7};
+    //int tabP1[10][2] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+    int indX,indY;
 };
 
 

@@ -49,7 +49,20 @@ void Contenu:: setTexte(string t){
     texte = t;
 }
 
-void Contenu::setTabPlace(int val, int i, int j)
+void Contenu:: setPlaceX(int x){
+    placeX = x;
+}
+
+void Contenu:: setPlaceY(int y){
+    placeY = y;
+}
+
+int Contenu::getPlaceX()
 {
-    TabPlace[i][j] = val;
+    return placeX;
+}
+
+int Contenu::getPlaceY()
+{
+    return placeY;
 }
