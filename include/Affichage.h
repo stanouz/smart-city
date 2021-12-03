@@ -16,7 +16,6 @@ using namespace std;
 
 class Affichage{
     Ville * ville;
-    vector<bool*> showParking;
 
     sf::RenderWindow window;
     sf::Sprite sprite;

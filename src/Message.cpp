@@ -26,6 +26,7 @@ string Message::perfo_to_string(){
         case 1 : return "Réponse";
         case 2 : return "Refut";
         case 3 : return "Accepté";
+        case 4 : return "LibérerPlace";
         default : break;
     }
     return " ";
