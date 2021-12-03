@@ -10,8 +10,6 @@
 
 using namespace std;
 
-const double DUREE_STATIONNEMENT = 0.2;
-
 // Constructeur
 
 Voiture::Voiture(string immat, int x, int y, Direction dir){
@@ -47,11 +45,12 @@ bool Voiture::getEstGaree(){
 
 // Fonctions de négociation
 
-void Voiture::negociation(string id_destinataire, double prixPopositionPrecedente)
+void Voiture::negociation(string id_destinataire, double prixPopositionPrecedente, Date & dateDebut, double duree)
 {
     Message m_new(immatriculation, DemandePlace);
 
-    m_new.contenuMessage.setDuree(DUREE_STATIONNEMENT);
+    m_new.contenuMessage.setDate(dateDebut);
+    m_new.contenuMessage.setDuree(duree);
     m_new.contenuMessage.setTexte("Je vous fais une autre proposition");
     
 
@@ -65,11 +64,12 @@ void Voiture::negociation(string id_destinataire, double prixPopositionPrecedent
     sendMessage(m_new, immatriculation, id_destinataire);
 }
 
-void Voiture::premierMessage(string id_destinataire)
+void Voiture::premierMessage(string id_destinataire, Date & dateDebut, double duree)
 {
     Message m(immatriculation, DemandePlace);
     string mess = "Premier message de voiture";
-    m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
+    m.contenuMessage.setDate(dateDebut); 
+    m.contenuMessage.setDuree(duree);
     
     float prix = (rand()%6)+1;
     m.contenuMessage.setPrix(prix);
@@ -81,11 +81,17 @@ void Voiture::premierMessage(string id_destinataire)
 
 void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> & prop)
 {
-    premierMessage(id_parking);
+    // Date actuelle et duree constant pour l'instant
+    Date dateDebut; 
+    double dureeStationnement = (rand()%900)/100.  + 0.2;
+
+    premierMessage(id_parking, dateDebut, dureeStationnement);
     
     Message recu; 
     int compteur=0;
     bool propositionAccepte = false;
+
+
     
     while(compteur<3 && !propositionAccepte){
         
@@ -103,7 +109,7 @@ void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> 
         {
             // On recupère le prix de la proposition précédente que le
             // parking renvoie dans le contenu du message
-            negociation(recu.emmeteur, recu.contenuMessage.getPrix());
+            negociation(recu.emmeteur, recu.contenuMessage.getPrix(), dateDebut, dureeStationnement);
         } 
         else if(recu.performatif==Refut)
         {
@@ -157,7 +163,7 @@ void Voiture::Boucle(){
 
         if(meilleurOffre.getPrix()!=-1 && meilleurOffre.getId()!="P#"){
             Message m(immatriculation, Accepter);
-            m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
+            m.contenuMessage.setDuree(10.);
             sendMessage(m, immatriculation, meilleurOffre.getId());
             cout << "ACCEPTE "+immatriculation+" pour "+ meilleurOffre.getId() << endl;
             estGaree = true;

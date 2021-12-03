@@ -8,11 +8,17 @@ Message::Message(){
 Message::Message(string emmeteur_, Performatif perfo){
     emmeteur = emmeteur_;
     performatif = perfo;
-    
 }
 
 Message::~Message(){
     
+}
+
+void Message::operator=(Message msg){
+    emmeteur = msg.emmeteur;
+    recepteur = msg.recepteur;
+    contenuMessage = msg.contenuMessage;
+    performatif = msg.performatif;
 }
 
 
