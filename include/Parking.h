@@ -26,7 +26,7 @@ public:
     void propositionAcceptee(Message recu);
     void propositionRefusee(Message recu, int compteur);
     double prixFinal(float duree);
-    void ajouteVoiture(string occupant, Date dateDepart);
+    void ajouteVoiture(Date dateDebut, double duree, string occupant);
     double pourcentageRemplissage();
 
     string getId();

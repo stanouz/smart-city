@@ -48,16 +48,19 @@ double Parking::pourcentageRemplissage(){
     return (double)nb_place_occup/(double)NB_PLACES_TOTAL;
 }
 
-void Parking::ajouteVoiture(string occupant, Date dateDepart){
+void Parking::ajouteVoiture(Date dateDebut, double duree, string occupant){
 
     int i=0;
     bool ajouter = false;
     while(i<NB_PLACES_TOTAL && !ajouter){
-        ajouter = tabPlaces[i].ajouteVoiture(occupant, dateDepart);
+        
+        ajouter = tabPlaces[i].addReservations(Reservation(dateDebut, duree, occupant));
         i++;
     }
     if(ajouter)
         nb_place_occup++;
+
+    cout << occupant << "accepte place " << i << " de " << ID << endl;
 }
 
 double Parking::prixFinal(float duree){
@@ -133,7 +136,7 @@ void Parking::processusNegocitation(){
       // printf(" somme est %f  \n", SommePrix);
 
         // On ajoute la voiture dans le parking
-        ajouteVoiture(recu.emmeteur, nowPlusDuree);
+        ajouteVoiture(Date(), duree, recu.emmeteur);
         return;
     }
 

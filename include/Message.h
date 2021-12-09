@@ -15,6 +15,8 @@ public:
     string to_string();
     string perfo_to_string();
 
+    void operator=(Message msg);
+
     string emmeteur;
     string recepteur;
     Performatif performatif;
