@@ -8,25 +8,27 @@ using namespace std;
 
 class Contenu{
 public:
+    Contenu(Date dateDebut, double duree, double _prix, string t);
     Contenu();
-    Contenu(double duree, float _prix, string t);
-    ~Contenu();
-
+    void operator=(Contenu c);
+    
     void display();
 
     string to_string();
 
     double getDuree();
-    float getPrix();
+    double getPrix();
     string getTexte();
+    Date getDate();
 
     void setDuree(double d);
-    void setPrix(float _prix);
+    void setPrix(double _prix);
     void setTexte(string t);
-
+    void setDate(Date d);
 private:
     double duree; // en heures
-    float prix;
+    Date dateDebut;
+    double prix;
     string texte;
 };
 

@@ -4,7 +4,7 @@
 #include <string>
 #include "Contenu.h"
 
-enum Performatif{DemandePlace, Reponse, Refut, Accepter};
+enum Performatif{DemandePlace, Reponse, Refut, Accepter, LibererPlace};
 
 class Message{
 public:
@@ -14,6 +14,8 @@ public:
     void display();
     string to_string();
     string perfo_to_string();
+
+    void operator=(Message msg);
 
     string emmeteur;
     string recepteur;

@@ -5,20 +5,12 @@
 
 using namespace std;
 
-Parking::Parking(){
-    prix = 5.;
-    nb_place_occup = 0;
-}
-
 Parking::Parking(string id){
     ID = id;
     prix = 5.;
     nb_place_occup = 0;
 }
 
-Parking::~Parking(){
-
-}
 
 
 string Parking::getId(){
@@ -33,59 +25,57 @@ int Parking::getNbPlaceOccupe(){
     return nb_place_occup;
 }
 
+Place & Parking::getPlace(int ind){
+    return tabPlaces[ind];
+}
+
 bool Parking::IsFull() const{
-    if(nb_place_occup<NB_PLACES_TOTAL){
-        return false;
-    }
-    return true;
+    return nb_place_occup>=NB_PLACES_TOTAL;
 }
 
 void Parking::updatePlacesStatus(){
-
     for(int i=0; i<NB_PLACES_TOTAL; i++){
-        if(tabPlaces[i].updateStatus()){
+        string update_immat = tabPlaces[i].updateStatus();
+        if(update_immat!="NULL"){
             nb_place_occup--;
-        }
-        
+            Message msg(ID, LibererPlace);
+            sendMessage(msg, ID, update_immat);
+        }  
     }
 }
 
-double Parking::pourcentageRemplissage()
-{
-    return (nb_place_occup/NB_PLACES_TOTAL);
+double Parking::pourcentageRemplissage(){
+    return (double)nb_place_occup/(double)NB_PLACES_TOTAL;
 }
 
-void Parking::ajouteVoiture(string occupant, Date dateDepart){
+void Parking::ajouteVoiture(Date dateDebut, double duree, string occupant){
 
     int i=0;
     bool ajouter = false;
     while(i<NB_PLACES_TOTAL && !ajouter){
-        ajouter = tabPlaces[i].ajouteVoiture(occupant, dateDepart);
+        
+        ajouter = tabPlaces[i].addReservations(Reservation(dateDebut, duree, occupant));
         i++;
     }
-    if(ajouter){
+    if(ajouter)
         nb_place_occup++;
-    }
+
+    cout << occupant << "accepte place " << i << " de " << ID << endl;
 }
 
-double Parking::prixFinal(float duree)
-{
+double Parking::prixFinal(float duree){
     double reduc=0.;
     double percent = pourcentageRemplissage();
-    if(duree<=4)
-    {
+    if(duree<=4){
         reduc = 0;
     }
-    else if(duree<=8)
-    {
+    else if(duree<=8){
         reduc = 0.05;
     }
-    else if(duree<=12)
-    {
+    else if(duree<=12){
         reduc = 0.1;
     }
-    else
-    {
+    else{
         reduc = 0.2;
     }
     return prix - (prix*reduc) + (prix*percent);
@@ -107,16 +97,12 @@ void Parking::propositionRefusee(Message recu, int compteur)
     Message toSend(ID, Reponse);
 
     toSend.contenuMessage.setTexte("Proposition refusée");
-
     toSend.contenuMessage.setPrix(recu.contenuMessage.getPrix());
 
-    if(compteur==2)
-    {
-
+    // Si c'est déjà la 3ème proposition on dit de ne pas faire
+    // d'autre proposition
+    if(compteur==2){
         toSend.performatif=Refut;
-        sendMessage(toSend, ID, recu.emmeteur);
-        cout<<"Parking a envoyé le message"<<endl;
-        return;
     }
 
     sendMessage(toSend, ID, recu.emmeteur);
@@ -124,7 +110,7 @@ void Parking::propositionRefusee(Message recu, int compteur)
 
 
 void Parking::processusNegocitation(){
-
+    // Check si on a recu un message
     Message recu = getMessage(ID);
 
     // Si le parking est plein on refuse directement 
@@ -135,14 +121,14 @@ void Parking::processusNegocitation(){
         return;
     }
 
+    // Si Perfo est accepter ça veut dire que la négociation à deja
+    // eu lieu et que la voiture est d'accord pour se garer
     if(recu.performatif==Accepter){
         double duree = recu.contenuMessage.getDuree();
-        Date now;
-        Date nowPlusDuree(now, duree);
-
-        cout << "OKKKKKK \n \n \n \n \n \n";
+    
+        
         // On ajoute la voiture dans le parking
-        ajouteVoiture(recu.emmeteur, nowPlusDuree);
+        ajouteVoiture(Date(), duree, recu.emmeteur);
         return;
     }
 
@@ -150,11 +136,8 @@ void Parking::processusNegocitation(){
     int compteur =0;
     bool accepte = false;
     Message toSend(ID, Reponse);
-    while(compteur<3){
-        
-
-        //cout << endl<<endl<<endl<<"===== COMPTEUR " << compteur << "=======" << endl;
-        //recu.display();
+    while(compteur<3 && !accepte){
+    
         float prixDemande = recu.contenuMessage.getPrix();
         float duree = recu.contenuMessage.getDuree();
         
@@ -177,18 +160,15 @@ void Parking::processusNegocitation(){
             recu = getMessageFrom(ID, recu.emmeteur);
         
         compteur++;
-        sleep(3);
     }
 }
 
 
 void Parking::Boucle(){
-    sleep(2);
     while(true){
         if(!BoiteAuxLettres[ID].empty())
             processusNegocitation();
         updatePlacesStatus();
-        
     }
 }
 

@@ -12,9 +12,9 @@ using namespace std;
 class Parking: public Agent{
     
 public:
-    Parking();
     Parking(string id);
-    ~Parking();
+    
+    
     bool IsFull() const;
 
     
@@ -26,12 +26,13 @@ public:
     void propositionAcceptee(Message recu);
     void propositionRefusee(Message recu, int compteur);
     double prixFinal(float duree);
-    void ajouteVoiture(string occupant, Date dateDepart);
+    void ajouteVoiture(Date dateDebut, double duree, string occupant);
     double pourcentageRemplissage();
 
     string getId();
     int getNbplace();
     int getNbPlaceOccupe();
+    Place & getPlace(int ind);
 private:
     Place tabPlaces[10];
     const int NB_PLACES_TOTAL = 10;

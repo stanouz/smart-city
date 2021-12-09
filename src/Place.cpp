@@ -6,47 +6,69 @@ using namespace std;
 
 Place::Place(){
     isOccupied=false;
-    occupant="NULL";
 }
 
 Place::~Place(){
 }
 
-int Place::getID() const{
-    return ID;
+string Place::getOccupant(){
+    if(isOccupied){
+        return reservationEnCours.getImmatriculation();
+    }
+    return "NULL";
 }
 
-bool Place::getIsOccupied() const{
+Date & Place::getDateDepart(){
+    return reservationEnCours.getDateFin();
+}
+
+bool Place::getIsOccupied(){
     return isOccupied;
 }
 
-Date Place::getOccupiedUntil() const{
-    return occupiedUntil;
-}
 
-
-bool Place::updateStatus(){
+string Place::updateStatus(){
     if(isOccupied){
-        Date now;
-        if(now >= occupiedUntil){
-            cout << "       La voiture " << occupant << " s'en va" << endl;
+        if(reservationEnCours.dateFinPasse()){
             isOccupied=false;
-            occupant = "NULL";
-            return true;
+            string tmp_occupant = getOccupant();
+            return getOccupant();
         }
     }
-    return false;
+
+
+    int i=0;
+    while(!isOccupied && i<(int)reservationFutures.size()){
+
+        if(reservationFutures[i].dateDebutPasse()){
+            reservationEnCours = reservationFutures[i];
+            reservationFutures.erase(reservationFutures.begin()+i);
+            isOccupied = true;
+        }
+
+
+        i++;
+    }
+
+
+    return "NULL";
 }
 
 
-bool Place::ajouteVoiture(string occupant_, Date dateDepart){
-    if(isOccupied){
+bool Place::addReservations(Reservation newReserv){
+
+    if(newReserv.intersectionDate(reservationEnCours)){
         return false;
     }
-    occupiedUntil = dateDepart;
-    cout << "       La voiture " << occupant_ << " se gare et partira le " << dateDepart << endl;
-    occupant = occupant_;
-    isOccupied = true;
+
+    for(int i=0; i<(int)reservationFutures.size(); i++){
+        if(newReserv.intersectionDate(reservationFutures[i])){
+            return false;
+        }
+    }
+
+    
+
+    reservationFutures.push_back(newReserv);
     return true;
 }
-

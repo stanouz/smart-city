@@ -46,6 +46,7 @@ Date::Date(Date & d, double hours){
 
     if(minute >= 60){
         hour += minute/60;
+        minute %= 60;
     }
 
     hour = d.hour + (int)hours;
@@ -114,54 +115,37 @@ Date::~Date(){
 
 bool Date::isBetween(Date date1, Date date2) const{
     if(date1 <= date2){
-        if(*this >= date1 && *this <= date2)
+        if(*this >= date1 && *this <= date2){
             return true;
+        }      
     } 
     else{
-        if(*this >= date2 && *this <= date1)
+        if(*this >= date2 && *this <= date1){
             return true;
+        }
     } 
     return false;
 }
 
-void Date::setDate(int day_, int month_, int year_){
-    day = day_;
-    month = month_;
-    year = year_;    
-}
-
-void Date::setTime(int hour_, int minute_){
-    hour = hour_;
-    minute = minute_;
-}
-
 bool Date::operator<=(Date &d2) const{
-    if(year > d2.year)
-        return false;
-    if(month > d2.month)
-        return false;
-    if(day > d2.day)
-        return false;
-    if(hour > d2.hour)
-        return false;
-    if(minute > d2.minute)
-        return false;
     
+    if(year > d2.year){return false; }        
+    if(month > d2.month){return false; }   
+    if(day > d2.day){return false; }        
+    if(hour > d2.hour){return false; }        
+    if(minute > d2.minute){return false; }
+        
     return true;
 }
 
 bool Date::operator>=(Date &d2) const{
-    if(year < d2.year)
-        return false;
-    if(month < d2.month)
-        return false;
-    if(day < d2.day)
-        return false;
-    if(hour < d2.hour)
-        return false;
-    if(minute < d2.minute)
-        return false;
-    
+
+    if(year < d2.year){ return false; }
+    if(month < d2.month){ return false; }
+    if(day < d2.day){ return false; }
+    if(hour < d2.hour){ return false; }
+    if(minute < d2.minute){ return false; }
+        
     return true;
 }
 
@@ -173,36 +157,6 @@ void Date::operator=(Date &d2){
     minute = d2.minute;
 
     weekDay = d2.weekDay;
-}
-
-std::ostream& operator<<(std::ostream& os, const Date& d){
-    os << d.DateToString();
-    return os;
-}
-
-
-int Date::getYear() const{
-    return year;
-}
-
-int Date::getMonth() const{
-    return month;
-}
-
-int Date::getDay() const{
-    return day;
-}
-
-int Date::getHour() const{
-    return hour;
-}
-
-int Date::getMinute() const{
-    return minute;
-}
-
-WeekDay Date::getWeekDay() const{
-    return weekDay;
 }
 
 

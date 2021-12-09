@@ -8,11 +8,17 @@ Message::Message(){
 Message::Message(string emmeteur_, Performatif perfo){
     emmeteur = emmeteur_;
     performatif = perfo;
-    
 }
 
 Message::~Message(){
     
+}
+
+void Message::operator=(Message msg){
+    emmeteur = msg.emmeteur;
+    recepteur = msg.recepteur;
+    contenuMessage = msg.contenuMessage;
+    performatif = msg.performatif;
 }
 
 
@@ -26,6 +32,7 @@ string Message::perfo_to_string(){
         case 1 : return "Réponse";
         case 2 : return "Refut";
         case 3 : return "Accepté";
+        case 4 : return "LibérerPlace";
         default : break;
     }
     return " ";
