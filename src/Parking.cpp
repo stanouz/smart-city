@@ -123,14 +123,22 @@ void Parking::processusNegocitation(){
 
     // Si Perfo est accepter ça veut dire que la négociation à deja
     // eu lieu et que la voiture est d'accord pour se garer
+    double SommePrix = 0;
+    double Moyenne;
+    int CompteurPlace;
     if(recu.performatif==Accepter){
         double duree = recu.contenuMessage.getDuree();
-    
-        
-        // On ajoute la voiture dans le parking
+        Date now;
+        Date nowPlusDuree(now, duree);
+        double prix=recu.contenuMessage.getPrix();
+        // pour calculer la moyenne de la place 
+       SommePrix = SommePrix + prix;
+       CompteurPlace++;
+         // On ajoute la voiture dans le parking
         ajouteVoiture(Date(), duree, recu.emmeteur);
         return;
     }
+    Moyenne = (SommePrix / CompteurPlace );
 
 
     int compteur =0;

@@ -30,16 +30,16 @@ int main(int argc, char ** argv){
 
 
     if(inf <= middle && sup >= middle)
-        cout << "YES" << endl;
+        cout << "YES " << endl;
     else 
         cout << "NO" << endl;
 
 
 
-    /*
+    
     Ville v;
     Affichage a(&v);
-    a.display();*/
+    a.display();
 
     return 0;
 }

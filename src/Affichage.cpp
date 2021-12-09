@@ -494,4 +494,3 @@ void Affichage::displayMessage(Message & msg, string & immatVoiture, int row){
     ImGui::TableSetColumnIndex(5);
     ImGui::Text("%s", msg.contenuMessage.getTexte().c_str());
  }
-

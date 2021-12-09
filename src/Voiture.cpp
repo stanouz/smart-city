@@ -402,7 +402,3 @@ bool Voiture::canGoStraight(vector< vector<int> > & map){
     }
     return false;
 }
-
-
-
-
