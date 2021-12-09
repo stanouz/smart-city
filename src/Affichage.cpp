@@ -118,7 +118,6 @@ void Affichage::drawTile(int nTile, double x, double y){
     double scaleH = tileH / 16.; // tiles are 16x16 px
     double scaleW = tileW / 16.;
 
-<<<<<<< HEAD
     sf::Sprite sprite;
     sprite.setTexture(text);
     int x, y;
@@ -258,10 +257,6 @@ int x3,y3;
                 window.draw(sprite);
                 */
 }
-=======
-    double posTileX = ((nTile - 1) % 27) * 17;
-    double posTileY = ((nTile - 1) / 27) * 17;
->>>>>>> Stan
 
     sprite.setPosition(x*tileH, y*tileW);
     sprite.setScale(scaleH, scaleW);
