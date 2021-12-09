@@ -10,11 +10,6 @@
 
 using namespace std;
 
-<<<<<<< HEAD
-const double DUREE_STATIONNEMENT = 0.1;
-
-=======
->>>>>>> Stan
 // Constructeur
 
 Voiture::Voiture(string immat, int x, int y, Direction dir){
@@ -41,6 +36,10 @@ double Voiture::getPosY() const{
 
 Direction Voiture::getDirection(){
     return direction;
+}
+
+bool Voiture::getEstGaree(){
+    return estGaree;
 }
 
 
@@ -142,45 +141,42 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
 }
 
 void Voiture::Boucle(){
-    string parkings[3] = {"P1", "P2", "P3"};
-    vector<thread> negociations;
-    vector<PropositionAccepte> propositions;
-    int size = 3;
+    sleep(2);
+    while(true){
+        int random = rand()%30;
+        sleep(random);
 
-    for(int i=0; i<size; i++){
-        negociations.push_back(thread(&Voiture::processusNegocition, ref(*this),parkings[i], ref(propositions)));
-    }
-    for(int i=0; i<size; i++){
-        negociations[i].join();
-    }
 
-    PropositionAccepte meilleurOffre = compareProposition(propositions);
+        string parkings[3] = {"P1", "P2", "P3"};
+        vector<thread> negociations;
+        vector<PropositionAccepte> propositions;
+        int size = 3;
 
-<<<<<<< HEAD
-    if(meilleurOffre.getPrix()!=-1 && meilleurOffre.getId()!="P#"){
-        Message m(immatriculation, Accepter);
-        m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
-        sendMessage(m, immatriculation, meilleurOffre.getId());
-        cout << "ACCEPTE "+immatriculation+" pour "+ meilleurOffre.getId() << endl;
-        estGaree = true;
-=======
+        for(int i=0; i<size; i++){
+            negociations.push_back(thread(&Voiture::processusNegocition, ref(*this),parkings[i], ref(propositions)));
+        }
+        for(int i=0; i<size; i++){
+            negociations[i].join();
+        }
+
+        PropositionAccepte meilleurOffre = compareProposition(propositions);
+
         if(meilleurOffre.getPrix()!=-1 && meilleurOffre.getId()!="P#"){
             Message m(immatriculation, Accepter);
             m.contenuMessage.setDuree(10.);
             sendMessage(m, immatriculation, meilleurOffre.getId());
             cout << "ACCEPTE "+immatriculation+" pour "+ meilleurOffre.getId() << endl;
             estGaree = true;
->>>>>>> Stan
 
-        Message msg;
-        do{
-            msg = getMessageFrom(immatriculation, meilleurOffre.getId());
-        }
-        while(msg.performatif != LibererPlace);
+            Message msg;
+            do{
+                msg = getMessageFrom(immatriculation, meilleurOffre.getId());
+            }
+            while(msg.performatif != LibererPlace);
 
-        estGaree = false;
-        
-    }    
+            estGaree = false;
+        }    
+    }
 }
     
 
@@ -224,49 +220,44 @@ void Voiture::halfTurn(){
 }
 
 void Voiture::Avancer(vector< vector<int> > & map){
-    
+
     while(true){
         if(!estGaree){
-        vector<bool> deplacementPossible;
-        deplacementPossible.push_back(canGoStraight(map));
-        deplacementPossible.push_back(canGoRight(map));
-        deplacementPossible.push_back(canGoLeft(map));
+            vector<int> deplacementPossible;
+            if(canGoStraight(map)){
+                deplacementPossible.push_back(0);
+            }
 
-        // On verifie qu'il y ai bien un true
-        bool hasTrue = false;
+            if(canGoRight(map)){
+                deplacementPossible.push_back(1);
+            }
 
-        for(int i=0; i<3; i++){
-            if(deplacementPossible[i])
-                hasTrue= true;
-        }
+            if(canGoLeft(map)){
+                deplacementPossible.push_back(2);
+            }
 
-        // ==========================================
-        // A FAIRE : 
-        // Améliorer le système de choix aléatoire 
-        // pour pas avoir à faire plusieur rand()
-        // ==========================================
+            
+            // Si pas de deplacement possible alors demi-tour
+            if(deplacementPossible.size()==0){
+                halfTurn(); 
+            }
+            else{                
+                int random = rand()%deplacementPossible.size();
 
-        // Si pas de deplacement possible alors demi-tour
-        
-        if(!hasTrue){
-            halfTurn(); 
+                if(deplacementPossible[random]==0){
+                    goStraight();
+                } 
+                else if(deplacementPossible[random]==1){
+                    turnRight();
+                }
+                else if(deplacementPossible[random]==2){
+                    turnLeft();
+                }
+            }
         }
         else{
-            srand(time(NULL));
-            
-            int random;
-            do{
-                random = rand()%3;
-            }
-            while(!deplacementPossible[random]);
-
-            if(random==0) goStraight();
-            else if(random==1) turnRight();
-            else if(random==2) turnLeft();
-        }
-        }else {
             sleep(1);
-        }
+        } 
     }
 }
 
@@ -318,7 +309,7 @@ void Voiture::rouler(int dirX, int dirY){
     }
 
 }
-// droite
+
 bool Voiture::canGoRight(vector< vector<int> > & map){
     int val;
     switch (direction)
@@ -349,7 +340,7 @@ bool Voiture::canGoRight(vector< vector<int> > & map){
     }
     return false;
 }
-// gauche 
+
 bool Voiture::canGoLeft(vector< vector<int> > & map){
     int val;
     switch (direction)
@@ -411,7 +402,3 @@ bool Voiture::canGoStraight(vector< vector<int> > & map){
     }
     return false;
 }
-
-
-
-
