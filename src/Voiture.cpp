@@ -170,6 +170,8 @@ void Voiture::Boucle(){
             m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
             m.contenuMessage.setPrix(meilleurOffre.getPrix());
 
+            agenda.AddReservation(Reservation(Date(), DUREE_STATIONNEMENT, meilleurOffre.getId()));
+
             sendMessage(m, immatriculation, meilleurOffre.getId());
             
             estGaree = true;

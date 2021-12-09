@@ -35,7 +35,7 @@ string Place::updateStatus(){
         isOccupied = true;
     }
 
-    return "NULL";
+    return retour;
 }
 
 

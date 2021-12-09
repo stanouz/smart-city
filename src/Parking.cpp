@@ -172,7 +172,7 @@ void Parking::processusNegocitation(){
     }
         //*************************
     Moyenne = (SommePrix / CompteurPlace );
-    cout<< "la moyenne  est :"<< Moyenne <<endl;
+   
         //**************************
 }
 

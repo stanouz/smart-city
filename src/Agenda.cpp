@@ -20,6 +20,7 @@ string Agenda::UpdateCurrentReservation(){
     if(currentReservation.getID()!="NULL"){
         if(currentReservation.dateFinPasse()){
             string tmp_occupant = currentReservation.getID();
+
             currentReservation.reset();
           
             return tmp_occupant;

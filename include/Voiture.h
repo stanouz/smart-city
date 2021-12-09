@@ -4,7 +4,7 @@
 #include <string>
 
 
-#include "Date.h"
+#include "Agenda.h"
 #include "Agent.h"
 #include "PropositionAccepte.h"
 
@@ -51,6 +51,7 @@ private:
     double posX, posY;
     Direction direction;
     bool estGaree;
+    Agenda agenda;
 };
 
 #endif
