@@ -39,6 +39,10 @@ private:
     int nb_place_occup;
     float prix;
     string ID;
+    double SommePrix;
+    double Moyenne;
+    int CompteurPlace;
+
 };
 
 
