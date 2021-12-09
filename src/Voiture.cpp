@@ -10,8 +10,9 @@
 
 using namespace std;
 
-// Constructeur
+const double DUREE_STATIONNEMENT = 0.2;
 
+// Constructeur
 Voiture::Voiture(string immat, int x, int y, Direction dir){
     immatriculation = immat;
     posX = x;
@@ -84,6 +85,8 @@ void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> 
     // Date actuelle et duree constant pour l'instant
     Date dateDebut; 
     double dureeStationnement = (rand()%900)/100.  + 0.2;
+
+    dureeStationnement = DUREE_STATIONNEMENT;
 
     premierMessage(id_parking, dateDebut, dureeStationnement);
     
@@ -163,7 +166,9 @@ void Voiture::Boucle(){
 
         if(meilleurOffre.getPrix()!=-1 && meilleurOffre.getId()!="P#"){
             Message m(immatriculation, Accepter);
-            m.contenuMessage.setDuree(10.);
+            m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
+            m.contenuMessage.setPrix(meilleurOffre.getPrix());
+
             sendMessage(m, immatriculation, meilleurOffre.getId());
             cout << "ACCEPTE "+immatriculation+" pour "+ meilleurOffre.getId() << endl;
             estGaree = true;
