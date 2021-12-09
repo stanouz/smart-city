@@ -9,6 +9,10 @@ Parking::Parking(string id){
     ID = id;
     prix = 5.;
     nb_place_occup = 0;
+     SommePrix = 0;
+     Moyenne = 0 ;
+     CompteurPlace = 0 ;
+
 }
 
 
@@ -123,6 +127,7 @@ void Parking::processusNegocitation(){
 
     // Si Perfo est accepter ça veut dire que la négociation à deja
     // eu lieu et que la voiture est d'accord pour se garer
+<<<<<<< HEAD
     double SommePrix = 0;
     double Moyenne;
     int CompteurPlace;
@@ -135,6 +140,13 @@ void Parking::processusNegocitation(){
        SommePrix = SommePrix + prix;
        CompteurPlace++;
          // On ajoute la voiture dans le parking
+=======
+    
+    if(recu.performatif==Accepter){
+        double duree = recu.contenuMessage.getDuree();
+
+        // On ajoute la voiture dans le parking
+>>>>>>> Stan
         ajouteVoiture(Date(), duree, recu.emmeteur);
         return;
     }
@@ -159,9 +171,16 @@ void Parking::processusNegocitation(){
         }
         else 
         {
+            // pour calculer la moyenne
+            double prix = recu.contenuMessage.getPrix();
+            SommePrix = SommePrix + prix;
+            CompteurPlace++;
+
+
             propositionAcceptee(recu);
             accepte = true;
         }
+       
 
         // Boucle bloquant l'attente d'un nouveau message
         if(!accepte)
@@ -169,6 +188,10 @@ void Parking::processusNegocitation(){
         
         compteur++;
     }
+        //*************************
+    Moyenne = (SommePrix / CompteurPlace );
+    cout<< "la moyenne  est :"<< Moyenne <<endl;
+        //**************************
 }
 
 
