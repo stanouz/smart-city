@@ -22,18 +22,18 @@ public:
     void setDuree(double d);
     void setPrix(double _prix);
     void setTexte(string t);
-    void setPlaceX(int x);
-    void setPlaceY(int y);
-    int getPlaceX();
-    int getPlaceY();
+    void setPlaceX(double x);
+    void setPlaceY(double y);
+    double getPlaceX();
+    double getPlaceY();
 
 
 private:
     double duree; // en heures
     double prix;
     string texte;
-    int placeX;
-    int placeY;
+    double placeX;
+    double placeY;
 };
 
 #endif

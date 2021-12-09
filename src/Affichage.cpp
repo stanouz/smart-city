@@ -44,9 +44,10 @@ void Affichage::display(){
 
         for(int i=0; i<(int)ville->getTabVoitures().size(); i++){
             Voiture & v = ville->getTabVoitures()[i];
-            /*if(!v.getEstGaree()){
+            /*if(v.getEstGaree()){
                 displayCar(v.getPosX(), v.getPosY(), v.getDirection());
             }*/
+            //if(v.getEstGaree()){cout<<" PosX = "<<v.getPosX()<<" PosY = "<<v.getPosY()<<endl;}
             displayCar(v.getPosX(), v.getPosY(), v.getDirection()); 
         }
 
@@ -70,8 +71,7 @@ void Affichage::displayMap(){
     }
 }
 
-void Affichage::displayCar(double x, double y, Direction dir){
-   
+void Affichage::displayCar(double x, double y, Direction dir){    
     switch (dir){
         case Droite : 
                 drawTile(481, x-0.5, y-0.3); 

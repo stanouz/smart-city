@@ -10,12 +10,12 @@ class PropositionAccepte{
     string ID_parking;
     int posX,posY;
 public:
-    PropositionAccepte(double prix, string ID, int posX, int posY);
+    PropositionAccepte(double prix, string ID, double posX, double posY);
     ~PropositionAccepte();
     string getId() const;
     double getPrix() const;
-    int getPosX();
-    int getPosY();
+    double getPosX();
+    double getPosY();
 };
 
 

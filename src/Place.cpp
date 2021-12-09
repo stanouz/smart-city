@@ -29,7 +29,7 @@ string Place::updateStatus(){
     if(isOccupied){
         Date now;
         if(now >= occupiedUntil){
-            cout << "       La voiture " << occupant << " s'en va" << endl;
+            //cout << "       La voiture " << occupant << " s'en va" << endl;
             isOccupied=false;
             string tmp_occupant = occupant;
             occupant = "NULL";
@@ -45,7 +45,7 @@ bool Place::ajouteVoiture(string occupant_, Date dateDepart){
         return false;
     }
     occupiedUntil = dateDepart;
-    cout << "       La voiture " << occupant_ << " se gare et partira le " << dateDepart << endl;
+    //cout << "       La voiture " << occupant_ << " se gare et partira le " << dateDepart << endl;
     occupant = occupant_;
     isOccupied = true;
     return true;

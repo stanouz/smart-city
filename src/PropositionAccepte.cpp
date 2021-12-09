@@ -2,7 +2,7 @@
 
 
 
-PropositionAccepte::PropositionAccepte(double prix_, string ID, int _posX, int _posY){
+PropositionAccepte::PropositionAccepte(double prix_, string ID, double _posX, double _posY){
     prix = prix_;
     ID_parking = ID;
     posX = _posX;
@@ -22,12 +22,12 @@ double PropositionAccepte::getPrix() const{
     return prix;
 }
 
-int PropositionAccepte::getPosX()
+double PropositionAccepte::getPosX()
 {
     return posX;
 }
 
-int PropositionAccepte::getPosY()
+double PropositionAccepte::getPosY()
 {
     return posY;
 }

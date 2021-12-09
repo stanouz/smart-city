@@ -49,20 +49,20 @@ void Contenu:: setTexte(string t){
     texte = t;
 }
 
-void Contenu:: setPlaceX(int x){
+void Contenu:: setPlaceX(double x){
     placeX = x;
 }
 
-void Contenu:: setPlaceY(int y){
+void Contenu:: setPlaceY(double y){
     placeY = y;
 }
 
-int Contenu::getPlaceX()
+double Contenu::getPlaceX()
 {
     return placeX;
 }
 
-int Contenu::getPlaceY()
+double Contenu::getPlaceY()
 {
     return placeY;
 }

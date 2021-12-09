@@ -89,18 +89,35 @@ void Parking::propositionAcceptee(Message recu)
     //En fonction du parking, le parking attribut une place à la voiture
     
     if(ID=="P1")
-    {
-        toSend.contenuMessage.setPlaceX(tabP1[indX][indY]);
-        cout<<" DANS PARKING indX = "<<indX;
-        indY = (indY+1)%2;
+    {   
+        //cout<<" ID == "<<ID<<" ";
+        if(indY == 4){indX = (indX+1) %2;}
+        toSend.contenuMessage.setPlaceX(tabP1x[indX]);
+        
+        toSend.contenuMessage.setPlaceY(tabP1y[indY]);
+        indY = (indY+1)%5;
         
         
-        toSend.contenuMessage.setPlaceY(tabP1[indX][indY]);
-        cout<<" DANS PARKING indY = "<<indY<<endl;
-        indX = (indX+1)%10;
-        
+        //cout<<" posX = "<<tabP1x[indX];        
+        //cout<<" posY = "<<tabP1y[indY]<<endl;
         
     }
+
+    /*else if(ID=="P2")
+    {
+         cout<<" ID == "<<ID<<" ";
+        if(indY == 4){indX = (indX+1) %2;}
+        toSend.contenuMessage.setPlaceX(tabP2x[indX]);
+        
+        toSend.contenuMessage.setPlaceY(tabP2y[indY]);
+        indY = (indY+1)%5;
+        
+        
+        cout<<" posX = "<<tabP2x[indX];        
+        cout<<" posY = "<<tabP2y[indY]<<endl;
+        
+        
+    }*/
     
     
     // on envoie le message à la voiture

@@ -41,8 +41,11 @@ private:
     float prix;
     string ID;
     map<string, double> score;
-    int tabP1[10][2] = {10,11,9,10,9,9,9,8,9,7,10,11,10,10,10,9,10,8,10,7};
-    //int tabP1[10][2] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20};
+    double tabP1x[2] = {11.,11.};
+    double tabP1y[5] = {11.,11.,11.,11.,11.};
+
+    double tabP2x[2] = {17.,19.};
+    double tabP2y[5] = {19.,20.,21.,22.,23.};
     int indX,indY;
 };
 

@@ -16,7 +16,7 @@ enum Direction{Haut, Bas, Gauche, Droite};
 
 class Voiture:public Agent{
 public:
-    Voiture(string immat, int x, int y, Direction dir);
+    Voiture(string immat, double x, double y, Direction dir);
 
     // Getters
     string getImat() const;
@@ -24,6 +24,7 @@ public:
     double getPosY() const;
     Direction getDirection();
     bool getEstGaree();
+
 
     // Negociation
     void Boucle();

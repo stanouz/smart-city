@@ -14,7 +14,7 @@ const double DUREE_STATIONNEMENT = 0.1;
 
 // Constructeur
 
-Voiture::Voiture(string immat, int x, int y, Direction dir){
+Voiture::Voiture(string immat, double x, double y, Direction dir){
     immatriculation = immat;
     posX = x;
     posY = y;
@@ -43,7 +43,6 @@ Direction Voiture::getDirection(){
 bool Voiture::getEstGaree(){
     return estGaree;
 }
-
 
 // Fonctions de négociation
 
@@ -98,7 +97,7 @@ void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> 
             propositionAccepte = true;
             PropositionAccepte p(recu.contenuMessage.getPrix(), recu.emmeteur, recu.contenuMessage.getPlaceX(), recu.contenuMessage.getPlaceY());
             prop.push_back(p);
-            cout<<" Position X de recu "<<recu.contenuMessage.getPlaceX()<< " Position Y de recu "<<recu.contenuMessage.getPlaceY()<<endl;
+            //cout<<" Position X de recu "<<recu.contenuMessage.getPlaceX()<< " Position Y de recu "<<recu.contenuMessage.getPlaceY()<<endl;
         }
         else if(recu.performatif == Reponse)
         {
@@ -136,7 +135,6 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
 }
 
 void Voiture::Boucle(){
-    //sleep(2);
     while(true){
         sleep(2);
         while((((int)posY!=9) || ((int)posX!=6)) && (((int)posY!=24) || ((int)posX!=9)) && (((int)posY!=16) || ((int)posX!=18)))
@@ -144,7 +142,7 @@ void Voiture::Boucle(){
             cout<<"";
         }
 
-        string parkings[3] = {"P1", "P2", "P3"};
+        string parkings[3] = {"P1", "P1", "P1"};
         vector<thread> negociations;
         vector<PropositionAccepte> propositions;
         int size = 3;
@@ -162,16 +160,20 @@ void Voiture::Boucle(){
             Message m(immatriculation, Accepter);
             m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
             sendMessage(m, immatriculation, meilleurOffre.getId());
-            cout << "ACCEPTE "+immatriculation+" pour "+ meilleurOffre.getId() << endl;
+            //cout << "ACCEPTE "+immatriculation+" pour "+ meilleurOffre.getId() << endl;
             estGaree = true;
-
+            //cout<<"Je me gare dans "<<meilleurOffre.getId()<<endl;
             double tmpX, tmpY;
             tmpX = posX;
             tmpY = posY;
+            //cout<<" tmpX = "<<tmpX<<" tmpY = "<<tmpY<<endl;
             Direction tmpDir = direction;
             posX = meilleurOffre.getPosX();
             posY = meilleurOffre.getPosY();
             direction = Droite;
+            //cout<<" PosX = "<<posX<<" PosY = "<<posY<<endl;
+
+            //cout<<"POS X="<<posX<<"  POS Y="<<posY<<endl;
 
             if(meilleurOffre.getId()!="P1")
             {
@@ -246,6 +248,7 @@ void Voiture::halfTurn(){
 void Voiture::Avancer(vector< vector<int> > & map){
 
     while(true){
+        
         if(!estGaree){
             vector<int> deplacementPossible;
             if(canGoStraight(map)){
@@ -280,7 +283,8 @@ void Voiture::Avancer(vector< vector<int> > & map){
             }
         }
         else{
-            sleep(1);
+            cout<<" PosX = "<<posX<<" PosY = "<<posY<<endl;
+            //sleep(1);
         } 
     }
 }
@@ -290,48 +294,48 @@ void Voiture::rouler(int dirX, int dirY){
     if(dirX!=0 && dirY!=0){
         return;
     }
-
-    double vitesse =0.0001;
-    if(dirX!=0){
-        int newX = posX + dirX;
-        if(dirX > 0){
-            while(posX < newX && !estGaree){
-                posX += vitesse;
-                usleep(60);
+    while(!estGaree){
+        double vitesse =0.0001;
+        if(dirX!=0){
+            int newX = posX + dirX;
+            if(dirX > 0){
+                while(posX < newX && !estGaree){
+                    posX += vitesse;
+                    usleep(60);
+                }
+                posX = newX;
+                return;
             }
-            posX = newX;
-            return;
+            else{
+                while(posX > newX && !estGaree){
+                    posX -= vitesse;
+                    usleep(60);
+                }
+                posX = newX;
+                return;
+            }
         }
-        else{
-            while(posX > newX && !estGaree){
-                posX -= vitesse;
-                usleep(60);
+
+        if(dirY!=0){
+            int newY = posY + dirY;
+            if(dirY > 0){
+                while(posY < newY && !estGaree){
+                    posY += vitesse;
+                    usleep(60);
+                }
+                posY = newY;
+                return;
             }
-            posX = newX;
-            return;
+            else{
+                while(posY > newY && !estGaree){
+                    posY -= vitesse;
+                    usleep(60);
+                }
+                posY = newY;
+                return;
+            }
         }
     }
-
-    if(dirY!=0){
-        int newY = posY + dirY;
-        if(dirY > 0){
-            while(posY < newY && !estGaree){
-                posY += vitesse;
-                usleep(60);
-            }
-            posY = newY;
-            return;
-        }
-        else{
-            while(posY > newY && !estGaree){
-                posY -= vitesse;
-                usleep(60);
-            }
-            posY = newY;
-            return;
-        }
-    }
-
 }
 
 bool Voiture::canGoRight(vector< vector<int> > & map){
