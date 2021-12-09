@@ -38,7 +38,7 @@ void Affichage::display(){
 
         displayMainWidget();
 
-        //ImGui::ShowDemoWindow();
+        ImGui::ShowDemoWindow();
 
         window.clear();
         displayMap();
@@ -165,9 +165,18 @@ void Affichage::displayInfoParking(Parking & p){
     // =========================================== 
     if(ImGui::CollapsingHeader("Remplissage du parking")){
         ImGui::Indent();
+
+
+        // ===========================================  
+        //          Prix moyen d'un place
+        // ===========================================
+        ImGui::Text("Le prix moyen d'un place du parking %s est de %.2f euros.",
+                     p.getId().c_str(), p.getMoyennePrix());
+        ImGui::NewLine();
+
         // ===========================================  
         // Barre de progression du taux de remplissage
-        // =========================================== 
+        // ===========================================
         ImGui::Text("Nombre de voitures :");
         char buf[32];
         sprintf(buf, "%d/%d", p.getNbPlaceOccupe(), p.getNbplace());
@@ -294,13 +303,14 @@ void Affichage::displayInfoParking(Parking & p){
             // =========================================== 
 
             // Ouverture du tableau
-            ImGui::BeginTable("MessagesEnvoye", 6, table_flags);
+            ImGui::BeginTable("MessagesEnvoye", 7, table_flags);
 
             // En-tête du tableau
             ImGui::TableSetupColumn("#");
             ImGui::TableSetupColumn("Voiture");
             ImGui::TableSetupColumn("Performatif");
             ImGui::TableSetupColumn("Prix");
+            ImGui::TableSetupColumn("Date");
             ImGui::TableSetupColumn("Durée");
             ImGui::TableSetupColumn("Texte");
             ImGui::TableHeadersRow();

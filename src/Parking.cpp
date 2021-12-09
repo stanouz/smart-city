@@ -9,9 +9,9 @@ Parking::Parking(string id){
     ID = id;
     prix = 5.;
     nb_place_occup = 0;
-     SommePrix = 0;
-     Moyenne = 0 ;
-     CompteurPlace = 0 ;
+
+    sommePrix = 0;
+    compteurVoitureGare = 0 ;
 
 }
 
@@ -31,6 +31,15 @@ int Parking::getNbPlaceOccupe(){
 
 Place & Parking::getPlace(int ind){
     return tabPlaces[ind];
+}
+
+double Parking::getMoyennePrix(){
+    if(compteurVoitureGare==0){
+        return 0;
+    }
+
+
+    return sommePrix/compteurVoitureGare;
 }
 
 bool Parking::IsFull() const{
@@ -91,6 +100,7 @@ void Parking::propositionAcceptee(Message recu)
     // Si la proposition est accepté on previent la voiture et 
     // on quitte le processus de négociation.
     toSend.contenuMessage.setTexte("Proposition acceptée");
+    toSend.contenuMessage.setPrix(recu.contenuMessage.getPrix());
     sendMessage(toSend, ID, recu.emmeteur);
 }
 
@@ -129,6 +139,9 @@ void Parking::processusNegocitation(){
     if(recu.performatif==Accepter){
         double duree = recu.contenuMessage.getDuree();
 
+        sommePrix += recu.contenuMessage.getPrix();
+        compteurVoitureGare ++;
+
         // On ajoute la voiture dans le parking
         ajouteVoiture(Date(), duree, recu.emmeteur);
         return;
@@ -153,12 +166,6 @@ void Parking::processusNegocitation(){
         }
         else 
         {
-            // pour calculer la moyenne
-            double prix = recu.contenuMessage.getPrix();
-            SommePrix = SommePrix + prix;
-            CompteurPlace++;
-
-
             propositionAcceptee(recu);
             accepte = true;
         }
@@ -170,10 +177,6 @@ void Parking::processusNegocitation(){
         
         compteur++;
     }
-        //*************************
-    Moyenne = (SommePrix / CompteurPlace );
-   
-        //**************************
 }
 
 

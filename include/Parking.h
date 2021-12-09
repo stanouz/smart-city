@@ -33,15 +33,18 @@ public:
     int getNbplace();
     int getNbPlaceOccupe();
     Place & getPlace(int ind);
+
+    double getMoyennePrix();
 private:
     Place tabPlaces[10];
     const int NB_PLACES_TOTAL = 10;
     int nb_place_occup;
     float prix;
     string ID;
-    double SommePrix;
-    double Moyenne;
-    int CompteurPlace;
+
+    
+    double sommePrix;
+    int compteurVoitureGare;
 
 };
 
