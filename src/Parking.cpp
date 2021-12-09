@@ -120,10 +120,17 @@ void Parking::processusNegocitation(){
 
     // Si Perfo est accepter ça veut dire que la négociation à deja
     // eu lieu et que la voiture est d'accord pour se garer
+    double SommePrix = 0;
+    double Moyenne;
+    int CompteurPlace;
     if(recu.performatif==Accepter){
         double duree = recu.contenuMessage.getDuree();
         Date now;
         Date nowPlusDuree(now, duree);
+        double prix=recu.contenuMessage.getPrix();
+       SommePrix = SommePrix + prix;
+       CompteurPlace++;
+      // printf(" somme est %f  \n", SommePrix);
 
         // On ajoute la voiture dans le parking
         ajouteVoiture(recu.emmeteur, nowPlusDuree);
