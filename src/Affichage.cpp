@@ -38,6 +38,8 @@ void Affichage::display(){
 
         displayMainWidget();
 
+        //ImGui::ShowDemoWindow();
+
         window.clear();
         displayMap();
 
@@ -178,9 +180,8 @@ void Affichage::displayInfoParking(Parking & p){
         // =========================================== 
         for(int i=0; i<p.getNbplace(); i++){ 
             if(p.getPlace(i).getIsOccupied()){
-                //ImGui::BulletText("%s jusqu'au %s", p.getPlace(i).getOccupant().c_str(), p.getPlace(i).getDateDepart().DateToString().c_str());
-                ImGui::BulletText("%i", i);
-                ImGui::NewLine();
+                ImGui::BulletText("%s jusqu'au %s", p.getPlace(i).getOccupant().c_str(),
+                                                    p.getPlace(i).getDateDepart().DateToString().c_str());
             }
         }
 

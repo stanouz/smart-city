@@ -30,9 +30,12 @@ bool Place::getIsOccupied(){
 string Place::updateStatus(){
     if(isOccupied){
         if(reservationEnCours.dateFinPasse()){
-            isOccupied=false;
+            cout << "La date de fin " << reservationEnCours.getDateFin().DateToString() << " est passée " << endl;
+            
             string tmp_occupant = getOccupant();
-            return getOccupant();
+            isOccupied=false;
+          
+            return tmp_occupant;
         }
     }
 
@@ -65,9 +68,7 @@ bool Place::addReservations(Reservation newReserv){
         if(newReserv.intersectionDate(reservationFutures[i])){
             return false;
         }
-    }
-
-    
+    }   
 
     reservationFutures.push_back(newReserv);
     return true;

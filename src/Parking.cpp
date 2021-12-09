@@ -125,7 +125,7 @@ void Parking::processusNegocitation(){
     // eu lieu et que la voiture est d'accord pour se garer
     if(recu.performatif==Accepter){
         double duree = recu.contenuMessage.getDuree();
-    
+        double prix = recu.contenuMessage.getPrix();
         
         // On ajoute la voiture dans le parking
         ajouteVoiture(Date(), duree, recu.emmeteur);

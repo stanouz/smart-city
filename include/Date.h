@@ -16,11 +16,15 @@ public:
 
     
     bool isBetween(Date date1, Date date2) const;
-    bool operator<=(Date &d2) const;
-    bool operator>=(Date &d2) const;
-    void operator=(Date &d2);
+    bool operator<=(const Date &d2) const;
+    bool operator>=(const Date &d2) const;
+    void operator=(const Date &d2);
+    bool operator==(const Date &d2) const;
 
     string DateToString() const;
+
+
+    void Test();
 private:
     int day, month, year;
     int hour, minute;
