@@ -10,10 +10,10 @@ class Reservation{
 private:
     Date dateDebut;
     Date dateFin;
-    string immatriculation;
+    string ID;
 public:
     Reservation();
-    Reservation(Date dateDeb, double duree, string immat); // duree en heures
+    Reservation(Date dateDeb, double duree, string ID); // duree en heures
 
     void operator=(Reservation r);
 
@@ -21,7 +21,7 @@ public:
     bool dateFinPasse();
     bool intersectionDate(Reservation & resa);
 
-    string getImmatriculation();
+    string getID();
     Date & getDateDebut();
     Date & getDateFin();
 

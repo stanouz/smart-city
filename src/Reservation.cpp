@@ -5,13 +5,15 @@
 using namespace std;
 
 Reservation::Reservation(){
-
+    dateFin = Date();
+    dateDebut = Date();
+    ID = "NULL";
 }
 
 
-Reservation::Reservation(Date dateDeb, double duree, string immat):
+Reservation::Reservation(Date dateDeb, double duree, string id_):
     dateDebut(dateDeb), dateFin(dateDeb, duree){
-    immatriculation = immat;
+    ID = id_;
 }
 
 
@@ -19,7 +21,7 @@ Reservation::Reservation(Date dateDeb, double duree, string immat):
 void Reservation::operator=(Reservation r){
     dateDebut = r.dateDebut;
     dateFin = r.dateFin;
-    immatriculation = r.immatriculation;
+    ID = r.ID;
 }
 
 Date & Reservation::getDateDebut(){
@@ -52,12 +54,12 @@ bool Reservation::intersectionDate(Reservation & resa){
 }
 
 
-string Reservation::getImmatriculation(){
-    return immatriculation;
+string Reservation::getID(){
+    return ID;
 }
 
 
 
 void Reservation::reset(){
-    immatriculation = "NULL";
+    ID = "NULL";
 }

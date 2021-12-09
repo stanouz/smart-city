@@ -1,16 +1,5 @@
 #include "Agenda.h"
 
-
-Agenda::Agenda(){
-    currentReservation = Reservation(Date(), 0., "NULL");
-}
-
-Agenda::~Agenda(){
-    currentReservation.reset();
-    nextReservations.clear();
-}
-
-
 bool Agenda::AddReservation(Reservation newReservation){
     if(newReservation.intersectionDate(currentReservation)){
         return false;
@@ -28,9 +17,9 @@ bool Agenda::AddReservation(Reservation newReservation){
 
 
 string Agenda::UpdateCurrentReservation(){
-    if(currentReservation.getImmatriculation()!="NULL"){
+    if(currentReservation.getID()!="NULL"){
         if(currentReservation.dateFinPasse()){
-            string tmp_occupant = currentReservation.getImmatriculation();
+            string tmp_occupant = currentReservation.getID();
             currentReservation.reset();
           
             return tmp_occupant;
@@ -54,7 +43,7 @@ bool Agenda::UpdateNextReservations(){
 
 
 string Agenda::getCurrendID(){
-    return currentReservation.getImmatriculation();
+    return currentReservation.getID();
 }
 
 Date Agenda::getCurrentDateFin(){

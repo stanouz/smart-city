@@ -13,9 +13,6 @@ class Agenda{
     Reservation currentReservation;
     vector<Reservation> nextReservations;
 public:
-    Agenda();
-    ~Agenda();
-
     bool AddReservation(Reservation newReservation);
 
     string UpdateCurrentReservation();
