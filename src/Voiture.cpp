@@ -84,7 +84,7 @@ void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> 
 {
     // Date actuelle et duree constant pour l'instant
     Date dateDebut; 
-    double dureeStationnement = (rand()%900)/100.  + 0.2;
+    double dureeStationnement = (rand()%1000)/100.  + 0.2;
 
     dureeStationnement = DUREE_STATIONNEMENT;
 
@@ -143,6 +143,7 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
     return PropositionAccepte(-1, "P#");
 }
 
+
 void Voiture::Boucle(){
     sleep(2);
     while(true){
@@ -170,7 +171,7 @@ void Voiture::Boucle(){
             m.contenuMessage.setPrix(meilleurOffre.getPrix());
 
             sendMessage(m, immatriculation, meilleurOffre.getId());
-            cout << "ACCEPTE "+immatriculation+" pour "+ meilleurOffre.getId() << endl;
+            
             estGaree = true;
 
             Message msg;

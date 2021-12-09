@@ -55,3 +55,9 @@ bool Reservation::intersectionDate(Reservation & resa){
 string Reservation::getImmatriculation(){
     return immatriculation;
 }
+
+
+
+void Reservation::reset(){
+    immatriculation = "NULL";
+}

@@ -12,14 +12,11 @@ Place::~Place(){
 }
 
 string Place::getOccupant(){
-    if(isOccupied){
-        return reservationEnCours.getImmatriculation();
-    }
-    return "NULL";
+    return agenda.getCurrendID();
 }
 
-Date & Place::getDateDepart(){
-    return reservationEnCours.getDateFin();
+Date Place::getDateDepart(){
+    return agenda.getCurrentDateFin();
 }
 
 bool Place::getIsOccupied(){
@@ -28,48 +25,20 @@ bool Place::getIsOccupied(){
 
 
 string Place::updateStatus(){
-    if(isOccupied){
-        if(reservationEnCours.dateFinPasse()){
-            cout << "La date de fin " << reservationEnCours.getDateFin().DateToString() << " est passée " << endl;
-            
-            string tmp_occupant = getOccupant();
-            isOccupied=false;
-          
-            return tmp_occupant;
-        }
+    string retour = agenda.UpdateCurrentReservation();
+
+    if(retour!="NULL"){
+        isOccupied = false;
     }
 
-
-    int i=0;
-    while(!isOccupied && i<(int)reservationFutures.size()){
-
-        if(reservationFutures[i].dateDebutPasse()){
-            reservationEnCours = reservationFutures[i];
-            reservationFutures.erase(reservationFutures.begin()+i);
-            isOccupied = true;
-        }
-
-
-        i++;
+    if(agenda.UpdateNextReservations()){
+        isOccupied = true;
     }
-
 
     return "NULL";
 }
 
 
 bool Place::addReservations(Reservation newReserv){
-
-    if(newReserv.intersectionDate(reservationEnCours)){
-        return false;
-    }
-
-    for(int i=0; i<(int)reservationFutures.size(); i++){
-        if(newReserv.intersectionDate(reservationFutures[i])){
-            return false;
-        }
-    }   
-
-    reservationFutures.push_back(newReserv);
-    return true;
+    return agenda.AddReservation(newReserv);
 }

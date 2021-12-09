@@ -22,9 +22,10 @@ public:
     bool intersectionDate(Reservation & resa);
 
     string getImmatriculation();
-
     Date & getDateDebut();
     Date & getDateFin();
+
+    void reset();
 
     
 };

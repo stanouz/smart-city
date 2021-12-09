@@ -255,13 +255,14 @@ void Affichage::displayInfoParking(Parking & p){
             // =========================================== 
                 
             // Ouverture du tableau
-            ImGui::BeginTable("MessagesRecu", 6, table_flags);
+            ImGui::BeginTable("MessagesRecu", 7, table_flags);
 
             // En-tête du tableau
             ImGui::TableSetupColumn("#");
             ImGui::TableSetupColumn("Voiture");
             ImGui::TableSetupColumn("Performatif");
             ImGui::TableSetupColumn("Prix");
+            ImGui::TableSetupColumn("Date");
             ImGui::TableSetupColumn("Durée");
             ImGui::TableSetupColumn("Texte");
             ImGui::TableHeadersRow();
@@ -343,12 +344,16 @@ void Affichage::displayMessage(Message & msg, string & immatVoiture, int row){
     ImGui::TableSetColumnIndex(3);
     ImGui::Text("%.2f euros", msg.contenuMessage.getPrix());
 
-    // Colonne durée
+    // Colonne date
     ImGui::TableSetColumnIndex(4);
+    ImGui::Text("%s", msg.contenuMessage.getDate().DateToString().c_str());
+
+    // Colonne durée
+    ImGui::TableSetColumnIndex(5);
     ImGui::Text("%.2f heures", msg.contenuMessage.getDuree());
 
     // Colonne texte
-    ImGui::TableSetColumnIndex(5);
+    ImGui::TableSetColumnIndex(6);
     ImGui::Text("%s", msg.contenuMessage.getTexte().c_str());
  }
 

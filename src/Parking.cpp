@@ -59,8 +59,6 @@ void Parking::ajouteVoiture(Date dateDebut, double duree, string occupant){
     }
     if(ajouter)
         nb_place_occup++;
-
-    cout << occupant << "accepte place " << i << " de " << ID << endl;
 }
 
 double Parking::prixFinal(float duree){
