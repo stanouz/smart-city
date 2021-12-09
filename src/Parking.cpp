@@ -131,14 +131,14 @@ void Parking::processusNegocitation(){
         Date now;
         Date nowPlusDuree(now, duree);
         double prix=recu.contenuMessage.getPrix();
+        // pour calculer la moyenne de la place 
        SommePrix = SommePrix + prix;
        CompteurPlace++;
-      // printf(" somme est %f  \n", SommePrix);
-
-        // On ajoute la voiture dans le parking
+         // On ajoute la voiture dans le parking
         ajouteVoiture(Date(), duree, recu.emmeteur);
         return;
     }
+    Moyenne = (SommePrix / CompteurPlace );
 
 
     int compteur =0;
