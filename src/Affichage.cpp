@@ -38,17 +38,17 @@ void Affichage::display(){
 
         displayMainWidget();
 
+        ImGui::ShowDemoWindow();
+
         window.clear();
         displayMap();
 
 
         for(int i=0; i<(int)ville->getTabVoitures().size(); i++){
             Voiture & v = ville->getTabVoitures()[i];
-            /*if(v.getEstGaree()){
+            if(!v.getEstGaree()){
                 displayCar(v.getPosX(), v.getPosY(), v.getDirection());
-            }*/
-            //if(v.getEstGaree()){cout<<" PosX = "<<v.getPosX()<<" PosY = "<<v.getPosY()<<endl;}
-            displayCar(v.getPosX(), v.getPosY(), v.getDirection()); 
+            }
         }
 
 
@@ -71,7 +71,8 @@ void Affichage::displayMap(){
     }
 }
 
-void Affichage::displayCar(double x, double y, Direction dir){    
+void Affichage::displayCar(double x, double y, Direction dir){
+   
     switch (dir){
         case Droite : 
                 drawTile(481, x-0.5, y-0.3); 
@@ -164,9 +165,18 @@ void Affichage::displayInfoParking(Parking & p){
     // =========================================== 
     if(ImGui::CollapsingHeader("Remplissage du parking")){
         ImGui::Indent();
+
+
+        // ===========================================  
+        //          Prix moyen d'un place
+        // ===========================================
+        ImGui::Text("Le prix moyen d'un place du parking %s est de %.2f euros.",
+                     p.getId().c_str(), p.getMoyennePrix());
+        ImGui::NewLine();
+
         // ===========================================  
         // Barre de progression du taux de remplissage
-        // =========================================== 
+        // ===========================================
         ImGui::Text("Nombre de voitures :");
         char buf[32];
         sprintf(buf, "%d/%d", p.getNbPlaceOccupe(), p.getNbplace());
@@ -177,10 +187,10 @@ void Affichage::displayInfoParking(Parking & p){
         // ===========================================  
         //  Liste des voitures garées dans le parking
         // =========================================== 
-        for(int i=0; i<p.getNbplace(); i++){
-            string occupant = p.getPlace(i).getOccupant();
-            if(occupant!="NULL"){
-                ImGui::BulletText("%s jusqu'au %s", occupant.c_str(), p.getPlace(i).getOccupiedUntil().DateToString().c_str());
+        for(int i=0; i<p.getNbplace(); i++){ 
+            if(p.getPlace(i).getIsOccupied()){
+                ImGui::BulletText("%s jusqu'au %s", p.getPlace(i).getOccupant().c_str(),
+                                                    p.getPlace(i).getDateDepart().DateToString().c_str());
             }
         }
 
@@ -254,13 +264,14 @@ void Affichage::displayInfoParking(Parking & p){
             // =========================================== 
                 
             // Ouverture du tableau
-            ImGui::BeginTable("MessagesRecu", 6, table_flags);
+            ImGui::BeginTable("MessagesRecu", 7, table_flags);
 
             // En-tête du tableau
             ImGui::TableSetupColumn("#");
             ImGui::TableSetupColumn("Voiture");
             ImGui::TableSetupColumn("Performatif");
             ImGui::TableSetupColumn("Prix");
+            ImGui::TableSetupColumn("Date");
             ImGui::TableSetupColumn("Durée");
             ImGui::TableSetupColumn("Texte");
             ImGui::TableHeadersRow();
@@ -292,13 +303,14 @@ void Affichage::displayInfoParking(Parking & p){
             // =========================================== 
 
             // Ouverture du tableau
-            ImGui::BeginTable("MessagesEnvoye", 6, table_flags);
+            ImGui::BeginTable("MessagesEnvoye", 7, table_flags);
 
             // En-tête du tableau
             ImGui::TableSetupColumn("#");
             ImGui::TableSetupColumn("Voiture");
             ImGui::TableSetupColumn("Performatif");
             ImGui::TableSetupColumn("Prix");
+            ImGui::TableSetupColumn("Date");
             ImGui::TableSetupColumn("Durée");
             ImGui::TableSetupColumn("Texte");
             ImGui::TableHeadersRow();
@@ -342,12 +354,16 @@ void Affichage::displayMessage(Message & msg, string & immatVoiture, int row){
     ImGui::TableSetColumnIndex(3);
     ImGui::Text("%.2f euros", msg.contenuMessage.getPrix());
 
-    // Colonne durée
+    // Colonne date
     ImGui::TableSetColumnIndex(4);
+    ImGui::Text("%s", msg.contenuMessage.getDate().DateToString().c_str());
+
+    // Colonne durée
+    ImGui::TableSetColumnIndex(5);
     ImGui::Text("%.2f heures", msg.contenuMessage.getDuree());
 
     // Colonne texte
-    ImGui::TableSetColumnIndex(5);
+    ImGui::TableSetColumnIndex(6);
     ImGui::Text("%s", msg.contenuMessage.getTexte().c_str());
  }
 
