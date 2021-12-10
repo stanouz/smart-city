@@ -13,7 +13,7 @@ class Parking: public Agent{
     
 public:
     Parking(string id);
-    
+    ~Parking();
     
     bool IsFull() const;
 
@@ -25,15 +25,16 @@ public:
     void processusNegocitation();
     void propositionAcceptee(Message recu);
     void propositionRefusee(Message recu, int compteur);
-    double prixFinal(float duree, string immatriculation);
-    void ajouteVoiture(string occupant, Date dateDepart);
+    double prixFinal(float duree);
+    void ajouteVoiture(Date dateDebut, double duree, string occupant);
     double pourcentageRemplissage();
 
     string getId();
     int getNbplace();
     int getNbPlaceOccupe();
     Place & getPlace(int ind);
-    
+
+    double getMoyennePrix();
 private:
     Place tabPlaces[10];
     const int NB_PLACES_TOTAL = 10;
@@ -47,6 +48,11 @@ private:
     double tabP2x[2] = {17.,20.};
     double tabP2y[5] = {19.,20.,21.,22.,23.};
     int indX,indY;
+
+    
+    double sommePrix;
+    int compteurVoitureGare;
+
 };
 
 

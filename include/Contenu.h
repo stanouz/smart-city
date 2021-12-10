@@ -8,8 +8,9 @@ using namespace std;
 
 class Contenu{
 public:
-    Contenu(double duree, double _prix, string t);
+    Contenu(Date dateDebut, double duree, double _prix, string t);
     Contenu();
+    void operator=(Contenu c);
     
     void display();
 
@@ -18,6 +19,7 @@ public:
     double getDuree();
     double getPrix();
     string getTexte();
+    Date getDate();
 
     void setDuree(double d);
     void setPrix(double _prix);
@@ -28,8 +30,10 @@ public:
     double getPlaceY();
 
 
+    void setDate(Date d);
 private:
     double duree; // en heures
+    Date dateDebut;
     double prix;
     string texte;
     double placeX;
