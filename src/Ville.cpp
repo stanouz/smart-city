@@ -71,14 +71,14 @@ Ville::Ville(){
         tabThreads.push_back(thread(&Parking::Boucle, ref(tab_parkings[i])));
     }
 
-    // Thread negociation des voitures
-    for(int i=0; i<(int)tab_voitures.size();i++){
-        tabThreads.push_back(thread(&Voiture::Boucle, ref(tab_voitures[i])));
-    }
-
     // Thread mouvement des voitures
     for(int i=0; i<(int)tab_voitures.size();i++){
         tabThreads.push_back(thread(&Voiture::Avancer, ref(tab_voitures[i]), ref(map)));
+    }
+
+    // Thread negociation des voitures
+    for(int i=0; i<(int)tab_voitures.size();i++){
+        tabThreads.push_back(thread(&Voiture::Boucle, ref(tab_voitures[i])));
     }
 }
 

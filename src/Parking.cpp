@@ -103,9 +103,9 @@ void Parking::propositionAcceptee(Message recu)
         
     }
 
-    /*else if(ID=="P2")
+    else if(ID=="P2" || ID=="P3")
     {
-         cout<<" ID == "<<ID<<" ";
+        //cout<<" ID == "<<ID<<" ";
         if(indY == 4){indX = (indX+1) %2;}
         toSend.contenuMessage.setPlaceX(tabP2x[indX]);
         
@@ -113,11 +113,11 @@ void Parking::propositionAcceptee(Message recu)
         indY = (indY+1)%5;
         
         
-        cout<<" posX = "<<tabP2x[indX];        
-        cout<<" posY = "<<tabP2y[indY]<<endl;
+        //cout<<" posX = "<<tabP2x[indX];        
+        //cout<<" posY = "<<tabP2y[indY]<<endl;
         
         
-    }*/
+    }
     
     
     // on envoie le message à la voiture

@@ -142,7 +142,7 @@ void Voiture::Boucle(){
             cout<<"";
         }
 
-        string parkings[3] = {"P1", "P1", "P1"};
+        string parkings[3] = {"P2", "P2", "P2"};
         vector<thread> negociations;
         vector<PropositionAccepte> propositions;
         int size = 3;
@@ -170,6 +170,8 @@ void Voiture::Boucle(){
             Direction tmpDir = direction;
             posX = meilleurOffre.getPosX();
             posY = meilleurOffre.getPosY();
+            posXAv = posX;
+            posYAv = posY;
             direction = Droite;
             //cout<<" PosX = "<<posX<<" PosY = "<<posY<<endl;
 
@@ -283,8 +285,10 @@ void Voiture::Avancer(vector< vector<int> > & map){
             }
         }
         else{
+            posX = posXAv;
+            posY = posYAv;
             cout<<" PosX = "<<posX<<" PosY = "<<posY<<endl;
-            //sleep(1);
+            sleep(1);
         } 
     }
 }
