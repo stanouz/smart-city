@@ -13,7 +13,7 @@ class Parking: public Agent{
     
 public:
     Parking(string id);
-    
+    ~Parking();
     
     bool IsFull() const;
 

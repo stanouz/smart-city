@@ -4,7 +4,7 @@
 #include "Affichage.h"
 #include <thread>
 
-#include <unistd.h>
+#include <fstream>
 
 #include "Reservation.h"
 
@@ -13,7 +13,6 @@ using namespace std;
 
 
 int main(int argc, char ** argv){
-    
     
     Ville v;
     Affichage a(&v);

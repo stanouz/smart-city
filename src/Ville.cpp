@@ -30,9 +30,18 @@ vector<int> TxtLineToInt(string data)
 
 Ville::Ville(){
     tab_parkings.push_back(Parking("P1"));
-    
     tab_parkings.push_back(Parking("P2"));
     tab_parkings.push_back(Parking("P3"));
+
+
+    for(int i=0; i<(int)tab_parkings.size(); i++){
+        fstream f("data/"+tab_parkings[i].getId()+".txt");
+        if(!f.good()){
+            ofstream file("data/"+tab_parkings[i].getId()+".txt");
+            file << "Nombre de voiture venu : " << 0 << endl;
+            file << "Total d'argent gagné : " << 0 << endl; 
+        }
+    }
     
 
     tab_voitures.push_back(Voiture("AAA-123-AAA", 2,16, Droite));
@@ -78,6 +87,10 @@ Ville::~Ville(){
     for(int i=0; i<(int)tabThreads.size(); i++){
         tabThreads[i].join();
     }
+
+
+
+
 }
 
 void Ville::lancerThread(){

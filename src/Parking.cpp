@@ -2,17 +2,43 @@
 
 #include <unistd.h>
 #include <iostream>
+#include <fstream>
 
 using namespace std;
+
+double lineParsing(string line){
+    int pos = line.find(": ");
+    return stod(line.substr(pos+2, line.size()-pos));
+}
 
 Parking::Parking(string id){
     ID = id;
     prix = 5.;
     nb_place_occup = 0;
 
-    sommePrix = 0;
-    compteurVoitureGare = 0 ;
 
+
+    ifstream file("data/"+ID+".txt", ios::in);
+
+    string compteurVoiture;
+    string revenu;
+
+    if(file.is_open()){
+        getline(file, compteurVoiture);
+        getline(file, revenu);
+    }
+    
+
+    sommePrix = lineParsing(revenu);
+    compteurVoitureGare = lineParsing(compteurVoiture); ;
+
+}
+
+
+Parking::~Parking(){
+    ofstream file("data/"+ID+".txt");
+    file << "Nombre de voiture venu : " << compteurVoitureGare << endl;
+    file << "Total d'argent gagné : " << sommePrix << endl;
 }
 
 
