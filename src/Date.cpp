@@ -37,19 +37,19 @@ A FAIRE :
     Changement de weedDay 
 */
 
-Date::Date(Date & d, double hours){
+Date::Date(Date & d, double hoursToAdd){
     *this = d;
 
-    int minutesToAdd = (hours - (int)hours)*60;
+
     
-    minute += minutesToAdd;
+    minute += hoursToAdd*60;
+   
 
     if(minute >= 60){
         hour += minute/60;
         minute %= 60;
     }
-
-    hour = d.hour + (int)hours;
+    
     if(hour >= 24){
         int addDay = (hour+ hour/24 - hour%24) / 24;
         day += addDay;
@@ -57,52 +57,40 @@ Date::Date(Date & d, double hours){
         
         // Nombre de jour minimum dans un mois 
         if(day>28){
-            switch (month)
-            {
-            case 1 :
-            case 3 :
-            case 5 :
-            case 7 :
-            case 8 :
-            case 10 :
-            case 12 :
+
+            if(month==1 || month==3 || month==5 || month==7 ||
+               month==8 || month==10 || month==12){
+
                 if(day>31){
-                    month++;
+                    month += day/31;
                     day = day%31 + 1;
                 }
-                break;
-            
-            case 4 :
-            case 6 :
-            case 9 :
-            case 11 :
+            }
+
+            if(month==4 || month==6 || month==9 || month==11){
                 if(day>30){
-                    month++;
+                    month += day/30;
                     day = day%30 + 1;
                 }
-                break;
-
-            case 2:
+            }
+            
+            
+            if(month==2){
                 if(year%4==0){
                     if(day>29){
-                        month++;
+                        month += day/29;
                         day = day%29 + 1;
                     }
                 }
                 else{
                     if(day>28){
-                        month++;
+                        month += day/28;
                         day = day%28 + 1;
                     }
                 }
-                
-                break;
-
-             
-            default:
-                break;
             }
         }
+           
         
 
     }
@@ -115,58 +103,68 @@ Date::~Date(){
 
 bool Date::isBetween(Date date1, Date date2) const{
     if(date1 <= date2){
-        if(*this >= date1 && *this <= date2)
+        if(*this >= date1 && *this <= date2){
             return true;
+        }      
     } 
     else{
-        if(*this >= date2 && *this <= date1)
+        if(*this >= date2 && *this <= date1){
             return true;
+        }
     } 
     return false;
 }
 
-void Date::setDate(int day_, int month_, int year_){
-    day = day_;
-    month = month_;
-    year = year_;    
+bool Date::operator<=(const Date &d2) const{
+    // Cas où ils sont égaux
+    if(*this == d2){
+        return true;
+    }
+
+
+    if(year < d2.year){ return true; }
+    else if(year != d2.year){ return false; }
+
+    if(month < d2.month){ return true; }
+    else if(month != d2.month){  return false; }
+
+    if(day < d2.day){ return true; }
+    else if(day != d2.day){ return false; }
+
+    if(hour < d2.hour){ return true; }
+    else if(hour != d2.hour){ return false; }
+
+    if(minute < d2.minute){ return true; }
+    else if(minute != d2.minute){  return false; }
+      
+    return false;
 }
 
-void Date::setTime(int hour_, int minute_){
-    hour = hour_;
-    minute = minute_;
-}
+bool Date::operator==(const Date &d2) const{
+    if(minute != d2.minute)
+        return false;
 
-bool Date::operator<=(Date &d2) const{
-    if(year > d2.year)
+    if(hour != d2.hour)
         return false;
-    if(month > d2.month)
+
+    if(day != d2.day)
         return false;
-    if(day > d2.day)
+
+    if(month != d2.month)
         return false;
-    if(hour > d2.hour)
+
+    if(year != d2.year)
         return false;
-    if(minute > d2.minute)
-        return false;
-    
+
     return true;
 }
 
-bool Date::operator>=(Date &d2) const{
-    if(year < d2.year)
-        return false;
-    if(month < d2.month)
-        return false;
-    if(day < d2.day)
-        return false;
-    if(hour < d2.hour)
-        return false;
-    if(minute < d2.minute)
-        return false;
-    
-    return true;
+bool Date::operator>=(const Date &d2) const{
+        
+    return !(*this <= d2) || (*this==d2);
 }
 
-void Date::operator=(Date &d2){
+void Date::operator=(const Date &d2){
     year = d2.year;
     month = d2.month;
     day = d2.day;
@@ -174,36 +172,6 @@ void Date::operator=(Date &d2){
     minute = d2.minute;
 
     weekDay = d2.weekDay;
-}
-
-std::ostream& operator<<(std::ostream& os, const Date& d){
-    os << d.DateToString();
-    return os;
-}
-
-
-int Date::getYear() const{
-    return year;
-}
-
-int Date::getMonth() const{
-    return month;
-}
-
-int Date::getDay() const{
-    return day;
-}
-
-int Date::getHour() const{
-    return hour;
-}
-
-int Date::getMinute() const{
-    return minute;
-}
-
-WeekDay Date::getWeekDay() const{
-    return weekDay;
 }
 
 
@@ -239,4 +207,33 @@ string Date::DateToString() const{
     string resultat = strWeekDay + " " + to_string(day) + "/" + to_string(month) + "/" + to_string(year)+ " - " + to_string(hour)+":"+to_string(minute);
    
     return resultat;
+}
+
+
+void Date::Test(){
+
+    Date now;
+    srand(time(NULL));
+
+
+    for(int i=0; i<10; i++){
+        Date now_1(now, (rand()%100)/10.);
+        Date now_2(now, (rand()%100)/10.);
+
+        cout << "now   : "<<now.DateToString() << endl;
+        cout << "now_1 : "<< now_1.DateToString() << endl;
+        cout << "now_2 : "<< now_2.DateToString() << endl << endl;
+
+        cout <<"now_1 >= now_2 : "<< (now_1 >= now_2) << endl;
+        cout <<"now_1 <= now_2 : "<< (now_1 <= now_2) << endl << endl;
+
+        cout << "now_2 >= now_1 : " << (now_2 >= now_1) << endl;
+        cout << "now_2 <= now_1 : " << (now_2 <= now_1) << endl << endl;
+        
+        
+        cout <<"now <= now_1 <= now_2 : "<< now_1.isBetween(now, now_2) << endl;
+        cout <<"now <= now_2 <= now_1 : "<< now_2.isBetween(now, now_1) << endl;
+
+        cout << "========================" << endl;
+    }
 }

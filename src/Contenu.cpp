@@ -3,16 +3,24 @@
 #include<iostream>
 #include<string>
 
-Contenu::Contenu(){
+Contenu::Contenu():dateDebut(){
     duree = 0;
     prix=0;
     texte = "pas de texte";
 }
 
-Contenu::Contenu(double d, double _prix, string t){
+Contenu::Contenu(Date date, double d, double _prix, string t){
+    dateDebut = date;
     duree = d;
     prix = _prix;
     texte = t;
+}
+
+void Contenu::operator=(Contenu c){
+    dateDebut = c.dateDebut;
+    duree = c.duree;
+    prix = c.prix;
+    texte = c.texte;
 }
 
 
@@ -36,16 +44,20 @@ string Contenu:: getTexte(){
     return texte;
 }
 
+Date Contenu::getDate(){
+    return dateDebut;
+}
+
 
 void Contenu::setDuree(double d){
     duree = d;
 }
 
-void Contenu:: setPrix(double p){
+void Contenu::setPrix(double p){
     prix = p;
 }
 
-void Contenu:: setTexte(string t){
+void Contenu::setTexte(string t){
     texte = t;
 }
 
@@ -65,4 +77,7 @@ double Contenu::getPlaceX()
 double Contenu::getPlaceY()
 {
     return placeY;
+
+void Contenu::setDate(Date d){
+    dateDebut = d;
 }

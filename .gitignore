@@ -7,3 +7,4 @@ bin/*
 obj/*.o
 build/*
 imgui.ini
+data/P*.txt

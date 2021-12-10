@@ -4,7 +4,7 @@
 #include <string>
 
 
-#include "Date.h"
+#include "Agenda.h"
 #include "Agent.h"
 #include "PropositionAccepte.h"
 
@@ -28,8 +28,8 @@ public:
 
     // Negociation
     void Boucle();
-    void negociation(string id_destinataire, double prixPopositionPrecedente);
-    void premierMessage(string id_destinataire);
+    void negociation(string id_destinataire, double prixPopositionPrecedente, Date & dateDebut, double duree);
+    void premierMessage(string id_destinataire, Date & dateDebut, double duree);
     void processusNegocition(string id_parking, vector<PropositionAccepte> & prop);
     PropositionAccepte compareProposition(vector<PropositionAccepte> & prop);
 
@@ -53,6 +53,7 @@ private:
     double posXAv, posYAv;
     Direction direction;
     bool estGaree;
+    Agenda agenda;
 };
 
 #endif
