@@ -26,11 +26,14 @@ Parking::Parking(string id){
     if(file.is_open()){
         getline(file, compteurVoiture);
         getline(file, revenu);
+        sommePrix = lineParsing(revenu);
+        compteurVoitureGare = lineParsing(compteurVoiture);
+    }
+    else{
+        sommePrix = 0;
+        compteurVoitureGare = 0;
     }
     
-
-    sommePrix = lineParsing(revenu);
-    compteurVoitureGare = lineParsing(compteurVoiture); ;
 
 }
 

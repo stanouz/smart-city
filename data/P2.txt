@@ -1,2 +1,0 @@
-Nombre de voiture venu : 1
-Total d'argent gagné : 6
