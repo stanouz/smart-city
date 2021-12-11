@@ -10,7 +10,7 @@
 
 using namespace std;
 
-const double DUREE_STATIONNEMENT = 2;
+const double DUREE_STATIONNEMENT = 0.1;
 
 // Constructeur
 
@@ -299,7 +299,7 @@ void Voiture::Avancer(vector< vector<int> > & map){
             posX = posXAv;
             posY = posYAv;
             cout<<" PosX = "<<posX<<" PosY = "<<posY<<endl;
-            sleep(4);
+            sleep(1);
         } 
     }
 }

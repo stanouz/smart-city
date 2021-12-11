@@ -77,6 +77,7 @@ double Contenu::getPlaceX()
 double Contenu::getPlaceY()
 {
     return placeY;
+}
 
 void Contenu::setDate(Date d){
     dateDebut = d;
