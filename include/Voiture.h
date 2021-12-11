@@ -50,7 +50,6 @@ public:
 private:
     string immatriculation;
     double posX, posY;
-    double posXAv, posYAv;
     Direction direction;
     bool estGaree;
     Agenda agenda;
