@@ -7,11 +7,9 @@
 #include "Agenda.h"
 #include "Agent.h"
 #include "PropositionAccepte.h"
-
+#include "Enums.h"
 
 using namespace std;
-
-enum Direction{Haut, Bas, Gauche, Droite};
 
 
 class Voiture:public Agent{
@@ -31,6 +29,8 @@ public:
     void premierMessage(string id_destinataire, Date & dateDebut, double duree);
     void processusNegocition(string id_parking, vector<PropositionAccepte> & prop);
     PropositionAccepte compareProposition(vector<PropositionAccepte> & prop);
+
+
 
     // Deplacement
     void Avancer(vector< vector<int> > & map);
@@ -52,6 +52,11 @@ private:
     Direction direction;
     bool estGaree;
     Agenda agenda;
+
+
+    double posX_parking;
+    double posY_parking;
+    Direction direction_parking;
 };
 
 #endif

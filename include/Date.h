@@ -4,9 +4,9 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
+#include "Enums.h"
 
-enum WeekDay{monday, tuesday, wednesday, thursday, friday, saturday, sunday};
+using namespace std;
 
 class Date{
 public:

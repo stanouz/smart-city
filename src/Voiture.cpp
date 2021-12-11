@@ -173,9 +173,16 @@ void Voiture::Boucle(){
 
             sendMessage(m, immatriculation, meilleurOffre.getId());
             
+            Message msg;
+            msg = getMessageFrom(immatriculation, meilleurOffre.getId());
+
+            posX_parking = msg.contenuMessage.posX;
+            posY_parking = msg.contenuMessage.posY;
+            direction_parking = msg.contenuMessage.direction;
+
             estGaree = true;
 
-            Message msg;
+            
             do{
                 msg = getMessageFrom(immatriculation, meilleurOffre.getId());
             }
@@ -185,7 +192,8 @@ void Voiture::Boucle(){
         }    
     }
 }
-    
+
+
 
 
 // Fonctions de déplacement
@@ -263,7 +271,22 @@ void Voiture::Avancer(vector< vector<int> > & map){
             }
         }
         else{
-            sleep(1);
+            double tmp_x = posX;
+            double tmp_y = posY;
+            Direction tmp_dir = direction;
+
+            posX = posX_parking;
+            posY = posY_parking;
+            direction = direction_parking;
+
+            while(estGaree){
+                usleep(500);
+            }
+           
+            posX = tmp_x;
+            posY = tmp_y;
+            direction = tmp_dir;
+
         } 
     }
 }
@@ -273,49 +296,51 @@ void Voiture::rouler(int dirX, int dirY){
     if(dirX!=0 && dirY!=0){
         return;
     }
-
-    double vitesse =0.0001;
-    if(dirX!=0){
-        int newX = posX + dirX;
-        if(dirX > 0){
-            while(posX < newX){
-                posX += vitesse;
-                usleep(60);
+    while(!estGaree){
+        double vitesse =0.0001;
+        if(dirX!=0){
+            int newX = posX + dirX;
+            if(dirX > 0){
+                while(posX < newX && !estGaree){
+                    posX += vitesse;
+                    usleep(60);
+                }
+                posX = newX;
+                return;
             }
-            posX = newX;
-            return;
+            else{
+                while(posX > newX && !estGaree){
+                    posX -= vitesse;
+                    usleep(60);
+                }
+                posX = newX;
+                return;
+            }
         }
-        else{
-            while(posX > newX){
-                posX -= vitesse;
-                usleep(60);
+
+        if(dirY!=0){
+            int newY = posY + dirY;
+            if(dirY > 0){
+                while(posY < newY && !estGaree){
+                    posY += vitesse;
+                    usleep(60);
+                }
+                posY = newY;
+                return;
             }
-            posX = newX;
-            return;
+            else{
+                while(posY > newY && !estGaree){
+                    posY -= vitesse;
+                    usleep(60);
+                }
+                posY = newY;
+                return;
+            }
         }
     }
-
-    if(dirY!=0){
-        int newY = posY + dirY;
-        if(dirY > 0){
-            while(posY < newY){
-                posY += vitesse;
-                usleep(60);
-            }
-            posY = newY;
-            return;
-        }
-        else{
-            while(posY > newY){
-                posY -= vitesse;
-                usleep(60);
-            }
-            posY = newY;
-            return;
-        }
-    }
-
 }
+
+
 
 bool Voiture::canGoRight(vector< vector<int> > & map){
     int val;

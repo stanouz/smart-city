@@ -21,6 +21,10 @@ void Contenu::operator=(Contenu c){
     duree = c.duree;
     prix = c.prix;
     texte = c.texte;
+
+    posX = c.posX;
+    posY = c.posY;
+    direction = c.direction;
 }
 
 

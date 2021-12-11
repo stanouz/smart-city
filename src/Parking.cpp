@@ -11,12 +11,14 @@ double lineParsing(string line){
     return stod(line.substr(pos+2, line.size()-pos));
 }
 
-Parking::Parking(string id){
+Parking::Parking(string id, int x, int y, Orientation orient){
     ID = id;
     prix = 5.;
     nb_place_occup = 0;
 
-
+    posX = x;
+    posY = y;
+    orientation = orient;
 
     ifstream file("data/"+ID+".txt", ios::in);
 
@@ -45,6 +47,36 @@ Parking::~Parking(){
 }
 
 
+void Parking::getPlacePosition_Orientation(int ind, double & X, double & Y, Direction & dir){
+    if(orientation==Vertical){
+        X = posX + 3*(ind%2);
+        Y = posY + (int)(ind/2);
+
+        if(ind%2==0){
+            dir = Droite;
+            Y += 0.3;
+        }
+        else{
+            dir = Gauche;
+            Y -= 0.3;
+        }
+    }
+    if(orientation==Horizontal){
+        Y = posY + 2*(ind%2);
+        X = posX + (int)(ind/2);
+
+        if(ind%2==0){
+            dir = Bas;
+            X -= 0.3;
+        }
+        else{
+            dir = Haut;
+            X += 0.3;
+        }
+    }
+}
+
+
 
 string Parking::getId(){
     return ID;
@@ -66,8 +98,6 @@ double Parking::getMoyennePrix(){
     if(compteurVoitureGare==0){
         return 0;
     }
-
-
     return sommePrix/compteurVoitureGare;
 }
 
@@ -95,12 +125,21 @@ void Parking::ajouteVoiture(Date dateDebut, double duree, string occupant){
     int i=0;
     bool ajouter = false;
     while(i<NB_PLACES_TOTAL && !ajouter){
-        
         ajouter = tabPlaces[i].addReservations(Reservation(dateDebut, duree, occupant));
         i++;
     }
-    if(ajouter)
+    if(ajouter){
+        Message toSend(ID, PositionPlace);
+        toSend.contenuMessage.setTexte("Voici là où vous devez vous garer.");
+
+        getPlacePosition_Orientation(nb_place_occup, 
+                                 toSend.contenuMessage.posX,
+                                 toSend.contenuMessage.posY, 
+                                 toSend.contenuMessage.direction);
+        sendMessage(toSend, ID, occupant);
+
         nb_place_occup++;
+    }
 }
 
 double Parking::prixFinal(float duree){
@@ -130,6 +169,10 @@ void Parking::propositionAcceptee(Message recu)
     // on quitte le processus de négociation.
     toSend.contenuMessage.setTexte("Proposition acceptée");
     toSend.contenuMessage.setPrix(recu.contenuMessage.getPrix());
+
+    
+
+
     sendMessage(toSend, ID, recu.emmeteur);
 }
 

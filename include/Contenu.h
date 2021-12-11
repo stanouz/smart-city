@@ -3,6 +3,7 @@
 
 #include <string>
 #include "Date.h"
+#include "Enums.h"
 
 using namespace std;
 
@@ -25,6 +26,10 @@ public:
     void setPrix(double _prix);
     void setTexte(string t);
     void setDate(Date d);
+
+    double posX, posY;
+    Direction direction;
+
 private:
     double duree; // en heures
     Date dateDebut;

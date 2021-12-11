@@ -3,8 +3,7 @@
 
 #include <string>
 #include "Contenu.h"
-
-enum Performatif{DemandePlace, Reponse, Refut, Accepter, LibererPlace};
+#include "Enums.h"
 
 class Message{
 public:
