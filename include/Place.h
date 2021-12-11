@@ -1,7 +1,8 @@
 #ifndef __PLACE__
 #define __PLACE__
 
-#include "Agenda.h"
+#include "Date.h"
+#include <vector>
 
 using namespace std;
 
@@ -10,17 +11,17 @@ public:
     Place();
     ~Place();
     
-    string getOccupant();
-    bool getIsOccupied();
-    Date getDateDepart();
-
- 
+    string getOccupant() const;
+    bool getIsOccupied() const;
+    Date getOccupiedUntil() const;
     string updateStatus();
-    bool addReservations(Reservation newReserv);
+    bool ajouteVoiture(string immat, Date dateDepart);
+
 
 private:
-    Agenda agenda;
+    Date occupiedUntil;
     bool isOccupied;
+    string occupant;
 };
 
 

@@ -2,14 +2,8 @@
 
 #include <unistd.h>
 #include <iostream>
-#include <fstream>
 
 using namespace std;
-
-double lineParsing(string line){
-    int pos = line.find(": ");
-    return stod(line.substr(pos+2, line.size()-pos));
-}
 
 Parking::Parking(string id){
     ID = id;
@@ -17,33 +11,6 @@ Parking::Parking(string id){
     nb_place_occup = 0;
     indX=0;
     indY=0;
-
-
-
-    ifstream file("data/"+ID+".txt", ios::in);
-
-    string compteurVoiture;
-    string revenu;
-
-    if(file.is_open()){
-        getline(file, compteurVoiture);
-        getline(file, revenu);
-        sommePrix = lineParsing(revenu);
-        compteurVoitureGare = lineParsing(compteurVoiture);
-    }
-    else{
-        sommePrix = 0;
-        compteurVoitureGare = 0;
-    }
-    
-
-}
-
-
-Parking::~Parking(){
-    ofstream file("data/"+ID+".txt");
-    file << "Nombre de voiture venu : " << compteurVoitureGare << endl;
-    file << "Total d'argent gagné : " << sommePrix << endl;
 }
 
 
@@ -62,15 +29,6 @@ int Parking::getNbPlaceOccupe(){
 
 Place & Parking::getPlace(int ind){
     return tabPlaces[ind];
-}
-
-double Parking::getMoyennePrix(){
-    if(compteurVoitureGare==0){
-        return 0;
-    }
-
-
-    return sommePrix/compteurVoitureGare;
 }
 
 bool Parking::IsFull() const{
@@ -92,13 +50,12 @@ double Parking::pourcentageRemplissage(){
     return (double)nb_place_occup/(double)NB_PLACES_TOTAL;
 }
 
-void Parking::ajouteVoiture(Date dateDebut, double duree, string occupant){
+void Parking::ajouteVoiture(string occupant, Date dateDepart){
 
     int i=0;
     bool ajouter = false;
     while(i<NB_PLACES_TOTAL && !ajouter){
-        
-        ajouter = tabPlaces[i].addReservations(Reservation(dateDebut, duree, occupant));
+        ajouter = tabPlaces[i].ajouteVoiture(occupant, dateDepart);
         i++;
     }
     if(ajouter)
@@ -146,9 +103,9 @@ void Parking::propositionAcceptee(Message recu)
         
     }
 
-    /*else if(ID=="P2")
+    else if(ID=="P2" || ID=="P3")
     {
-         cout<<" ID == "<<ID<<" ";
+        //cout<<" ID == "<<ID<<" ";
         if(indY == 4){indX = (indX+1) %2;}
         toSend.contenuMessage.setPlaceX(tabP2x[indX]);
         
@@ -156,16 +113,15 @@ void Parking::propositionAcceptee(Message recu)
         indY = (indY+1)%5;
         
         
-        cout<<" posX = "<<tabP2x[indX];        
-        cout<<" posY = "<<tabP2y[indY]<<endl;
+        //cout<<" posX = "<<tabP2x[indX];        
+        //cout<<" posY = "<<tabP2y[indY]<<endl;
         
         
-    }*/
+    }
     
     
     // on envoie le message à la voiture
     toSend.contenuMessage.setTexte("Proposition acceptée");
-    toSend.contenuMessage.setPrix(recu.contenuMessage.getPrix());
     sendMessage(toSend, ID, recu.emmeteur);
 }
 
@@ -200,15 +156,13 @@ void Parking::processusNegocitation(){
 
     // Si Perfo est accepter ça veut dire que la négociation à deja
     // eu lieu et que la voiture est d'accord pour se garer
-    
     if(recu.performatif==Accepter){
         double duree = recu.contenuMessage.getDuree();
-
-        sommePrix += recu.contenuMessage.getPrix();
-        compteurVoitureGare ++;
+        Date now;
+        Date nowPlusDuree(now, duree);
 
         // On ajoute la voiture dans le parking
-        ajouteVoiture(Date(), duree, recu.emmeteur);
+        ajouteVoiture(recu.emmeteur, nowPlusDuree);
         score[recu.emmeteur]-=0.03;
         return;
     }
@@ -216,7 +170,6 @@ void Parking::processusNegocitation(){
     if(recu.performatif==Refut){
         
         score[recu.emmeteur]+=0.03;
-        
         return;
     }
 
@@ -244,7 +197,6 @@ void Parking::processusNegocitation(){
             accepte = true;
 
         }
-       
 
         // Boucle bloquant l'attente d'un nouveau message
         if(!accepte)

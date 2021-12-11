@@ -46,12 +46,11 @@ bool Voiture::getEstGaree(){
 
 // Fonctions de négociation
 
-void Voiture::negociation(string id_destinataire, double prixPopositionPrecedente, Date & dateDebut, double duree)
+void Voiture::negociation(string id_destinataire, double prixPopositionPrecedente)
 {
     Message m_new(immatriculation, DemandePlace);
 
-    m_new.contenuMessage.setDate(dateDebut);
-    m_new.contenuMessage.setDuree(duree);
+    m_new.contenuMessage.setDuree(DUREE_STATIONNEMENT);
     m_new.contenuMessage.setTexte("Je vous fais une autre proposition");
     
 
@@ -65,12 +64,11 @@ void Voiture::negociation(string id_destinataire, double prixPopositionPrecedent
     sendMessage(m_new, immatriculation, id_destinataire);
 }
 
-void Voiture::premierMessage(string id_destinataire, Date & dateDebut, double duree)
+void Voiture::premierMessage(string id_destinataire)
 {
     Message m(immatriculation, DemandePlace);
     string mess = "Premier message de voiture";
-    m.contenuMessage.setDate(dateDebut); 
-    m.contenuMessage.setDuree(duree);
+    m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
     
     float prix = (rand()%6)+1;
     m.contenuMessage.setPrix(prix);
@@ -82,19 +80,11 @@ void Voiture::premierMessage(string id_destinataire, Date & dateDebut, double du
 
 void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> & prop)
 {
-    // Date actuelle et duree constant pour l'instant
-    Date dateDebut; 
-    double dureeStationnement = (rand()%1000)/100.  + 0.2;
-
-    dureeStationnement = DUREE_STATIONNEMENT;
-
-    premierMessage(id_parking, dateDebut, dureeStationnement);
+    premierMessage(id_parking);
     
     Message recu; 
     int compteur=0;
     bool propositionAccepte = false;
-
-
     
     while(compteur<3 && !propositionAccepte){
         
@@ -113,7 +103,7 @@ void Voiture::processusNegocition(string id_parking, vector<PropositionAccepte> 
         {
             // On recupère le prix de la proposition précédente que le
             // parking renvoie dans le contenu du message
-            negociation(recu.emmeteur, recu.contenuMessage.getPrix(), dateDebut, dureeStationnement);
+            negociation(recu.emmeteur, recu.contenuMessage.getPrix());
         } 
         else if(recu.performatif==Refut)
         {
@@ -144,7 +134,6 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
     return PropositionAccepte(-1, "P#", -1,-1);
 }
 
-
 void Voiture::Boucle(){
     while(true){
         sleep(2);
@@ -153,7 +142,7 @@ void Voiture::Boucle(){
             cout<<"";
         }
 
-        string parkings[3] = {"P1", "P1", "P1"};
+        string parkings[3] = {"P2", "P2", "P2"};
         vector<thread> negociations;
         vector<PropositionAccepte> propositions;
         int size = 3;
@@ -181,6 +170,8 @@ void Voiture::Boucle(){
             Direction tmpDir = direction;
             posX = meilleurOffre.getPosX();
             posY = meilleurOffre.getPosY();
+            posXAv = posX;
+            posYAv = posY;
             direction = Droite;
             //cout<<" PosX = "<<posX<<" PosY = "<<posY<<endl;
 
@@ -294,8 +285,10 @@ void Voiture::Avancer(vector< vector<int> > & map){
             }
         }
         else{
+            posX = posXAv;
+            posY = posYAv;
             cout<<" PosX = "<<posX<<" PosY = "<<posY<<endl;
-            //sleep(1);
+            sleep(1);
         } 
     }
 }
