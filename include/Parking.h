@@ -27,7 +27,7 @@ public:
     void processusNegocitation();
     void propositionAcceptee(Message recu);
     void propositionRefusee(Message recu, int compteur);
-    double prixFinal(float duree);
+    double prixFinal(float duree, string immatriculation);
     void ajouteVoiture(Date dateDebut, double duree, string occupant);
     double pourcentageRemplissage();
 
@@ -50,6 +50,7 @@ private:
     
     double sommePrix;
     int compteurVoitureGare;
+    map<string, double> score;
 
     Position position;
     vector<Position> position_sorties;

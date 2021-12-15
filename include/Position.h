@@ -3,13 +3,18 @@
 
 
 #include "Enums.h"
+#include <vector>
 
+using namespace std;
 
 class Position{
 public:
     Position();
     Position(double x_, double y_);
     Position(double x_, double y_, Direction dir);
+
+    // Initialise une position aléatoire cohérante avec la map
+    Position(vector< vector<int> > & map);
     
     void operator=(const Position &p2);
 

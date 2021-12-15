@@ -20,6 +20,14 @@ Position::Position(double x_, double y_, Direction dir){
     y = y_;
     direction = dir;
 }
+
+
+Position::Position(vector< vector<int> > & map){
+    
+
+
+}
+
     
 void Position::operator=(const Position &p2){
     x = p2.x;

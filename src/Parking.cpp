@@ -163,11 +163,11 @@ void Parking::ajouteVoiture(Date dateDebut, double duree, string occupant){
     }
 }
 
-double Parking::prixFinal(float duree){
+double Parking::prixFinal(float duree, string immatriculation){
     double reduc=0.;
     double percent = pourcentageRemplissage();
     if(duree<=4){
-        reduc = 0;
+        reduc = 0.;
     }
     else if(duree<=8){
         reduc = 0.05;
@@ -178,7 +178,14 @@ double Parking::prixFinal(float duree){
     else{
         reduc = 0.2;
     }
-    return prix - (prix*reduc) + (prix*percent);
+    double price = prix - (prix*reduc) + (prix*percent);
+
+    if(score.find(immatriculation) != score.end()){
+        return price + price * score[immatriculation];
+    }
+
+    
+    return price;
 }
 
 
@@ -237,6 +244,12 @@ void Parking::processusNegocitation(){
 
         // On ajoute la voiture dans le parking
         ajouteVoiture(Date(), duree, recu.emmeteur);
+        score[recu.emmeteur]-=0.03;
+        return;
+    }
+
+    if(recu.performatif==Refut){
+        score[recu.emmeteur]+=0.03;
         return;
     }
 
@@ -249,7 +262,7 @@ void Parking::processusNegocitation(){
         float prixDemande = recu.contenuMessage.getPrix();
         float duree = recu.contenuMessage.getDuree();
         
-        if(prixDemande<prixFinal(duree))
+        if(prixDemande<prixFinal(duree, recu.emmeteur))
         {
             propositionRefusee(recu, compteur);
             if(compteur==2)

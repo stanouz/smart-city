@@ -163,12 +163,19 @@ void Voiture::Boucle(){
         PropositionAccepte meilleurOffre = compareProposition(propositions);
 
         if(meilleurOffre.getPrix()!=-1 && meilleurOffre.getId()!="P#"){
-            Message m(immatriculation, Accepter);
-            m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
-            m.contenuMessage.setPrix(meilleurOffre.getPrix());
-            
+            for(int i = 0; i<3; i++){
+                if(meilleurOffre.getId()!=parkings[i]){
+                    Message refut(immatriculation, Refut);
+                    sendMessage(refut, immatriculation, parkings[i]);
+                }
+                else{
+                    Message m(immatriculation, Accepter);
+                    m.contenuMessage.setDuree(DUREE_STATIONNEMENT);
+                    m.contenuMessage.setPrix(meilleurOffre.getPrix());
+                    sendMessage(m, immatriculation, meilleurOffre.getId());
+                }
+            }
 
-            sendMessage(m, immatriculation, meilleurOffre.getId());
             
             Message msg;
             msg = getMessageFrom(immatriculation, meilleurOffre.getId());
