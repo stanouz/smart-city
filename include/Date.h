@@ -22,9 +22,6 @@ public:
     bool operator==(const Date &d2) const;
 
     string DateToString() const;
-
-
-    void Test();
 private:
     int day, month, year;
     int hour, minute;

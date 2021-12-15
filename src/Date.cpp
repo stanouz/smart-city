@@ -54,8 +54,13 @@ Date::Date(Date & d, double hoursToAdd){
         int addDay = (hour+ hour/24 - hour%24) / 24;
         day += addDay;
         hour = hour % 24;
+
+        // Avance les jours de la semaine de addDay jours
+        nextDay(weekDay, addDay);
         
-        // Nombre de jour minimum dans un mois 
+        // Nombre de jour minimum dans un mois et on fait ensuite 
+        // les cas pour les mois à 30 ou 31 jours et le cas
+        // de fevrier et des années bisectille
         if(day>28){
 
             if(month==1 || month==3 || month==5 || month==7 ||
@@ -90,7 +95,11 @@ Date::Date(Date & d, double hoursToAdd){
                 }
             }
         }
-           
+
+        if(month> 12){
+            year += month/12;
+            month = month%12;
+        }
         
 
     }
@@ -176,64 +185,8 @@ void Date::operator=(const Date &d2){
 
 
 string Date::DateToString() const{
-    string strWeekDay;
-    switch(weekDay)
-    {
-    case monday: strWeekDay="Monday";
-        break;
-
-    case tuesday: strWeekDay="Tuesday";
-        break;
-
-    case wednesday: strWeekDay="Wednesday";
-        break;
-
-    case thursday: strWeekDay="Thursday";
-        break;
-    
-    case friday: strWeekDay="Friday";
-        break;
-    
-    case saturday: strWeekDay="Saturday";
-        break;
-    
-    case sunday: strWeekDay="Sunday";
-        break;
-    
-    default: strWeekDay="Monday";
-        break;
-    }
-
-    string resultat = strWeekDay + " " + to_string(day) + "/" + to_string(month) + "/" + to_string(year)+ " - " + to_string(hour)+":"+to_string(minute);
-   
+    string resultat = dayToString(weekDay)+" "+to_string(day)+"/"+to_string(month);
+    resultat += "/" + to_string(year)+ " - " +to_string(hour)+":"+to_string(minute);
     return resultat;
 }
 
-
-void Date::Test(){
-
-    Date now;
-    srand(time(NULL));
-
-
-    for(int i=0; i<10; i++){
-        Date now_1(now, (rand()%100)/10.);
-        Date now_2(now, (rand()%100)/10.);
-
-        cout << "now   : "<<now.DateToString() << endl;
-        cout << "now_1 : "<< now_1.DateToString() << endl;
-        cout << "now_2 : "<< now_2.DateToString() << endl << endl;
-
-        cout <<"now_1 >= now_2 : "<< (now_1 >= now_2) << endl;
-        cout <<"now_1 <= now_2 : "<< (now_1 <= now_2) << endl << endl;
-
-        cout << "now_2 >= now_1 : " << (now_2 >= now_1) << endl;
-        cout << "now_2 <= now_1 : " << (now_2 <= now_1) << endl << endl;
-        
-        
-        cout <<"now <= now_1 <= now_2 : "<< now_1.isBetween(now, now_2) << endl;
-        cout <<"now <= now_2 <= now_1 : "<< now_2.isBetween(now, now_1) << endl;
-
-        cout << "========================" << endl;
-    }
-}
