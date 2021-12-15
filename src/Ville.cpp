@@ -53,6 +53,7 @@ Ville::Ville(){
     tab_voitures.push_back(Voiture("GGG-123-GGG", 24, 8, Bas));
     tab_voitures.push_back(Voiture("HHH-123-HHH", 26, 17, Haut));
 
+    /*
     tab_voitures.push_back(Voiture("1", 2,16, Droite));
     tab_voitures.push_back(Voiture("2", 17,14, Gauche));
     tab_voitures.push_back(Voiture("3", 4, 3, Bas));
@@ -60,7 +61,7 @@ Ville::Ville(){
     tab_voitures.push_back(Voiture("5", 3, 24, Gauche));
     tab_voitures.push_back(Voiture("6", 26, 24, Haut));
     tab_voitures.push_back(Voiture("7", 24, 8, Bas));
-    tab_voitures.push_back(Voiture("8", 26, 17, Haut));
+    tab_voitures.push_back(Voiture("8", 26, 17, Haut));*/
     
     ifstream my_file("data/map.txt");
     
@@ -95,22 +96,50 @@ Ville::~Ville(){
     for(int i=0; i<(int)tabThreads.size(); i++){
         tabThreads[i].join();
     }
-
-
-
-
 }
 
-void Ville::lancerThread(){
-    vector<thread> tabThreads;
-    
-    
-
-    for(int i=0; i<(int)tabThreads.size(); i++){
-        tabThreads[i].join();
+bool Ville::immatExists(string immat){
+    for(int i=0; i<(int)tab_voitures.size(); i++){
+        if(tab_voitures[i].getImat()==immat){
+            return true;
+        }
     }
+    return false;
 }
 
+string Ville::randomImmat(){
+    string immat;
+    string letters = "ABCDEFGHIJKLMNOPQRSTUVXYZ";
+    string numbers = "0123456789";
+    do{
+        for(int i=0; i<3; i++){
+            int random = rand()%letters.size();
+            immat.push_back(letters[random]);
+        }
+        immat.push_back('-');
+        for(int i=0; i<3; i++){
+            int random = rand()%numbers.size();
+            immat.push_back(numbers[random]);
+        }
+        immat.push_back('-');
+        for(int i=0; i<3; i++){
+            int random = rand()%letters.size();
+            immat.push_back(letters[random]);
+        }
+    }
+    while(immatExists(immat));
+
+    return immat;
+}
+
+
+void Ville::addVoiture(){
+    tab_voitures.push_back(Voiture(randomImmat(), 2,16, Droite));
+    int size = tab_voitures.size();
+    
+    tabThreads.push_back(thread(&Voiture::Boucle, ref(tab_voitures[size-1])));
+    tabThreads.push_back(thread(&Voiture::Avancer, ref(tab_voitures[size-1]), ref(map)));
+}
 
 vector<Parking> & Ville::getTabParkings(){
     return tab_parkings;

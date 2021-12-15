@@ -20,11 +20,15 @@ public:
     Ville();
     ~Ville();
 
-    void lancerThread();
-
     vector<Parking> & getTabParkings();
     vector<Voiture> & getTabVoitures();
     vector<vector<int> > & getMap();
+
+    void addVoiture();
+
+    bool immatExists(string immat);
+    string randomImmat();
+
 };
 
 

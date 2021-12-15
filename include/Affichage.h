@@ -30,6 +30,8 @@ public:
     void displayCar(double x, double y, Direction dir);
     void displayMessage(Message & msg, string & immatVoiture, int row);
     void drawTile(int nTile, double x, double y);
+
+    void displayCarsWidget();
 };
 
 

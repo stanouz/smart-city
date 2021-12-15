@@ -3,8 +3,8 @@
 
 
 int main(int argc, char ** argv){
-    
     Ville v;
+
     Affichage a(&v);
     a.display();
 
