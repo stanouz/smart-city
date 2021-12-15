@@ -7,18 +7,18 @@
 using namespace std;
 
 double lineParsing(string line){
+    if(line.size()==0){
+        return 0.;
+    }
     int pos = line.find(": ");
     return stod(line.substr(pos+2, line.size()-pos));
 }
 
-Parking::Parking(string id, int x, int y, Orientation orient){
+Parking::Parking(string id, int x, int y, Direction orient): position(x, y, orient){
     ID = id;
     prix = 5.;
     nb_place_occup = 0;
 
-    posX = x;
-    posY = y;
-    orientation = orient;
 
     ifstream file("data/"+ID+".txt", ios::in);
 
@@ -35,6 +35,26 @@ Parking::Parking(string id, int x, int y, Orientation orient){
         sommePrix = 0;
         compteurVoitureGare = 0;
     }
+
+    if(ID == "P1"){
+        position_sorties.push_back(Position(6, 8, Haut));
+        position_sorties.push_back(Position(4, 8, Bas));
+        position_sorties.push_back(Position(10, 14, Gauche));
+        position_sorties.push_back(Position(10, 16, Droite));
+    }
+    if(ID == "P2"){
+        position_sorties.push_back(Position(5, 16, Droite));
+        position_sorties.push_back(Position(4, 14, Gauche));
+        position_sorties.push_back(Position(12, 20, Bas));
+        position_sorties.push_back(Position(14, 20, Haut));
+    }
+    if(ID == "P3"){
+        position_sorties.push_back(Position(17, 16, Droite));
+        position_sorties.push_back(Position(17, 14, Gauche));
+        position_sorties.push_back(Position(24, 20, Bas));
+        position_sorties.push_back(Position(26, 20, Haut));
+    }
+    
     
 
 }
@@ -47,10 +67,12 @@ Parking::~Parking(){
 }
 
 
-void Parking::getPlacePosition_Orientation(int ind, double & X, double & Y, Direction & dir){
-    if(orientation==Vertical){
-        X = posX + 3*(ind%2);
-        Y = posY + (int)(ind/2);
+Position Parking::getPlacePosition_Orientation(int ind){
+    double X, Y;
+    Direction dir;
+    if(position.getDirection()==Vertical){
+        X = position.getX() + 3*(ind%2);
+        Y = position.getY() + (int)(ind/2);
 
         if(ind%2==0){
             dir = Droite;
@@ -61,9 +83,9 @@ void Parking::getPlacePosition_Orientation(int ind, double & X, double & Y, Dire
             Y -= 0.3;
         }
     }
-    if(orientation==Horizontal){
-        Y = posY + 2*(ind%2);
-        X = posX + (int)(ind/2);
+    if(position.getDirection()==Horizontal){
+        Y = position.getY() + 2*(ind%2);
+        X = position.getX() + (int)(ind/2);
 
         if(ind%2==0){
             dir = Bas;
@@ -74,7 +96,10 @@ void Parking::getPlacePosition_Orientation(int ind, double & X, double & Y, Dire
             X += 0.3;
         }
     }
+    return Position(X, Y, dir);
 }
+
+
 
 
 
@@ -110,7 +135,9 @@ void Parking::updatePlacesStatus(){
         string update_immat = tabPlaces[i].updateStatus();
         if(update_immat!="NULL"){
             nb_place_occup--;
-            Message msg(ID, LibererPlace);
+            int random = rand()%position_sorties.size();
+            Message msg(ID, LibererPlace, position_sorties[random]);
+            
             sendMessage(msg, ID, update_immat);
         }  
     }
@@ -129,15 +156,9 @@ void Parking::ajouteVoiture(Date dateDebut, double duree, string occupant){
         i++;
     }
     if(ajouter){
-        Message toSend(ID, PositionPlace);
+        Message toSend(ID, PositionPlace, getPlacePosition_Orientation(nb_place_occup));
         toSend.contenuMessage.setTexte("Voici là où vous devez vous garer.");
-
-        getPlacePosition_Orientation(nb_place_occup, 
-                                 toSend.contenuMessage.posX,
-                                 toSend.contenuMessage.posY, 
-                                 toSend.contenuMessage.direction);
         sendMessage(toSend, ID, occupant);
-
         nb_place_occup++;
     }
 }

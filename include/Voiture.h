@@ -8,6 +8,7 @@
 #include "Agent.h"
 #include "PropositionAccepte.h"
 #include "Enums.h"
+#include "Position.h"
 
 
 using namespace std;
@@ -49,13 +50,10 @@ public:
 
 private:
     string immatriculation;
-    double posX, posY;
-    Direction direction;
     bool estGaree;
 
-    double posX_parking;
-    double posY_parking;
-    Direction direction_parking;
+    Position position;
+    Position position_parking;
 };
 
 #endif

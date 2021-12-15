@@ -13,11 +13,8 @@ using namespace std;
 const double DUREE_STATIONNEMENT = 0.2;
 
 // Constructeur
-Voiture::Voiture(string immat, int x, int y, Direction dir){
+Voiture::Voiture(string immat, int x, int y, Direction dir) : position(x, y, dir){
     immatriculation = immat;
-    posX = x;
-    posY = y;
-    direction = dir;
     estGaree = false;
 }
 
@@ -28,15 +25,15 @@ string Voiture::getImat() const{
 }
 
 double Voiture::getPosX() const{
-    return posX;
+    return position.getX();
 }
 
 double Voiture::getPosY() const{
-    return posY;
+    return position.getY();
 }
 
 Direction Voiture::getDirection(){
-    return direction;
+    return position.getDirection();
 }
 
 bool Voiture::getEstGaree(){
@@ -176,10 +173,9 @@ void Voiture::Boucle(){
             Message msg;
             msg = getMessageFrom(immatriculation, meilleurOffre.getId());
 
-            posX_parking = msg.contenuMessage.posX;
-            posY_parking = msg.contenuMessage.posY;
-            direction_parking = msg.contenuMessage.direction;
 
+            // Position de l'endroit où l'on doit se garer
+            position_parking = msg.contenuMessage.getPosition();            
             estGaree = true;
 
             
@@ -188,6 +184,8 @@ void Voiture::Boucle(){
             }
             while(msg.performatif != LibererPlace);
 
+            // Position de l'endroit où l'on doit sortir du parking
+            position_parking = msg.contenuMessage.getPosition();   
             estGaree = false;
         }    
     }
@@ -199,38 +197,42 @@ void Voiture::Boucle(){
 // Fonctions de déplacement
 
 void Voiture::turnLeft(){
-    switch(direction){
-        case Gauche: rouler(-2, 0);direction=Bas; rouler(0, 3); return; break;
-        case Droite: rouler(2, 0); direction=Haut; rouler(0, -3); return; break;
-        case Haut: rouler(0, -2); direction=Gauche; rouler(-3, 0); return; break;
-        case Bas: rouler(0, 2); direction=Droite; rouler(3, 0); return; break;
+    switch(getDirection()){
+        case Gauche: rouler(-2, 0); position.setDirection(Bas); rouler(0, 3); return; break;
+        case Droite: rouler(2, 0); position.setDirection(Haut); rouler(0, -3); return; break;
+        case Haut: rouler(0, -2); position.setDirection(Gauche); rouler(-3, 0); return; break;
+        case Bas: rouler(0, 2); position.setDirection(Droite); rouler(3, 0); return; break;
+        default : break;
     }
 }
 
 void Voiture::turnRight(){
-    switch(direction){
-        case Gauche: direction=Haut; rouler(0, -1); return; break;
-        case Droite: direction=Bas; rouler(0, 1); return; break;
-        case Haut: direction=Droite; rouler(1, 0); return; break;
-        case Bas: direction=Gauche; rouler(-1, 0); return; break;
+    switch(getDirection()){
+        case Gauche: position.setDirection(Haut); rouler(0, -1); return; break;
+        case Droite: position.setDirection(Bas); rouler(0, 1); return; break;
+        case Haut: position.setDirection(Droite); rouler(1, 0); return; break;
+        case Bas: position.setDirection(Gauche); rouler(-1, 0); return; break;
+        default : break;
     }
 }
 
 void Voiture::goStraight(){
-    switch(direction){
+    switch(getDirection()){
         case Gauche: rouler(-1, 0); break;
         case Droite: rouler(1, 0); break;
         case Haut: rouler(0, -1); break;
         case Bas: rouler(0, 1); break;
+        default : break;
     }
 }
 
 void Voiture::halfTurn(){
-    switch(direction){
-        case Droite: rouler(2, 0); direction = Haut; rouler(0, -2); direction=Gauche; rouler(-1, 0); return; break;
-        case Gauche: rouler(-2, 0); direction = Bas; rouler(0, 2); direction=Droite; rouler(1, 0);  return; break;
-        case Haut: rouler(0, -2); direction = Gauche; rouler(-2, 0); direction=Bas; rouler(0, 1); return; break;
-        case Bas: rouler(0, 2); direction = Droite; rouler(2, 0); direction=Haut; rouler(0, -1); return; break;
+    switch(getDirection()){
+        case Droite: rouler(2, 0); position.setDirection(Haut); rouler(0, -2); position.setDirection(Gauche); rouler(-1, 0); return; break;
+        case Gauche: rouler(-2, 0); position.setDirection(Bas); rouler(0, 2); position.setDirection(Droite); rouler(1, 0);  return; break;
+        case Haut: rouler(0, -2); position.setDirection(Gauche); rouler(-2, 0); position.setDirection(Bas); rouler(0, 1); return; break;
+        case Bas: rouler(0, 2); position.setDirection(Droite); rouler(2, 0); position.setDirection(Haut); rouler(0, -1); return; break;
+        default : break;
     }
 }
 
@@ -242,11 +244,9 @@ void Voiture::Avancer(vector< vector<int> > & map){
             if(canGoStraight(map)){
                 deplacementPossible.push_back(0);
             }
-
             if(canGoRight(map)){
                 deplacementPossible.push_back(1);
             }
-
             if(canGoLeft(map)){
                 deplacementPossible.push_back(2);
             }
@@ -271,22 +271,19 @@ void Voiture::Avancer(vector< vector<int> > & map){
             }
         }
         else{
-            double tmp_x = posX;
-            double tmp_y = posY;
-            Direction tmp_dir = direction;
-
-            posX = posX_parking;
-            posY = posY_parking;
-            direction = direction_parking;
+            
+            // On place la voiture là où le parking 
+            // nous dit de nous garer
+            position = position_parking;
 
             while(estGaree){
                 usleep(500);
             }
-           
-            posX = tmp_x;
-            posY = tmp_y;
-            direction = tmp_dir;
 
+            // On place la voiture là où le parking 
+            // nous dit de sortir du parking
+            position = position_parking;
+            
         } 
     }
 }
@@ -299,41 +296,41 @@ void Voiture::rouler(int dirX, int dirY){
     while(!estGaree){
         double vitesse =0.0001;
         if(dirX!=0){
-            int newX = posX + dirX;
+            int newX = getPosX() + dirX;
             if(dirX > 0){
-                while(posX < newX && !estGaree){
-                    posX += vitesse;
+                while(getPosX() < newX && !estGaree){
+                    position.incrementX(vitesse);
                     usleep(60);
                 }
-                posX = newX;
+                position.setX(newX);
                 return;
             }
             else{
-                while(posX > newX && !estGaree){
-                    posX -= vitesse;
+                while(getPosX() > newX && !estGaree){
+                    position.incrementX(-vitesse);
                     usleep(60);
                 }
-                posX = newX;
+                position.setX(newX);
                 return;
             }
         }
 
         if(dirY!=0){
-            int newY = posY + dirY;
+            int newY = getPosY() + dirY;
             if(dirY > 0){
-                while(posY < newY && !estGaree){
-                    posY += vitesse;
+                while(getPosY() < newY && !estGaree){
+                    position.incrementY(vitesse);
                     usleep(60);
                 }
-                posY = newY;
+                position.setY(newY);
                 return;
             }
             else{
-                while(posY > newY && !estGaree){
-                    posY -= vitesse;
+                while(getPosY() > newY && !estGaree){
+                    position.incrementY(-vitesse);
                     usleep(60);
                 }
-                posY = newY;
+                position.setY(newY);
                 return;
             }
         }
@@ -341,96 +338,160 @@ void Voiture::rouler(int dirX, int dirY){
 }
 
 
+bool isOutOfMap(vector< vector<int> > & map, int x, int y){
+   int sizeX = map[0].size();
+   int sizeY = map.size();
+
+    if(x >= sizeX || y >= sizeY || x < 0 || y < 0){
+        return true;
+    }
+    return false;
+}
+
 
 bool Voiture::canGoRight(vector< vector<int> > & map){
     int val;
-    switch (direction)
+
+    
+
+    switch (getDirection())
     {
         case Droite:
-            val = map[posY+1][posX];
+            if(isOutOfMap(map, getPosX(), getPosY()+1)){
+                return false;
+            }
+
+            val = map.at(getPosY()+1).at(getPosX());
             if(val==462 || val==435)
                 return true;
             break;
 
         case Gauche:
-            val = map[posY-1][posX];
+            if(isOutOfMap(map, getPosX(), getPosY()-1)){
+                return false;
+            }
+
+            val = map.at(getPosY()-1).at(getPosX());
             if(val==464 || val==437)
                 return true;
             break;
         
         case Bas:
-            val = map[posY][posX-1];
+            if(isOutOfMap(map, getPosX()-1, getPosY())){
+                return false;
+            }
+
+            val = map.at(getPosY()).at(getPosX()-1);
             if(val==406 || val==407)
                 return true;
             break;
 
         case Haut:
-            val = map[posY][posX+1];
+            if(isOutOfMap(map, getPosX()+1, getPosY())){
+                return false;
+            }
+
+            val = map.at(getPosY()).at(getPosX()+1);
             if(val==460 || val==461)
                 return true;
             break;
+        default : break;
     }
     return false;
 }
 
 bool Voiture::canGoLeft(vector< vector<int> > & map){
     int val;
-    switch (direction)
+    switch (getDirection())
     {
         case Droite:
-            val = map[posY-3][posX+2];
+            if(isOutOfMap(map, getPosX()+2, getPosY()-3)){
+                return false;
+            }
+
+            val = map.at(getPosY()-3).at(getPosX()+2);
             if(val==464 || val==437)
                 return true;
             break;
 
         case Gauche:
-            val = map[posY+3][posX-2];
+            if(isOutOfMap(map, getPosX()-2, getPosY()+3)){
+                return false;
+            }
+
+            val = map.at(getPosY()+3).at(getPosX()-2);
             if(val==462 || val==435)
                 return true;
             break;
         
         case Haut:
-            val = map[posY-2][posX-3];
+            if(isOutOfMap(map, getPosX()-3, getPosY()-2)){
+                return false;
+            }
+
+            val = map.at(getPosY()-2).at(getPosX()-3);
             if(val==406 || val==407)
                 return true;
             break;
 
         case Bas:
-            val = map[posY+2][posX+3];
+            if(isOutOfMap(map, getPosX()+3, getPosY()+2)){
+                return false;
+            }
+
+            val = map.at(getPosY()+2).at(getPosX()+3);
             if(val==460 || val==461)
                 return true;
             break;
+        default : break;
     }
     return false;
 }
 
 bool Voiture::canGoStraight(vector< vector<int> > & map){
     int val;
-    switch (direction)
+    switch (getDirection())
     {
         case Droite:
-            val = map[posY][posX+2];
+            if(isOutOfMap(map, getPosX()+2, getPosY())){
+                return false;
+            }
+
+            val = map.at(getPosY()).at(getPosX()+2);
             if(val!=464 && val!=466)
                 return true;
             break;
 
         case Gauche:
-            val = map[posY][posX-2];
+            if(isOutOfMap(map, getPosX()-2, getPosY())){
+                return false;
+            }
+
+            val = map.at(getPosY()).at(getPosX()-2);
             if(val!=438 && val!=462)
                 return true;
             break;
         
         case Haut:
-            val = map[posY-2][posX];
+            if(isOutOfMap(map, getPosX(), getPosY()-2)){
+                return false;
+            }
+
+            val = map.at(getPosY()-2).at(getPosX());
             if(val!=439 && val!=407)
                 return true;
             break;
 
         case Bas:
-            val = map[posY+2][posX];
+            if(isOutOfMap(map, getPosX(), getPosY()+2)){
+                return false;
+            }
+
+            val = map.at(getPosY()+2).at(getPosX());
             if(val!=465 && val!=461)
                 return true;
             break;
+        default : break;
     }
     return false;
 }

@@ -10,6 +10,11 @@ Message::Message(string emmeteur_, Performatif perfo){
     performatif = perfo;
 }
 
+Message::Message(string emmeteur_, Performatif perfo, Position p): contenuMessage(p){
+    emmeteur = emmeteur_;
+    performatif = perfo;
+}
+
 Message::~Message(){
     
 }

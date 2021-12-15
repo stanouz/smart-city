@@ -9,6 +9,7 @@ class Message{
 public:
     Message();
     Message(string emmeteur_, Performatif perfo);
+    Message(string emmeteur_, Performatif perfo, Position p);
     ~Message();
     void display();
     string to_string();

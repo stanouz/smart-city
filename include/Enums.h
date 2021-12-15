@@ -6,10 +6,10 @@
 using namespace std;
 
 
-enum Direction{Haut, Bas, Gauche, Droite};
+enum Direction{Haut, Bas, Gauche, Droite, Horizontal, Vertical, Aucune};
 enum Performatif{DemandePlace, Reponse, Refut, Accepter, LibererPlace, PositionPlace};
 enum WeekDay{monday, tuesday, wednesday, thursday, friday, saturday, sunday};
-enum Orientation{Horizontal, Vertical};
+
 
 
 void nextDay(WeekDay & wd, int nbDays);

@@ -53,8 +53,8 @@ Ville::Ville(){
     tab_voitures.push_back(Voiture("FFF-123-FFF", 26, 24, Haut));
     tab_voitures.push_back(Voiture("GGG-123-GGG", 24, 8, Bas));
     tab_voitures.push_back(Voiture("HHH-123-HHH", 26, 17, Haut));
-
-    /*
+    
+    
     tab_voitures.push_back(Voiture("1", 2,16, Droite));
     tab_voitures.push_back(Voiture("2", 17,14, Gauche));
     tab_voitures.push_back(Voiture("3", 4, 3, Bas));
@@ -62,7 +62,7 @@ Ville::Ville(){
     tab_voitures.push_back(Voiture("5", 3, 24, Gauche));
     tab_voitures.push_back(Voiture("6", 26, 24, Haut));
     tab_voitures.push_back(Voiture("7", 24, 8, Bas));
-    tab_voitures.push_back(Voiture("8", 26, 17, Haut));*/
+    tab_voitures.push_back(Voiture("8", 26, 17, Haut));
     
     ifstream my_file("data/map.txt");
     
@@ -74,7 +74,7 @@ Ville::Ville(){
     while(getline(my_file, ligne)){
         map.push_back(TxtLineToInt(ligne));
     }
-
+    
     // Thread negociation des parkings
     for(int i=0; i<(int)tab_parkings.size();i++){
         tabThreads.push_back(thread(&Parking::Boucle, ref(tab_parkings[i])));
@@ -84,7 +84,8 @@ Ville::Ville(){
     for(int i=0; i<(int)tab_voitures.size();i++){
         tabThreads.push_back(thread(&Voiture::Boucle, ref(tab_voitures[i])));
     }
-
+    
+    
     // Thread mouvement des voitures
     for(int i=0; i<(int)tab_voitures.size();i++){
         tabThreads.push_back(thread(&Voiture::Avancer, ref(tab_voitures[i]), ref(map)));
