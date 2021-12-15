@@ -186,13 +186,14 @@ void Affichage::displayInfoParking(Parking & p){
         // ===========================================  
         //  Liste des voitures garées dans le parking
         // =========================================== 
+        
         for(int i=0; i<p.getNbplace(); i++){ 
             if(p.getPlace(i).getIsOccupied()){
                 ImGui::BulletText("%s jusqu'au %s", p.getPlace(i).getOccupant().c_str(),
                                                     p.getPlace(i).getDateDepart().DateToString().c_str());
             }
         }
-
+            
 
         ImGui::NewLine();
         ImGui::Unindent();

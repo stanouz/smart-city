@@ -5,61 +5,37 @@
 using namespace std;
 
 Reservation::Reservation(){
-    dateFin = Date();
-    dateDebut = Date();
+    dateDepart = Date();
     ID = "NULL";
 }
 
 
-Reservation::Reservation(Date dateDeb, double duree, string id_):
-    dateDebut(dateDeb), dateFin(dateDeb, duree){
+Reservation::Reservation(double duree, string id_){
+    Date now;
+    dateDepart = Date(now, duree);
     ID = id_;
 }
 
 
 
 void Reservation::operator=(Reservation r){
-    dateDebut = r.dateDebut;
-    dateFin = r.dateFin;
+    dateDepart = r.dateDepart;
     ID = r.ID;
 }
 
-Date & Reservation::getDateDebut(){
-    return dateDebut;
+
+
+Date & Reservation::getDateDepart(){
+    return dateDepart;
 }
 
-Date & Reservation::getDateFin(){
-    return dateFin;
-}
 
-bool Reservation::dateDebutPasse(){
+bool Reservation::dateDepartPasse(){
     Date now;
-    return dateDebut <= now; 
-}
-
-bool Reservation::dateFinPasse(){
-    Date now;
-    return dateFin <= now; 
-}
-
-bool Reservation::intersectionDate(Reservation & resa){
-
-    
-
-    
-    return dateDebut.isBetween(resa.dateDebut, resa.dateFin) ||  
-           dateFin.isBetween(resa.dateDebut, resa.dateFin)   ||
-           resa.dateDebut.isBetween(dateDebut, dateFin)      ||
-           resa.dateFin.isBetween(dateDebut, dateFin);
+    return dateDepart <= now; 
 }
 
 
 string Reservation::getID(){
     return ID;
-}
-
-
-
-void Reservation::reset(){
-    ID = "NULL";
 }

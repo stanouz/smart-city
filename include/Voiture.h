@@ -4,10 +4,11 @@
 #include <string>
 
 
-#include "Agenda.h"
+
 #include "Agent.h"
 #include "PropositionAccepte.h"
 #include "Enums.h"
+
 
 using namespace std;
 
@@ -51,8 +52,6 @@ private:
     double posX, posY;
     Direction direction;
     bool estGaree;
-    Agenda agenda;
-
 
     double posX_parking;
     double posY_parking;

@@ -45,6 +45,7 @@ Ville::Ville(){
     
 
     tab_voitures.push_back(Voiture("AAA-123-AAA", 2,16, Droite));
+    
     tab_voitures.push_back(Voiture("BBB-123-BBB", 17,14, Gauche));
     tab_voitures.push_back(Voiture("CCC-123-CCC", 4, 3, Bas));
     tab_voitures.push_back(Voiture("DDD-123-DDD", 19, 16, Droite));

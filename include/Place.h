@@ -1,7 +1,7 @@
 #ifndef __PLACE__
 #define __PLACE__
 
-#include "Agenda.h"
+#include "Reservation.h"
 
 using namespace std;
 
@@ -16,10 +16,10 @@ public:
 
  
     string updateStatus();
-    bool addReservations(Reservation newReserv);
+    bool addReservations(string immat, double duree);
 
 private:
-    Agenda agenda;
+    Reservation reservation;
     bool isOccupied;
 };
 

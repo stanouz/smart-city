@@ -8,26 +8,18 @@ using namespace std;
 
 class Reservation{
 private:
-    Date dateDebut;
-    Date dateFin;
+    Date dateDepart;
     string ID;
 public:
     Reservation();
-    Reservation(Date dateDeb, double duree, string ID); // duree en heures
+    Reservation(double duree, string ID); // duree en heures
 
     void operator=(Reservation r);
 
-    bool dateDebutPasse();
-    bool dateFinPasse();
-    bool intersectionDate(Reservation & resa);
+    bool dateDepartPasse();
 
     string getID();
-    Date & getDateDebut();
-    Date & getDateFin();
-
-    void reset();
-
-    
+    Date & getDateDepart();    
 };
 
 

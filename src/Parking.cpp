@@ -125,7 +125,7 @@ void Parking::ajouteVoiture(Date dateDebut, double duree, string occupant){
     int i=0;
     bool ajouter = false;
     while(i<NB_PLACES_TOTAL && !ajouter){
-        ajouter = tabPlaces[i].addReservations(Reservation(dateDebut, duree, occupant));
+        ajouter = tabPlaces[i].addReservations(occupant, duree);
         i++;
     }
     if(ajouter){

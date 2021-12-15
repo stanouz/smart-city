@@ -12,11 +12,11 @@ Place::~Place(){
 }
 
 string Place::getOccupant(){
-    return agenda.getCurrendID();
+    return reservation.getID();
 }
 
 Date Place::getDateDepart(){
-    return agenda.getCurrentDateFin();
+    return reservation.getDateDepart();
 }
 
 bool Place::getIsOccupied(){
@@ -25,20 +25,22 @@ bool Place::getIsOccupied(){
 
 
 string Place::updateStatus(){
-    string retour = agenda.UpdateCurrentReservation();
-
-    if(retour!="NULL"){
-        isOccupied = false;
+    if(isOccupied){
+        if(reservation.dateDepartPasse()){
+            isOccupied = false;
+            return reservation.getID();
+        }
     }
-
-    if(agenda.UpdateNextReservations()){
-        isOccupied = true;
-    }
-
-    return retour;
+        
+    return "NULL";
 }
 
 
-bool Place::addReservations(Reservation newReserv){
-    return agenda.AddReservation(newReserv);
+bool Place::addReservations(string immat, double duree){
+    if(isOccupied)
+        return false;
+
+    reservation = Reservation(duree, immat);
+    isOccupied = true;
+    return true;
 }
