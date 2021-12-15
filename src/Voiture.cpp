@@ -144,8 +144,14 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
 void Voiture::Boucle(){
     sleep(2);
     while(true){
-        int random = rand()%30;
-        sleep(random);
+        sleep(2);
+        while((((int)getPosY()!=9) || ((int)getPosX()!=6)) &&
+              (((int)getPosY()!=24) || ((int)getPosX()!=9))&&
+              (((int)getPosY()!=16) || ((int)getPosX()!=18))){
+            usleep(100);
+        }
+
+
 
 
         string parkings[3] = {"P1", "P2", "P3"};
