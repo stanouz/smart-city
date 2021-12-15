@@ -37,9 +37,7 @@ void Affichage::display(){
 
 
         displayMainWidget();
-        displayCarsWidget();
 
-        ImGui::ShowDemoWindow();
 
         window.clear();
         displayMap();
@@ -366,10 +364,3 @@ void Affichage::displayMessage(Message & msg, string & immatVoiture, int row){
     ImGui::TableSetColumnIndex(6);
     ImGui::Text("%s", msg.contenuMessage.getTexte().c_str());
  }
-
-void Affichage::displayCarsWidget(){
-    ImGui::Begin("Les voitures");
-
-
-    ImGui::End();
-}

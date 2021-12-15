@@ -24,8 +24,6 @@ public:
     vector<Voiture> & getTabVoitures();
     vector<vector<int> > & getMap();
 
-    void addVoiture();
-
     bool immatExists(string immat);
     string randomImmat();
 
