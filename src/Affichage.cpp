@@ -2,7 +2,7 @@
 
 #include <string>
 
-Affichage::Affichage(Ville * v): window(sf::VideoMode(900, 900), "smart parking"){
+Affichage::Affichage(Ville * v): window(sf::VideoMode(750, 750), "smart parking"){
     ville = v;
     
     window.setFramerateLimit(60);
