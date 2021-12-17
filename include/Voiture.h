@@ -4,14 +4,14 @@
 #include <string>
 
 
-#include "Date.h"
+
 #include "Agent.h"
 #include "PropositionAccepte.h"
+#include "Enums.h"
+#include "Position.h"
 
 
 using namespace std;
-
-enum Direction{Haut, Bas, Gauche, Droite};
 
 
 class Voiture:public Agent{
@@ -23,13 +23,16 @@ public:
     double getPosX() const;
     double getPosY() const;
     Direction getDirection();
+    bool getEstGaree();
 
     // Negociation
     void Boucle();
-    void negociation(string id_destinataire, double prixPopositionPrecedente);
-    void premierMessage(string id_destinataire);
+    void negociation(string id_destinataire, double prixPopositionPrecedente, Date & dateDebut, double duree);
+    void premierMessage(string id_destinataire, Date & dateDebut, double duree);
     void processusNegocition(string id_parking, vector<PropositionAccepte> & prop);
     PropositionAccepte compareProposition(vector<PropositionAccepte> & prop);
+
+
 
     // Deplacement
     void Avancer(vector< vector<int> > & map);
@@ -47,9 +50,10 @@ public:
 
 private:
     string immatriculation;
-    double posX, posY;
-    Direction direction;
     bool estGaree;
+
+    Position position;
+    Position position_parking;
 };
 
 #endif

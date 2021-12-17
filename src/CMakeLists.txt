@@ -11,6 +11,9 @@ if(SFML_FOUND)
     file(GLOB_RECURSE SRC_FILES *.cpp)
     add_executable(${PROJECT_NAME}_exec ${SRC_FILES})
 
+
+    
+
     # ajout des a inclure -> include qui contient les .h et date qui contient les ressourses
     target_include_directories(${PROJECT_NAME}_exec PUBLIC ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/data)
 

@@ -9,4 +9,4 @@
     * `make -C build`
 
 * ## Comment executer :
-    * `./build/src/smart-city_exec`
+    * `./bin/smart-city_exec`

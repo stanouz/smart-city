@@ -2,12 +2,9 @@
 
 #include <string>
 
-Affichage::Affichage(Ville * v): window(sf::VideoMode(900, 900), "smart parking"){
+Affichage::Affichage(Ville * v): window(sf::VideoMode(750, 750), "smart parking"){
     ville = v;
     
-    for(int i=0; i<(int)ville->getTabParkings().size(); i++)
-        showParking.push_back(new bool(true));
-
     window.setFramerateLimit(60);
     ImGui::SFML::Init(window);
 
@@ -38,7 +35,9 @@ void Affichage::display(){
 
         ImGui::SFML::Update(window, deltaClock.restart());
 
+
         displayMainWidget();
+
 
         window.clear();
         displayMap();
@@ -125,36 +124,28 @@ void Affichage::drawTile(int nTile, double x, double y){
 void Affichage::displayMainWidget(){
     // Ouverture de la fenetre
     ImGui::Begin("Les parkings");
-
-    static bool opt_reorderable = true;
-    static ImGuiTabBarFlags opt_fitting_flags = ImGuiTabBarFlags_FittingPolicyDefault_;
     
-    if (ImGui::CollapsingHeader("Choix des parkings")){
-        //Add Checkbox for each parkings
-        ImGui::Indent();
-        for(int i=0; i<(int)ville->getTabParkings().size(); i++){
-            Parking p = ville->getTabParkings()[i];
-            
-            ImGui::Checkbox(p.getId().c_str(), showParking[i]);
+    // ==============
+    // Date et heure
+    // ==============
+    Date now;
+    ImGui::Text("%s", now.DateToString().c_str());
+
+    ImGui::NewLine();
+
+    // ==================
+    // Info des parkings
+    // ==================
+    ImGui::BeginTabBar("Parkings", ImGuiTabBarFlags_None);
+    for(int i = 0; i < (int)ville->getTabParkings().size(); i++){
+        Parking p = ville->getTabParkings()[i];
+        if (ImGui::BeginTabItem(("Parking "+p.getId()).c_str())){
+            displayInfoParking(p);
+            ImGui::EndTabItem();
         }
-        ImGui::Unindent();
     }
-
-    ImGui::Separator();
-
-    ImGui::CollapsingHeader("Info des parkings");
-    ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable;
-
-    if (ImGui::BeginTabBar("Parkings", tab_bar_flags)){
-        for(int i = 0; i < (int)ville->getTabParkings().size(); i++){
-            Parking p = ville->getTabParkings()[i];
-            if (ImGui::BeginTabItem(("Parking "+p.getId()).c_str(), showParking[i] , ImGuiTabItemFlags_None)){
-                displayInfoParking(p);
-                ImGui::EndTabItem();
-            }
-        }
-        ImGui::EndTabBar();
-    }
+    ImGui::EndTabBar();
+    
     
 
     // Fermeture de la fenetre
@@ -171,9 +162,18 @@ void Affichage::displayInfoParking(Parking & p){
     // =========================================== 
     if(ImGui::CollapsingHeader("Remplissage du parking")){
         ImGui::Indent();
+
+
+        // ===========================================  
+        //          Prix moyen d'un place
+        // ===========================================
+        ImGui::Text("Le prix moyen d'un place du parking %s est de %.2f euros.",
+                     p.getId().c_str(), p.getMoyennePrix());
+        ImGui::NewLine();
+
         // ===========================================  
         // Barre de progression du taux de remplissage
-        // =========================================== 
+        // ===========================================
         ImGui::Text("Nombre de voitures :");
         char buf[32];
         sprintf(buf, "%d/%d", p.getNbPlaceOccupe(), p.getNbplace());
@@ -184,15 +184,16 @@ void Affichage::displayInfoParking(Parking & p){
         // ===========================================  
         //  Liste des voitures garées dans le parking
         // =========================================== 
-        for(int i=0; i<p.getNbplace(); i++){
-            string occupant = p.getPlace(i).getOccupant();
-            if(occupant!="NULL"){
-                ImGui::BulletText("%s jusqu'au %s", occupant.c_str(), p.getPlace(i).getOccupiedUntil().DateToString().c_str());
+        
+        for(int i=0; i<p.getNbplace(); i++){ 
+            if(p.getPlace(i).getIsOccupied()){
+                ImGui::BulletText("%s jusqu'au %s", p.getPlace(i).getOccupant().c_str(),
+                                                    p.getPlace(i).getDateDepart().DateToString().c_str());
             }
         }
+            
 
-
-
+        ImGui::NewLine();
         ImGui::Unindent();
     }
     
@@ -261,13 +262,14 @@ void Affichage::displayInfoParking(Parking & p){
             // =========================================== 
                 
             // Ouverture du tableau
-            ImGui::BeginTable("MessagesRecu", 6, table_flags);
+            ImGui::BeginTable("MessagesRecu", 7, table_flags);
 
             // En-tête du tableau
             ImGui::TableSetupColumn("#");
             ImGui::TableSetupColumn("Voiture");
             ImGui::TableSetupColumn("Performatif");
             ImGui::TableSetupColumn("Prix");
+            ImGui::TableSetupColumn("Date");
             ImGui::TableSetupColumn("Durée");
             ImGui::TableSetupColumn("Texte");
             ImGui::TableHeadersRow();
@@ -299,13 +301,14 @@ void Affichage::displayInfoParking(Parking & p){
             // =========================================== 
 
             // Ouverture du tableau
-            ImGui::BeginTable("MessagesEnvoye", 6, table_flags);
+            ImGui::BeginTable("MessagesEnvoye", 7, table_flags);
 
             // En-tête du tableau
             ImGui::TableSetupColumn("#");
             ImGui::TableSetupColumn("Voiture");
             ImGui::TableSetupColumn("Performatif");
             ImGui::TableSetupColumn("Prix");
+            ImGui::TableSetupColumn("Date");
             ImGui::TableSetupColumn("Durée");
             ImGui::TableSetupColumn("Texte");
             ImGui::TableHeadersRow();
@@ -349,12 +352,15 @@ void Affichage::displayMessage(Message & msg, string & immatVoiture, int row){
     ImGui::TableSetColumnIndex(3);
     ImGui::Text("%.2f euros", msg.contenuMessage.getPrix());
 
-    // Colonne durée
+    // Colonne date
     ImGui::TableSetColumnIndex(4);
+    ImGui::Text("%s", msg.contenuMessage.getDate().DateToString().c_str());
+
+    // Colonne durée
+    ImGui::TableSetColumnIndex(5);
     ImGui::Text("%.2f heures", msg.contenuMessage.getDuree());
 
     // Colonne texte
-    ImGui::TableSetColumnIndex(5);
+    ImGui::TableSetColumnIndex(6);
     ImGui::Text("%s", msg.contenuMessage.getTexte().c_str());
  }
-

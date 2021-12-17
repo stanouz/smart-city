@@ -6,48 +6,41 @@ using namespace std;
 
 Place::Place(){
     isOccupied=false;
-    occupant="NULL";
 }
 
 Place::~Place(){
 }
 
-string Place::getOccupant() const{
-    return occupant;
+string Place::getOccupant(){
+    return reservation.getID();
 }
 
-bool Place::getIsOccupied() const{
+Date Place::getDateDepart(){
+    return reservation.getDateDepart();
+}
+
+bool Place::getIsOccupied(){
     return isOccupied;
-}
-
-Date Place::getOccupiedUntil() const{
-    return occupiedUntil;
 }
 
 
 string Place::updateStatus(){
     if(isOccupied){
-        Date now;
-        if(now >= occupiedUntil){
-            cout << "       La voiture " << occupant << " s'en va" << endl;
-            isOccupied=false;
-            string tmp_occupant = occupant;
-            occupant = "NULL";
-            return tmp_occupant;
+        if(reservation.dateDepartPasse()){
+            isOccupied = false;
+            return reservation.getID();
         }
     }
+        
     return "NULL";
 }
 
 
-bool Place::ajouteVoiture(string occupant_, Date dateDepart){
-    if(isOccupied){
+bool Place::addReservations(string immat, double duree){
+    if(isOccupied)
         return false;
-    }
-    occupiedUntil = dateDepart;
-    cout << "       La voiture " << occupant_ << " se gare et partira le " << dateDepart << endl;
-    occupant = occupant_;
+
+    reservation = Reservation(duree, immat);
     isOccupied = true;
     return true;
 }
-

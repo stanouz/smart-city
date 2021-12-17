@@ -2,6 +2,7 @@
 #define __PROP_ACCEPTE_H__
 
 #include <string>
+#include "Enums.h"
 
 using namespace std;
 

@@ -3,17 +3,19 @@
 
 #include <string>
 #include "Contenu.h"
-
-enum Performatif{DemandePlace, Reponse, Refut, Accepter, LibererPlace};
+#include "Enums.h"
 
 class Message{
 public:
     Message();
     Message(string emmeteur_, Performatif perfo);
+    Message(string emmeteur_, Performatif perfo, Position p);
     ~Message();
     void display();
     string to_string();
     string perfo_to_string();
+
+    void operator=(Message msg);
 
     string emmeteur;
     string recepteur;
