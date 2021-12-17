@@ -1,8 +1,22 @@
 #include "Affichage.h"
 
+#include <string>
 
-Affichage::Affichage(Ville * v){
+Affichage::Affichage(Ville * v): window(sf::VideoMode(900, 900), "smart parking"){
     ville = v;
+    
+    for(int i=0; i<(int)ville->getTabParkings().size(); i++)
+        showParking.push_back(new bool(true));
+
+    window.setFramerateLimit(60);
+    ImGui::SFML::Init(window);
+
+    /* Pour ne pas sauvegarder la position des widgets dans imgui.ini
+    ImGuiIO io = ImGui::GetIO();
+    io.IniFilename = NULL;*/
+
+    tileset.loadFromFile("data/tilemap.png");
+    sprite.setTexture(tileset);
 }
 
 Affichage::~Affichage(){
@@ -11,11 +25,6 @@ Affichage::~Affichage(){
 
  
 void Affichage::display(){
-    sf::RenderWindow window(sf::VideoMode(700, 700), "smart parking");
-    window.setFramerateLimit(60);
-    ImGui::SFML::Init(window);
-    
-
     sf::Clock deltaClock;
     while (window.isOpen()) {
         sf::Event event;
@@ -23,100 +32,329 @@ void Affichage::display(){
             ImGui::SFML::ProcessEvent(event);
 
             if (event.type == sf::Event::Closed) {
-                
-                ImGui::SFML::Shutdown();
+                window.close();
             }
         }
 
         ImGui::SFML::Update(window, deltaClock.restart());
 
-       
-
-        ImGui::Begin("Messagerie");
-        vector<Message> tabMsg = ville->getTabParkings()[0].getBALPrive();
-        for(int i=0; i<(int)tabMsg.size(); i++){
-            ImGui::BulletText(tabMsg[i].to_string().c_str());
-        }
-        
-        ImGui::End();
+        displayMainWidget();
 
         window.clear();
-     
-        displayMap(window);
+        displayMap();
+
+
+        for(int i=0; i<(int)ville->getTabVoitures().size(); i++){
+            Voiture & v = ville->getTabVoitures()[i];
+            displayCar(v.getPosX(), v.getPosY(), v.getDirection());
+        }
+
+
         ImGui::SFML::Render(window);
         window.display();
     }
 
     ImGui::SFML::Shutdown();
-       
 }
 
 
-void Affichage::displayMap(sf::RenderWindow & window){
+void Affichage::displayMap(){
+    int mapH = ville->getMap().size();
+    int mapW = ville->getMap()[0].size();
+
+    for(int i=0; i<mapW; i++){
+        for(int j=0; j<mapH; j++){   
+            drawTile(ville->getMap()[j][i], i, j);
+        }
+    }
+}
+
+void Affichage::displayCar(double x, double y, Direction dir){
+   
+    switch (dir){
+        case Droite : 
+                drawTile(481, x-0.5, y-0.3); 
+                drawTile(482, x+0.5, y-0.3);
+                break;
+        
+        case Gauche : 
+                drawTile(454, x-0.5, y+0.3); 
+                drawTile(455, x+0.5, y+0.3);
+                break;
+
+        case Haut : 
+                drawTile(401, x-0.3, y-0.8); 
+                drawTile(428, x-0.3, y+0.2);
+                break;
+
+        case Bas : 
+                drawTile(400, x+0.3, y-0.8); 
+                drawTile(427, x+0.3, y+0.2);
+                break;
+        
+        default:
+            break;
+    }
+
+    
+    
+}
+
+
+void Affichage::drawTile(int nTile, double x, double y){
     int winH = window.getSize().y;
     int winW = window.getSize().x;
-
-    vector<vector<int> > map = ville->getMap();
-
-    int mapH = map.size();
-    int mapW = map[0].size();
+    int mapH = ville->getMap().size();
+    int mapW = ville->getMap()[0].size();
     double tileH = winH/(double)(mapH-1);
     double tileW = winW/(double)(mapW-1);
-  
-    sf::Texture text;
-    text.loadFromFile("data/tilemap.png");
-
     double scaleH = tileH / 16.; // tiles are 16x16 px
     double scaleW = tileW / 16.;
 
-    sf::Sprite sprite;
-    sprite.setTexture(text);
-    int x, y;
+    double posTileX = ((nTile - 1) % 27) * 17;
+    double posTileY = ((nTile - 1) / 27) * 17;
+
+    sprite.setPosition(x*tileH, y*tileW);
+    sprite.setScale(scaleH, scaleW);
+    sprite.setTextureRect(sf::IntRect(posTileX , posTileY, 16, 16));
+    window.draw(sprite); 
+
+}
+
+
+void Affichage::displayMainWidget(){
+    // Ouverture de la fenetre
+    ImGui::Begin("Les parkings");
+
+    static bool opt_reorderable = true;
+    static ImGuiTabBarFlags opt_fitting_flags = ImGuiTabBarFlags_FittingPolicyDefault_;
     
-    for(int i=0; i<mapW; i++){
-        for(int j=0; j<mapH; j++){   
-            int value = map[j][i];
-            x = ((value - 1) % 27) * 17; // 27 tile par ligne et 
-            y = ((value - 1) / 27) * 17; // * 17 car tile de 16px +1px d'espace
-
-            sprite.setPosition(i*tileH, j*tileW);
-            sprite.setScale(scaleH, scaleW);
-            sprite.setTextureRect(sf::IntRect(x, y, 16, 16));
-            window.draw(sprite);
+    if (ImGui::CollapsingHeader("Choix des parkings")){
+        //Add Checkbox for each parkings
+        ImGui::Indent();
+        for(int i=0; i<(int)ville->getTabParkings().size(); i++){
+            Parking p = ville->getTabParkings()[i];
+            
+            ImGui::Checkbox(p.getId().c_str(), showParking[i]);
         }
+        ImGui::Unindent();
     }
+
+    ImGui::Separator();
+
+    ImGui::CollapsingHeader("Info des parkings");
+    ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable;
+
+    if (ImGui::BeginTabBar("Parkings", tab_bar_flags)){
+        for(int i = 0; i < (int)ville->getTabParkings().size(); i++){
+            Parking p = ville->getTabParkings()[i];
+            if (ImGui::BeginTabItem(("Parking "+p.getId()).c_str(), showParking[i] , ImGuiTabItemFlags_None)){
+                displayInfoParking(p);
+                ImGui::EndTabItem();
+            }
+        }
+        ImGui::EndTabBar();
+    }
+    
+
+    // Fermeture de la fenetre
+    ImGui::End();
 }
 
 
-bool Affichage::clickParking(sf::RenderWindow & window, int & idParking){
-    vector<vector<int> > map = ville->getMap();
-    vector<int> tab_x;
-    vector<int> tab_y;
+void Affichage::displayInfoParking(Parking & p){
 
-    for(int i=0; i<(int)map.size(); i++){
-        for(int j=0; j<(int)map[0].size(); j++){
-            if(map[i][j]==443){
-                tab_x.push_back(j);
-                tab_y.push_back(i);
+    ImGui::Indent();
+
+    // ===========================================  
+    // Informations sur le remplissage du parking
+    // =========================================== 
+    if(ImGui::CollapsingHeader("Remplissage du parking")){
+        ImGui::Indent();
+        // ===========================================  
+        // Barre de progression du taux de remplissage
+        // =========================================== 
+        ImGui::Text("Nombre de voitures :");
+        char buf[32];
+        sprintf(buf, "%d/%d", p.getNbPlaceOccupe(), p.getNbplace());
+        ImGui::ProgressBar((double)p.getNbPlaceOccupe()/p.getNbplace(), ImVec2(0.f, 0.f), buf);
+
+        ImGui::NewLine();
+
+        // ===========================================  
+        //  Liste des voitures garées dans le parking
+        // =========================================== 
+        for(int i=0; i<p.getNbplace(); i++){
+            string occupant = p.getPlace(i).getOccupant();
+            if(occupant!="NULL"){
+                ImGui::BulletText("%s jusqu'au %s", occupant.c_str(), p.getPlace(i).getOccupiedUntil().DateToString().c_str());
             }
         }
+
+
+
+        ImGui::Unindent();
     }
-    int winH = window.getSize().y;
-    int winW = window.getSize().x;
-    int mapH = map.size();
-    int mapW = map[0].size();
-    double tileH = winH/(double)mapH;
-    double tileW = winW/(double)mapW;
+    
+    
+    
 
 
-    sf::Vector2i localPosition = sf::Mouse::getPosition(window);
-    for(int i=0; i<(int)tab_x.size(); i++){
-        if(localPosition.x > tab_x[i]*tileH && localPosition.x < (tab_x[i]+1)*tileH){
-            if(localPosition.y > tab_y[i]*tileW && localPosition.y < (tab_y[i]+1)*tileW){
-                idParking = i+1;
-                return true;
-            }
+    // ===========================================  
+    //   Affichage de la messagerie du parking
+    // =========================================== 
+    if(ImGui::CollapsingHeader("Messagerie du parkings")){
+        ImGui::Indent();
+        // ===========================================  
+        //        Liste déroulante des voitures
+        // =========================================== 
+        ImGui::Text("Selectionner les voitures émmetrices des messages :");
+
+        // remplissage d'un vector avec tte les immat + choix par défaut
+        vector<string> choixVoiture;
+        choixVoiture.push_back("Toutes les voitures");
+
+        for(int i=0; i<(int)ville->getTabVoitures().size(); i++){
+            choixVoiture.push_back(ville->getTabVoitures()[i].getImat());
         }
-    }
-    return false;
+
+        // Indice du choix selectionner
+        static int indSelected = 0; 
+        // Affichage du choix selectionner
+        const char* combo_label = choixVoiture[indSelected].c_str();
+
+        // Ouverture de la liste déroulante == ImGui::Combo 
+        if (ImGui::BeginCombo("     ", combo_label))
+        {
+            for (int n = 0; n < (int)choixVoiture.size(); n++)
+            {
+                const bool is_selected = (indSelected == n);
+                if (ImGui::Selectable(choixVoiture[n].c_str(), is_selected))
+                    indSelected = n; 
+                    if (is_selected){
+                        ImGui::SetItemDefaultFocus();
+                    }
+            }
+            ImGui::EndCombo();
+            
+        }
+        
+        ImGui::NewLine();  
+        // flags du tableau qui définissent le style
+        static ImGuiTableFlags table_flags =   ImGuiTableFlags_Borders 
+                                        | ImGuiTableFlags_RowBg
+                                        | ImGuiTableFlags_BordersH
+                                        | ImGuiTableFlags_BordersOuterH
+                                        | ImGuiTableFlags_BordersInnerH
+                                        | ImGuiTableFlags_BordersV
+                                        | ImGuiTableFlags_BordersOuterV
+                                        | ImGuiTableFlags_BordersInnerV
+                                        | ImGuiTableFlags_BordersOuter
+                                        | ImGuiTableFlags_BordersInner
+                                        | ImGuiTableFlags_SizingFixedFit
+                                        | ImGuiTableFlags_Hideable;
+
+        if(ImGui::CollapsingHeader("Messages reçus")){
+            ImGui::Indent();
+            // ===========================================  
+            //        Tableau des messages recu
+            // =========================================== 
+                
+            // Ouverture du tableau
+            ImGui::BeginTable("MessagesRecu", 6, table_flags);
+
+            // En-tête du tableau
+            ImGui::TableSetupColumn("#");
+            ImGui::TableSetupColumn("Voiture");
+            ImGui::TableSetupColumn("Performatif");
+            ImGui::TableSetupColumn("Prix");
+            ImGui::TableSetupColumn("Durée");
+            ImGui::TableSetupColumn("Texte");
+            ImGui::TableHeadersRow();
+
+            // Remplissage du tableau
+            for (int row = 0; row < (int)p.getBALPrive().size(); row++)
+            {
+                Message msg = p.getBALPrive()[row];
+                    
+
+                // Si choix toute les voitures ou si choix correspond à la voiture
+                if(indSelected==0 || choixVoiture[indSelected]==msg.emmeteur){
+                    displayMessage(msg, msg.emmeteur, row);
+                }
+            }
+                
+            // Fermeture du tableau
+            ImGui::EndTable();
+            ImGui::Unindent();
+            ImGui::NewLine();
+        }
+
+            
+
+        if(ImGui::CollapsingHeader("Messages envoyés")){
+            ImGui::Indent();
+            // ===========================================  
+            //        Tableau des messages envoyés
+            // =========================================== 
+
+            // Ouverture du tableau
+            ImGui::BeginTable("MessagesEnvoye", 6, table_flags);
+
+            // En-tête du tableau
+            ImGui::TableSetupColumn("#");
+            ImGui::TableSetupColumn("Voiture");
+            ImGui::TableSetupColumn("Performatif");
+            ImGui::TableSetupColumn("Prix");
+            ImGui::TableSetupColumn("Durée");
+            ImGui::TableSetupColumn("Texte");
+            ImGui::TableHeadersRow();
+
+            // Remplissage du tableau
+            for (int row = 0; row < (int)p.getMsgEnvoye().size(); row++)
+            {
+                Message msg = p.getMsgEnvoye()[row];
+                    
+
+                // Si choix toute les voitures ou si choix correspond à la voiture
+                if(indSelected==0 || choixVoiture[indSelected]==msg.recepteur){
+                    displayMessage(msg, msg.recepteur, row);
+                }
+            }
+                
+            // Fermeture du tableau
+            ImGui::EndTable();
+            ImGui::Unindent();
+        }
+    } 
 }
+
+
+void Affichage::displayMessage(Message & msg, string & immatVoiture, int row){
+    ImGui::TableNextRow();
+
+    // Colonne n°
+    ImGui::TableSetColumnIndex(0);
+    ImGui::Text("#%i", row);
+            
+    // Colonne Voiture
+    ImGui::TableSetColumnIndex(1);
+    ImGui::Text("%s", immatVoiture.c_str());
+            
+    // Colonne Performatif
+    ImGui::TableSetColumnIndex(2);
+    ImGui::Text("%s", msg.perfo_to_string().c_str());
+
+    // Colonne prix 
+    ImGui::TableSetColumnIndex(3);
+    ImGui::Text("%.2f euros", msg.contenuMessage.getPrix());
+
+    // Colonne durée
+    ImGui::TableSetColumnIndex(4);
+    ImGui::Text("%.2f heures", msg.contenuMessage.getDuree());
+
+    // Colonne texte
+    ImGui::TableSetColumnIndex(5);
+    ImGui::Text("%s", msg.contenuMessage.getTexte().c_str());
+ }
+

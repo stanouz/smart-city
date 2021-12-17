@@ -8,13 +8,16 @@ Agent::~Agent(){
     
 }
 
+mutex Agent::m;
+condition_variable Agent::cv;
+map<string, vector<Message> > Agent::BoiteAuxLettres;
 
 void Agent::sendMessage(Message & msg, string emmeteur, string recepteur){
     unique_lock<mutex> l(m);
     msg.recepteur = recepteur;
     msg.emmeteur = emmeteur;
     BoiteAuxLettres[recepteur].push_back(msg);
-
+    messagesEnvoye.push_back(msg);
     cv.notify_all();
 }
 
@@ -39,11 +42,11 @@ Message Agent::getMessageFrom(string recepteur, string emmeteur){
     Message msg;
 
     bool waitMsgFrom = true;
-    int i=0;
+    int i;
     
     while(waitMsgFrom)
     {
-        int i=0;
+        i=0;
         int size = BoiteAuxLettres[recepteur].size();
         while(i<size && waitMsgFrom){
             msg = BoiteAuxLettres[recepteur][i];
@@ -67,4 +70,9 @@ Message Agent::getMessageFrom(string recepteur, string emmeteur){
 
 vector<Message> Agent::getBALPrive(){
     return BoiteAuxLettresPrive;
+}
+
+
+vector<Message> Agent::getMsgEnvoye(){
+    return messagesEnvoye;
 }

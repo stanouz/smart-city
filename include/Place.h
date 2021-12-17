@@ -11,15 +11,14 @@ public:
     Place();
     ~Place();
     
-    int getID() const;
+    string getOccupant() const;
     bool getIsOccupied() const;
     Date getOccupiedUntil() const;
-    bool updateStatus();
+    string updateStatus();
     bool ajouteVoiture(string immat, Date dateDepart);
 
 
 private:
-    int ID;
     Date occupiedUntil;
     bool isOccupied;
     string occupant;

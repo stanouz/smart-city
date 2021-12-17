@@ -12,8 +12,8 @@ Place::Place(){
 Place::~Place(){
 }
 
-int Place::getID() const{
-    return ID;
+string Place::getOccupant() const{
+    return occupant;
 }
 
 bool Place::getIsOccupied() const{
@@ -25,17 +25,18 @@ Date Place::getOccupiedUntil() const{
 }
 
 
-bool Place::updateStatus(){
+string Place::updateStatus(){
     if(isOccupied){
         Date now;
         if(now >= occupiedUntil){
             cout << "       La voiture " << occupant << " s'en va" << endl;
             isOccupied=false;
+            string tmp_occupant = occupant;
             occupant = "NULL";
-            return true;
+            return tmp_occupant;
         }
     }
-    return false;
+    return "NULL";
 }
 
 

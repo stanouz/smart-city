@@ -3,6 +3,8 @@
 #include <fstream>
 #include <sstream>
 
+#include <unistd.h>
+
 
 
 using namespace std;
@@ -26,21 +28,23 @@ vector<int> TxtLineToInt(string data)
 }
 
 
-
 Ville::Ville(){
     tab_parkings.push_back(Parking("P1"));
+    
     tab_parkings.push_back(Parking("P2"));
     tab_parkings.push_back(Parking("P3"));
+    
 
-    tab_voitures.push_back(Voiture("AAA-123-AAA"));
-    tab_voitures.push_back(Voiture("BBB-123-BBB"));
-    tab_voitures.push_back(Voiture("CCC-123-CCC"));
-    tab_voitures.push_back(Voiture("DDD-123-DDD"));
-    tab_voitures.push_back(Voiture("EEE-123-EEE"));
-    tab_voitures.push_back(Voiture("FFF-123-FFF"));
-    tab_voitures.push_back(Voiture("GGG-123-GGG"));
-    tab_voitures.push_back(Voiture("HHH-123-HHH"));
-
+    tab_voitures.push_back(Voiture("AAA-123-AAA", 2,16, Droite));
+    tab_voitures.push_back(Voiture("BBB-123-BBB", 17,14, Gauche));
+    
+    tab_voitures.push_back(Voiture("CCC-123-CCC", 4, 3, Bas));
+    tab_voitures.push_back(Voiture("DDD-123-DDD", 19, 16, Droite));
+    tab_voitures.push_back(Voiture("EEE-123-EEE", 3, 24, Gauche));
+    tab_voitures.push_back(Voiture("FFF-123-FFF", 26, 24, Haut));
+    tab_voitures.push_back(Voiture("GGG-123-GGG", 24, 8, Bas));
+    tab_voitures.push_back(Voiture("HHH-123-HHH", 26, 17, Haut));
+    
     ifstream my_file("data/map.txt");
     
     if(!my_file){
@@ -52,14 +56,23 @@ Ville::Ville(){
         map.push_back(TxtLineToInt(ligne));
     }
 
+    // Thread negociation des parkings
     for(int i=0; i<(int)tab_parkings.size();i++){
         tabThreads.push_back(thread(&Parking::Boucle, ref(tab_parkings[i])));
     }
 
+    // Thread negociation des voitures
     for(int i=0; i<(int)tab_voitures.size();i++){
         tabThreads.push_back(thread(&Voiture::Boucle, ref(tab_voitures[i])));
     }
+
+    // Thread mouvement des voitures
+    for(int i=0; i<(int)tab_voitures.size();i++){
+        tabThreads.push_back(thread(&Voiture::Avancer, ref(tab_voitures[i]), ref(map)));
+    }
 }
+
+
 
 Ville::~Ville(){
     for(int i=0; i<(int)tabThreads.size(); i++){

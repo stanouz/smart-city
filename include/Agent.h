@@ -22,13 +22,15 @@ public:
     Message getMessageFrom(string recepteur, string emmeteur);
 
     vector<Message> getBALPrive();
+    vector<Message> getMsgEnvoye();
 
 
 protected:
-    inline static mutex m;
-    inline static condition_variable cv;
-    inline static map<string, vector<Message> > BoiteAuxLettres;
+    static mutex m;
+    static condition_variable cv;
+    static map<string, vector<Message> > BoiteAuxLettres;
     vector<Message> BoiteAuxLettresPrive;
+    vector<Message> messagesEnvoye;
 };
 
 #endif
