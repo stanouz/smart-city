@@ -142,17 +142,14 @@ PropositionAccepte Voiture::compareProposition(vector<PropositionAccepte> & prop
 void Voiture::Boucle(){
     sleep(2);
     while(true){
-        int r = rand()%20;
-        sleep(r);
-
-
-        /*
+        
         sleep(2);
+        // Tant qu'on est pas devant un parking en attend 
         while((((int)getPosY()!=9) || ((int)getPosX()!=6)) &&
               (((int)getPosY()!=24) || ((int)getPosX()!=9))&&
               (((int)getPosY()!=16) || ((int)getPosX()!=18))){
             usleep(100);
-        }*/
+        }
 
 
 
